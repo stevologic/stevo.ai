@@ -54,7 +54,7 @@ test("site manifest uses installable Stevo.AI icons", async () => {
 
   assert.equal(manifest.short_name, "Stevo.AI");
   assert.equal(manifest.display, "standalone");
-  assert.equal(manifest.theme_color, "#0a0f0d");
+  assert.equal(manifest.theme_color, "#15161c");
   assert.deepEqual(
     manifest.icons.map(({ src, sizes, purpose }) => ({ src, sizes, purpose })),
     [
@@ -93,6 +93,20 @@ test("desktop project grid uses four compact cards per row", async () => {
   );
   assert.match(styles, /grid-column: span 1/);
   assert.match(styles, /min-height: 560px/);
+});
+
+test("professional theme follows the formal portrait palette", async () => {
+  const styles = await readFile(
+    new URL("../app/globals.css", import.meta.url),
+    "utf8",
+  );
+
+  assert.match(styles, /--ink: #15161c/);
+  assert.match(styles, /--accent: #aaa8cf/);
+  assert.match(styles, /--accent-deep: #56547b/);
+  assert.match(styles, /--accent-cool: #7e93a7/);
+  assert.match(styles, /\.hero-orbit\s*{[^}]*opacity: 0\.2/s);
+  assert.doesNotMatch(styles, /#b8f34b|#ff6b52|#69d8ff/i);
 });
 
 test("professional resume is detailed, private, and print-ready", async () => {
