@@ -1,0 +1,24 @@
+{
+  "name": "Stevo.AI — Stephen M Abbott",
+  "short_name": "Stevo.AI",
+  "description": "Applied AI, cybersecurity, product engineering, and advisory services from Stephen M Abbott.",
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "background_color": "#0a0f0d",
+  "theme_color": "#0a0f0d",
+  "icons": [
+    {
+      "src": "/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ]
+}
