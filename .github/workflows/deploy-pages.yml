@@ -1,0 +1,77 @@
+name: Sync projects and deploy GitHub Pages
+
+on:
+  push:
+    branches:
+      - main
+  schedule:
+    # 01:17 America/Phoenix; choosing an off-minute reduces cron congestion.
+    - cron: "17 8 * * *"
+  workflow_dispatch:
+
+concurrency:
+  group: github-pages-production
+  cancel-in-progress: true
+
+# Keep the built-in workflow token read-only. A repository-scoped deploy key
+# publishes the generated branch so the push triggers branch-based Pages.
+permissions:
+  contents: read
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+
+    steps:
+      - name: Check out source
+        uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
+        with:
+          persist-credentials: false
+
+      - name: Set up Node.js
+        uses: actions/setup-node@249970729cb0ef3589644e2896645e5dc5ba9c38 # v6
+        with:
+          node-version: 24
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Require the Pages deploy key
+        shell: bash
+        env:
+          ACTIONS_DEPLOY_KEY: ${{ secrets.ACTIONS_DEPLOY_KEY }}
+        run: |
+          if [[ -z "$ACTIONS_DEPLOY_KEY" ]]; then
+            echo 'ACTIONS_DEPLOY_KEY is not configured. See docs/GITHUB_PAGES.md.' >&2
+            exit 1
+          fi
+
+      - name: Refresh public GitHub project data
+        env:
+          GITHUB_SYNC_STRICT: "1"
+          GITHUB_TOKEN: ${{ github.token }}
+        run: node scripts/sync-github.mjs
+
+      - name: Build static site
+        run: npm run build
+
+      - name: Prepare exact Pages output
+        shell: bash
+        run: |
+          test -f out/index.html
+          printf '%s\n' 'stevo.ai' > out/CNAME
+          : > out/.nojekyll
+
+      - name: Publish out to gh-pages
+        uses: peaceiris/actions-gh-pages@329bcc8f12caed2cefe5a5b80781499a6f3b361b # v4
+        with:
+          deploy_key: ${{ secrets.ACTIONS_DEPLOY_KEY }}
+          publish_branch: gh-pages
+          publish_dir: ./out
+          keep_files: false
+          enable_jekyll: false
+          user_name: github-actions[bot]
+          user_email: 41898282+github-actions[bot]@users.noreply.github.com
+          commit_message: "deploy: ${{ github.sha }}"

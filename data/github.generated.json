@@ -1,0 +1,525 @@
+{
+  "schemaVersion": 1,
+  "generatedAt": "2026-07-23T21:46:02.160Z",
+  "source": "https://api.github.com",
+  "apiVersion": "2022-11-28",
+  "defaultOwner": "stevologic",
+  "repositories": [
+    {
+      "projectKeys": [
+        "shiba-studio"
+      ],
+      "name": "shiba-studio",
+      "fullName": "stevologic/shiba-studio",
+      "description": "Orchestrate agents with Grok — code, browser control, integrations, and scheduling. Powered exclusively by xAI.",
+      "url": "https://github.com/stevologic/shiba-studio",
+      "homepage": "https://shiba-studio.io",
+      "topics": [],
+      "primaryLanguage": "TypeScript",
+      "defaultBranch": "main",
+      "visibility": "public",
+      "archived": false,
+      "disabled": false,
+      "fork": false,
+      "template": false,
+      "stars": 1,
+      "forks": 1,
+      "openIssues": 0,
+      "createdAt": "2026-07-07T18:55:49Z",
+      "updatedAt": "2026-07-23T21:39:48Z",
+      "pushedAt": "2026-07-23T21:37:49Z",
+      "owner": {
+        "login": "stevologic",
+        "url": "https://github.com/stevologic",
+        "avatarUrl": "https://avatars.githubusercontent.com/u/5211665?v=4"
+      },
+      "license": {
+        "key": "agpl-3.0",
+        "name": "GNU Affero General Public License v3.0",
+        "spdxId": "AGPL-3.0",
+        "url": null
+      },
+      "latestRelease": null,
+      "releases": []
+    },
+    {
+      "projectKeys": [
+        "security-recipes"
+      ],
+      "name": "security-recipes.ai",
+      "fullName": "stevologic/security-recipes.ai",
+      "description": "Turn security findings into bounded agent work: one recipe, scoped context, required proof, and a human-reviewed result.",
+      "url": "https://github.com/stevologic/security-recipes.ai",
+      "homepage": "http://security-recipes.ai/",
+      "topics": [],
+      "primaryLanguage": "Python",
+      "defaultBranch": "main",
+      "visibility": "public",
+      "archived": false,
+      "disabled": false,
+      "fork": false,
+      "template": false,
+      "stars": 1,
+      "forks": 0,
+      "openIssues": 2,
+      "createdAt": "2026-04-22T00:58:53Z",
+      "updatedAt": "2026-07-22T11:59:45Z",
+      "pushedAt": "2026-07-23T21:18:41Z",
+      "owner": {
+        "login": "stevologic",
+        "url": "https://github.com/stevologic",
+        "avatarUrl": "https://avatars.githubusercontent.com/u/5211665?v=4"
+      },
+      "license": {
+        "key": "apache-2.0",
+        "name": "Apache License 2.0",
+        "spdxId": "Apache-2.0",
+        "url": null
+      },
+      "latestRelease": null,
+      "releases": []
+    },
+    {
+      "projectKeys": [
+        "oss-deps-explorer"
+      ],
+      "name": "oss-deps-explorer",
+      "fullName": "stevologic/oss-deps-explorer",
+      "description": "A REST API and optional browser UI for exploring package dependencies.",
+      "url": "https://github.com/stevologic/oss-deps-explorer",
+      "homepage": null,
+      "topics": [
+        "applicationsecurity",
+        "appsec",
+        "appsec-tools",
+        "cybersecurity-tools",
+        "opensource",
+        "opensourcesecurity"
+      ],
+      "primaryLanguage": "JavaScript",
+      "defaultBranch": "main",
+      "visibility": "public",
+      "archived": false,
+      "disabled": false,
+      "fork": false,
+      "template": false,
+      "stars": 3,
+      "forks": 0,
+      "openIssues": 0,
+      "createdAt": "2025-07-28T05:26:58Z",
+      "updatedAt": "2026-07-12T08:34:24Z",
+      "pushedAt": "2026-07-12T08:34:16Z",
+      "owner": {
+        "login": "stevologic",
+        "url": "https://github.com/stevologic",
+        "avatarUrl": "https://avatars.githubusercontent.com/u/5211665?v=4"
+      },
+      "license": {
+        "key": "mit",
+        "name": "MIT License",
+        "spdxId": "MIT",
+        "url": null
+      },
+      "latestRelease": null,
+      "releases": []
+    },
+    {
+      "projectKeys": [
+        "tiny-book-buddies-ai"
+      ],
+      "name": "tiny-book-buddies-ai",
+      "fullName": "stevologic/tiny-book-buddies-ai",
+      "description": "Tiny Book Buddies AI — living, illustrated children's storybooks generated with any frontier AI model (GPT, Claude, Gemini, Imagen, Veo, Sora).",
+      "url": "https://github.com/stevologic/tiny-book-buddies-ai",
+      "homepage": "https://tinybookbuddies.ai",
+      "topics": [],
+      "primaryLanguage": "TypeScript",
+      "defaultBranch": "main",
+      "visibility": "public",
+      "archived": false,
+      "disabled": false,
+      "fork": false,
+      "template": false,
+      "stars": 2,
+      "forks": 1,
+      "openIssues": 0,
+      "createdAt": "2022-12-20T06:34:31Z",
+      "updatedAt": "2026-07-17T21:44:36Z",
+      "pushedAt": "2026-07-17T21:44:32Z",
+      "owner": {
+        "login": "stevologic",
+        "url": "https://github.com/stevologic",
+        "avatarUrl": "https://avatars.githubusercontent.com/u/5211665?v=4"
+      },
+      "license": {
+        "key": "other",
+        "name": "Other",
+        "spdxId": "NOASSERTION",
+        "url": null
+      },
+      "latestRelease": null,
+      "releases": []
+    },
+    {
+      "projectKeys": [
+        "pro-response"
+      ],
+      "name": "pro-response",
+      "fullName": "stevologic/pro-response",
+      "description": "An AI writing assistant for Slack — rewrite, refine, and reformat team messages with modern LLMs (OpenAI, Anthropic, or any compatible host). Slack bot, HTTP API, and CLI.",
+      "url": "https://github.com/stevologic/pro-response",
+      "homepage": "https://stevologic.github.io/pro-response/",
+      "topics": [
+        "ai",
+        "anthropic",
+        "claude",
+        "gpt",
+        "llm",
+        "openai",
+        "python",
+        "slack",
+        "slack-bolt",
+        "slack-bot",
+        "slackbot",
+        "writing-assistant"
+      ],
+      "primaryLanguage": "Python",
+      "defaultBranch": "main",
+      "visibility": "public",
+      "archived": false,
+      "disabled": false,
+      "fork": false,
+      "template": false,
+      "stars": 0,
+      "forks": 0,
+      "openIssues": 0,
+      "createdAt": "2022-12-18T06:46:13Z",
+      "updatedAt": "2026-07-17T21:38:42Z",
+      "pushedAt": "2026-07-17T21:38:16Z",
+      "owner": {
+        "login": "stevologic",
+        "url": "https://github.com/stevologic",
+        "avatarUrl": "https://avatars.githubusercontent.com/u/5211665?v=4"
+      },
+      "license": {
+        "key": "mit",
+        "name": "MIT License",
+        "spdxId": "MIT",
+        "url": null
+      },
+      "latestRelease": {
+        "id": 355934754,
+        "tagName": "v2.0.0",
+        "name": "Pro Response 2.0.0",
+        "url": "https://github.com/stevologic/pro-response/releases/tag/v2.0.0",
+        "createdAt": "2026-07-17T21:38:11Z",
+        "publishedAt": "2026-07-17T21:38:40Z",
+        "prerelease": false,
+        "draft": false
+      },
+      "releases": [
+        {
+          "id": 355934754,
+          "tagName": "v2.0.0",
+          "name": "Pro Response 2.0.0",
+          "url": "https://github.com/stevologic/pro-response/releases/tag/v2.0.0",
+          "createdAt": "2026-07-17T21:38:11Z",
+          "publishedAt": "2026-07-17T21:38:40Z",
+          "prerelease": false,
+          "draft": false
+        }
+      ]
+    },
+    {
+      "projectKeys": [
+        "mouseclicker"
+      ],
+      "name": "mouse_clicker",
+      "fullName": "stevologic/mouse_clicker",
+      "description": "Click the mouse at an alarming rate!",
+      "url": "https://github.com/stevologic/mouse_clicker",
+      "homepage": null,
+      "topics": [],
+      "primaryLanguage": "C#",
+      "defaultBranch": "main",
+      "visibility": "public",
+      "archived": false,
+      "disabled": false,
+      "fork": false,
+      "template": false,
+      "stars": 1,
+      "forks": 0,
+      "openIssues": 0,
+      "createdAt": "2021-08-29T15:52:39Z",
+      "updatedAt": "2026-07-23T19:50:36Z",
+      "pushedAt": "2026-07-17T21:35:39Z",
+      "owner": {
+        "login": "stevologic",
+        "url": "https://github.com/stevologic",
+        "avatarUrl": "https://avatars.githubusercontent.com/u/5211665?v=4"
+      },
+      "license": {
+        "key": "mit",
+        "name": "MIT License",
+        "spdxId": "MIT",
+        "url": null
+      },
+      "latestRelease": {
+        "id": 355932372,
+        "tagName": "v3.7",
+        "name": "mouseclicker.app 3.7 — recording superpowers",
+        "url": "https://github.com/stevologic/mouse_clicker/releases/tag/v3.7",
+        "createdAt": "2026-07-17T21:30:28Z",
+        "publishedAt": "2026-07-17T21:30:55Z",
+        "prerelease": false,
+        "draft": false
+      },
+      "releases": [
+        {
+          "id": 355932372,
+          "tagName": "v3.7",
+          "name": "mouseclicker.app 3.7 — recording superpowers",
+          "url": "https://github.com/stevologic/mouse_clicker/releases/tag/v3.7",
+          "createdAt": "2026-07-17T21:30:28Z",
+          "publishedAt": "2026-07-17T21:30:55Z",
+          "prerelease": false,
+          "draft": false
+        },
+        {
+          "id": 355598905,
+          "tagName": "v3.6",
+          "name": "mouseclicker.app 3.6 — recording countdown",
+          "url": "https://github.com/stevologic/mouse_clicker/releases/tag/v3.6",
+          "createdAt": "2026-07-17T10:02:10Z",
+          "publishedAt": "2026-07-17T10:02:40Z",
+          "prerelease": false,
+          "draft": false
+        },
+        {
+          "id": 355594709,
+          "tagName": "v3.5",
+          "name": "mouseclicker.app 3.5 — click-and-drag recording + smarter Start button",
+          "url": "https://github.com/stevologic/mouse_clicker/releases/tag/v3.5",
+          "createdAt": "2026-07-17T09:53:14Z",
+          "publishedAt": "2026-07-17T09:53:46Z",
+          "prerelease": false,
+          "draft": false
+        },
+        {
+          "id": 355584855,
+          "tagName": "v3.4",
+          "name": "mouseclicker.app 3.4 — the recorder now captures mouse movement",
+          "url": "https://github.com/stevologic/mouse_clicker/releases/tag/v3.4",
+          "createdAt": "2026-07-17T09:31:00Z",
+          "publishedAt": "2026-07-17T09:31:29Z",
+          "prerelease": false,
+          "draft": false
+        },
+        {
+          "id": 355576619,
+          "tagName": "v3.3",
+          "name": "mouseclicker.app 3.3 — reliability release (full-feature audit)",
+          "url": "https://github.com/stevologic/mouse_clicker/releases/tag/v3.3",
+          "createdAt": "2026-07-17T09:12:23Z",
+          "publishedAt": "2026-07-17T09:13:00Z",
+          "prerelease": false,
+          "draft": false
+        },
+        {
+          "id": 353008104,
+          "tagName": "v3.2",
+          "name": "mouseclicker.app 3.2 — HUD toggle + signing-ready builds",
+          "url": "https://github.com/stevologic/mouse_clicker/releases/tag/v3.2",
+          "createdAt": "2026-07-13T08:11:27Z",
+          "publishedAt": "2026-07-13T08:11:59Z",
+          "prerelease": false,
+          "draft": false
+        },
+        {
+          "id": 352995205,
+          "tagName": "v3.1",
+          "name": "mouseclicker.app 3.1 — record & replay, Grok, no-scroll UI",
+          "url": "https://github.com/stevologic/mouse_clicker/releases/tag/v3.1",
+          "createdAt": "2026-07-13T07:45:25Z",
+          "publishedAt": "2026-07-13T07:45:46Z",
+          "prerelease": false,
+          "draft": false
+        },
+        {
+          "id": 352978806,
+          "tagName": "v3.0",
+          "name": "mouseclicker.app 3.0 — system tray + quick presets on Movement",
+          "url": "https://github.com/stevologic/mouse_clicker/releases/tag/v3.0",
+          "createdAt": "2026-07-13T07:08:50Z",
+          "publishedAt": "2026-07-13T07:09:09Z",
+          "prerelease": false,
+          "draft": false
+        },
+        {
+          "id": 352890938,
+          "tagName": "v2.8",
+          "name": "mouseclicker.app 2.8 — rebrand + custom domain",
+          "url": "https://github.com/stevologic/mouse_clicker/releases/tag/v2.8",
+          "createdAt": "2026-07-13T01:35:44Z",
+          "publishedAt": "2026-07-13T01:35:59Z",
+          "prerelease": false,
+          "draft": false
+        },
+        {
+          "id": 352885209,
+          "tagName": "v2.7",
+          "name": "ClickForge 2.7 — fix local thinking-model responses",
+          "url": "https://github.com/stevologic/mouse_clicker/releases/tag/v2.7",
+          "createdAt": "2026-07-13T01:05:49Z",
+          "publishedAt": "2026-07-13T01:06:09Z",
+          "prerelease": false,
+          "draft": false
+        },
+        {
+          "id": 352882472,
+          "tagName": "v2.6",
+          "name": "ClickForge 2.6 — in-app local models",
+          "url": "https://github.com/stevologic/mouse_clicker/releases/tag/v2.6",
+          "createdAt": "2026-07-13T00:51:37Z",
+          "publishedAt": "2026-07-13T00:51:55Z",
+          "prerelease": false,
+          "draft": false
+        },
+        {
+          "id": 352880265,
+          "tagName": "v2.5",
+          "name": "ClickForge 2.5 — signed metadata + SmartScreen guidance",
+          "url": "https://github.com/stevologic/mouse_clicker/releases/tag/v2.5",
+          "createdAt": "2026-07-13T00:39:21Z",
+          "publishedAt": "2026-07-13T00:39:39Z",
+          "prerelease": false,
+          "draft": false
+        },
+        {
+          "id": 352875786,
+          "tagName": "v2.4",
+          "name": "ClickForge 2.4 — local AI model (no key, no cloud)",
+          "url": "https://github.com/stevologic/mouse_clicker/releases/tag/v2.4",
+          "createdAt": "2026-07-13T00:12:23Z",
+          "publishedAt": "2026-07-13T00:12:45Z",
+          "prerelease": false,
+          "draft": false
+        },
+        {
+          "id": 352873564,
+          "tagName": "v2.3",
+          "name": "ClickForge 2.3 — donate options",
+          "url": "https://github.com/stevologic/mouse_clicker/releases/tag/v2.3",
+          "createdAt": "2026-07-12T23:59:55Z",
+          "publishedAt": "2026-07-13T00:00:12Z",
+          "prerelease": false,
+          "draft": false
+        },
+        {
+          "id": 352872552,
+          "tagName": "v2.2",
+          "name": "ClickForge 2.2 — polish, activity HUD, multi-provider AI",
+          "url": "https://github.com/stevologic/mouse_clicker/releases/tag/v2.2",
+          "createdAt": "2026-07-12T23:53:29Z",
+          "publishedAt": "2026-07-12T23:53:46Z",
+          "prerelease": false,
+          "draft": false
+        },
+        {
+          "id": 352865207,
+          "tagName": "v2.1",
+          "name": "ClickForge 2.1 — animated interface",
+          "url": "https://github.com/stevologic/mouse_clicker/releases/tag/v2.1",
+          "createdAt": "2026-07-12T23:05:20Z",
+          "publishedAt": "2026-07-12T23:05:40Z",
+          "prerelease": false,
+          "draft": false
+        },
+        {
+          "id": 352859634,
+          "tagName": "v2.0",
+          "name": "ClickForge 2.0",
+          "url": "https://github.com/stevologic/mouse_clicker/releases/tag/v2.0",
+          "createdAt": "2026-07-12T22:30:33Z",
+          "publishedAt": "2026-07-12T22:31:49Z",
+          "prerelease": false,
+          "draft": false
+        }
+      ]
+    },
+    {
+      "projectKeys": [
+        "doge-commerce-kit"
+      ],
+      "name": "doge-commerce-kit",
+      "fullName": "stevologic/doge-commerce-kit",
+      "description": "DOGE Commerce Kit — free, open-source Dogecoin commerce toolkit: POS terminal, browser wallet, website snippets, and live market stats. Live at commerce.dog",
+      "url": "https://github.com/stevologic/doge-commerce-kit",
+      "homepage": "https://commerce.dog",
+      "topics": [],
+      "primaryLanguage": "JavaScript",
+      "defaultBranch": "main",
+      "visibility": "public",
+      "archived": false,
+      "disabled": false,
+      "fork": false,
+      "template": false,
+      "stars": 1,
+      "forks": 0,
+      "openIssues": 0,
+      "createdAt": "2026-07-11T09:17:03Z",
+      "updatedAt": "2026-07-18T06:33:36Z",
+      "pushedAt": "2026-07-18T06:33:32Z",
+      "owner": {
+        "login": "stevologic",
+        "url": "https://github.com/stevologic",
+        "avatarUrl": "https://avatars.githubusercontent.com/u/5211665?v=4"
+      },
+      "license": {
+        "key": "mit",
+        "name": "MIT License",
+        "spdxId": "MIT",
+        "url": null
+      },
+      "latestRelease": null,
+      "releases": []
+    },
+    {
+      "projectKeys": [
+        "doge-miner"
+      ],
+      "name": "doge-miner",
+      "fullName": "stevologic/doge-miner",
+      "description": "A dogecoin miner, paired with a polished web user interface.",
+      "url": "https://github.com/stevologic/doge-miner",
+      "homepage": null,
+      "topics": [],
+      "primaryLanguage": "Python",
+      "defaultBranch": "main",
+      "visibility": "public",
+      "archived": false,
+      "disabled": false,
+      "fork": false,
+      "template": false,
+      "stars": 1,
+      "forks": 0,
+      "openIssues": 0,
+      "createdAt": "2026-07-11T06:50:33Z",
+      "updatedAt": "2026-07-12T08:34:10Z",
+      "pushedAt": "2026-07-12T08:34:05Z",
+      "owner": {
+        "login": "stevologic",
+        "url": "https://github.com/stevologic",
+        "avatarUrl": "https://avatars.githubusercontent.com/u/5211665?v=4"
+      },
+      "license": {
+        "key": "mit",
+        "name": "MIT License",
+        "spdxId": "MIT",
+        "url": null
+      },
+      "latestRelease": null,
+      "releases": []
+    }
+  ]
+}
