@@ -4,10 +4,75 @@ import Link from "next/link";
 import { PrintButton } from "../../components/PrintButton";
 
 export const metadata: Metadata = {
-  title: "Professional Profile | Stephen M Abbott",
+  title: "Professional Resume | Stephen M Abbott",
   description:
-    "A project-led professional profile for Stephen M Abbott, focused on applied AI, cybersecurity, and product engineering.",
+    "The employer-anonymized professional resume of Stephen M Abbott, spanning cybersecurity leadership, applied AI, enterprise engineering, and shipped products.",
 };
+
+const careerMetrics = [
+  { value: "16 years", label: "Enterprise systems and security" },
+  { value: "Up to 26", label: "Engineers led" },
+  { value: "92%", label: "Sensitive-data reduction" },
+  { value: "75%+", label: "Open-source dependency reduction" },
+] as const;
+
+const careerExperience = [
+  {
+    dates: "2024-2026",
+    title: "Director, Cybersecurity",
+    scope: "Exposure management · Remediation operations · Developer security",
+    highlights: [
+      "Led an 11-person team responsible for remediation operations and Continuous Threat Exposure Management at enterprise scale.",
+      "Introduced risk-based prioritization, risk quantification, and governed AI-assisted remediation in partnership with executive security leadership.",
+      "Contributed to enterprise risk-appetite measures and Key Risk Indicators used in recurring board and executive reporting.",
+      "Built developer-engagement and preventative-control programs that improved ownership and reduced open-source dependencies in source code by more than 75%.",
+      "Developed security leaders, with team members advancing into senior and director-level positions.",
+    ],
+  },
+  {
+    dates: "2021-2024",
+    title: "Director, Security Data & Risk Intelligence",
+    scope: "Security data platforms · Supply-chain intelligence · Sensitive-data protection",
+    highlights: [
+      "Led an engineering organization of up to 26 people delivering platforms for sensitive-data detection, software-composition intelligence, and repository enrichment.",
+      "Reduced sensitive-data findings in source code by 92%, tripled detection coverage, and improved fidelity through automation with human review.",
+      "Owned application risk assessments, business-impact analysis, disaster-recovery requirements, and resilience planning for critical platforms.",
+      "Built risk-intelligence platforms and analytics that strengthened prioritization, governance, and executive decision-making.",
+      "Partnered across cloud and identity teams to secure infrastructure-as-code pipelines, apply encryption controls, and grow engineers into senior technical roles.",
+    ],
+  },
+  {
+    dates: "2019-2021",
+    title: "Senior Cybersecurity Engineer, Application Security",
+    scope: "SAST · DAST · Mobile testing · Software composition analysis",
+    highlights: [
+      "Managed an enterprise application-security tooling portfolio spanning static, dynamic, mobile, and software-composition analysis.",
+      "Led testing strategy, adoption, process integration, and effectiveness measurement throughout the software-development lifecycle.",
+      "Embedded scalable application-risk reduction practices directly into engineering workflows.",
+    ],
+  },
+  {
+    dates: "2014-2019",
+    title: "Senior Security Engineer, Detection & Infrastructure",
+    scope: "SIEM · Network visibility · Centralized telemetry",
+    highlights: [
+      "Engineered SIEM, full-packet-capture, and centralized logging platforms supporting enterprise threat detection and security operations.",
+      "Enabled encrypted-traffic inspection to improve network visibility and threat-detection coverage.",
+      "Deployed globally distributed, highly available security infrastructure across enterprise data centers.",
+      "Developed incident-response detections from logs, network telemetry, IDS/IPS events, and endpoint-security signals.",
+    ],
+  },
+  {
+    dates: "2010-2014",
+    title: "Senior Infrastructure Engineer, Resilient Transaction Platforms",
+    scope: "Backend services · Operational resilience · Automated delivery",
+    highlights: [
+      "Supported backend services for business-critical transaction systems in a highly regulated environment.",
+      "Maintained performance monitoring for 99.99% availability and helped automate application deployments through CI/CD.",
+      "Supported disaster-recovery and business-resilience programs for high-stakes systems, building the operational foundation for later security leadership.",
+    ],
+  },
+] as const;
 
 const focusAreas = [
   {
@@ -93,6 +158,25 @@ const technicalBreadth = [
   },
 ] as const;
 
+const credentials = [
+  {
+    label: "Education",
+    value: "BA, Walter Cronkite School of Journalism, Arizona State University",
+  },
+  {
+    label: "Security certification",
+    value: "Offensive Security Certified Professional (OSCP)",
+  },
+  {
+    label: "Cloud and risk",
+    value: "AWS Certified Cloud Practitioner · Formal CRISC training",
+  },
+  {
+    label: "Leadership development",
+    value: "Harvard and Duke University leadership training programs",
+  },
+] as const;
+
 const additionalProducts = [
   {
     name: "Tiny Book Buddies AI",
@@ -128,29 +212,27 @@ export default function ResumePage() {
 
       <article className="resume-document">
         <header className="resume-header">
-          <p className="resume-eyebrow">Professional profile</p>
+          <p className="resume-eyebrow">Professional resume</p>
           <h1 className="resume-name">Stephen M Abbott</h1>
-          <p className="resume-role">Applied AI &amp; cybersecurity product builder</p>
+          <p className="resume-role">
+            Cybersecurity leader · Applied AI &amp; product builder
+          </p>
           <p className="resume-introduction">
-            A hands-on builder who turns complex technical problems into
-            inspectable, useful products. Public work spans governed agent
-            systems, open security intelligence, software supply-chain tooling,
-            local-first AI applications, and production-ready automation.
+            Cybersecurity and engineering leader with 16 years building and
+            scaling security programs in highly regulated enterprise
+            environments. Combines executive risk governance, exposure
+            management, application and supply-chain security, sensitive-data
+            protection, governed AI-assisted remediation, and hands-on product
+            engineering.
           </p>
 
           <dl className="resume-profile-summary">
-            <div className="resume-profile-summary-item">
-              <dt className="resume-profile-summary-label">Orientation</dt>
-              <dd className="resume-profile-summary-value">Hands-on and product-led</dd>
-            </div>
-            <div className="resume-profile-summary-item">
-              <dt className="resume-profile-summary-label">Primary lens</dt>
-              <dd className="resume-profile-summary-value">AI systems with human control</dd>
-            </div>
-            <div className="resume-profile-summary-item">
-              <dt className="resume-profile-summary-label">Public work</dt>
-              <dd className="resume-profile-summary-value">Open, inspectable, and shipped</dd>
-            </div>
+            {careerMetrics.map((metric) => (
+              <div className="resume-profile-summary-item" key={metric.label}>
+                <dt className="resume-profile-summary-label">{metric.label}</dt>
+                <dd className="resume-profile-summary-value">{metric.value}</dd>
+              </div>
+            ))}
           </dl>
         </header>
 
@@ -163,25 +245,56 @@ export default function ResumePage() {
           </div>
           <div className="resume-section-content">
             <p className="resume-profile-copy">
-              Stephen builds at the intersection of applied AI, cybersecurity,
-              and product engineering. His public portfolio favors systems that
-              make powerful capabilities understandable and reviewable: agents
-              receive scoped context, security work requires proof, and users
-              retain control over consequential actions.
+              Stephen&apos;s career progresses from resilient transaction systems
+              through detection engineering, application security, security
+              data platforms, and enterprise risk leadership. He combines
+              hands-on technical depth with experience scaling teams, advising
+              executives, and turning complex security signals into decisions
+              that leaders and engineers can act on.
             </p>
             <p className="resume-profile-copy">
-              The work ranges from security knowledge infrastructure and
-              dependency research to agent workspaces, communication tools, and
-              focused end-user products. Across those projects, the consistent
-              pattern is practical experimentation followed by disciplined,
-              usable delivery.
+              His public work extends that operating model into governed agent
+              systems, open security intelligence, software supply-chain
+              research, and polished end-user products. The consistent pattern
+              is powerful capability bounded by evidence, human review, clear
+              ownership, and useful delivery.
             </p>
+          </div>
+        </section>
+
+        <section
+          className="resume-section resume-career-section"
+          aria-labelledby="resume-career-heading"
+        >
+          <div className="resume-section-heading">
+            <p className="resume-section-index">02</p>
+            <h2 id="resume-career-heading" className="resume-section-title">
+              Professional experience
+            </h2>
+          </div>
+          <div className="resume-career-list">
+            {careerExperience.map((role) => (
+              <article className="resume-career-role" key={`${role.dates}-${role.title}`}>
+                <header className="resume-career-role-header">
+                  <div>
+                    <h3 className="resume-career-title">{role.title}</h3>
+                    <p className="resume-career-scope">{role.scope}</p>
+                  </div>
+                  <p className="resume-career-dates">{role.dates}</p>
+                </header>
+                <ul className="resume-career-highlights">
+                  {role.highlights.map((highlight) => (
+                    <li key={highlight}>{highlight}</li>
+                  ))}
+                </ul>
+              </article>
+            ))}
           </div>
         </section>
 
         <section className="resume-section" aria-labelledby="resume-focus-heading">
           <div className="resume-section-heading">
-            <p className="resume-section-index">02</p>
+            <p className="resume-section-index">03</p>
             <h2 id="resume-focus-heading" className="resume-section-title">
               Focus areas
             </h2>
@@ -198,7 +311,7 @@ export default function ResumePage() {
 
         <section className="resume-section" aria-labelledby="resume-work-heading">
           <div className="resume-section-heading">
-            <p className="resume-section-index">03</p>
+            <p className="resume-section-index">04</p>
             <h2 id="resume-work-heading" className="resume-section-title">
               Representative work
             </h2>
@@ -248,7 +361,7 @@ export default function ResumePage() {
 
         <section className="resume-section" aria-labelledby="resume-technical-heading">
           <div className="resume-section-heading">
-            <p className="resume-section-index">04</p>
+            <p className="resume-section-index">05</p>
             <h2 id="resume-technical-heading" className="resume-section-title">
               Technical breadth
             </h2>
@@ -263,9 +376,26 @@ export default function ResumePage() {
           </dl>
         </section>
 
+        <section className="resume-section" aria-labelledby="resume-credentials-heading">
+          <div className="resume-section-heading">
+            <p className="resume-section-index">06</p>
+            <h2 id="resume-credentials-heading" className="resume-section-title">
+              Credentials
+            </h2>
+          </div>
+          <dl className="resume-technical-list">
+            {credentials.map((credential) => (
+              <div className="resume-technical-item" key={credential.label}>
+                <dt className="resume-technical-label">{credential.label}</dt>
+                <dd className="resume-technical-value">{credential.value}</dd>
+              </div>
+            ))}
+          </dl>
+        </section>
+
         <section className="resume-section" aria-labelledby="resume-products-heading">
           <div className="resume-section-heading">
-            <p className="resume-section-index">05</p>
+            <p className="resume-section-index">07</p>
             <h2 id="resume-products-heading" className="resume-section-title">
               Additional shipped products
             </h2>
@@ -291,7 +421,7 @@ export default function ResumePage() {
 
         <footer className="resume-footer">
           <p className="resume-availability">
-            Full career résumé available on request
+            Employer names intentionally omitted · Additional detail available on request
           </p>
           <a
             className="resume-github-link"

@@ -29,14 +29,25 @@ test("portfolio contains the finished content and social metadata", async () => 
   assert.doesNotMatch(html, /Your site is taking shape|codex-preview/i);
 });
 
-test("professional profile is honest and print-ready", async () => {
+test("professional resume is detailed, private, and print-ready", async () => {
   const html = await exportedPage("resume/index.html");
 
-  assert.match(html, /Professional profile/);
+  assert.match(html, /Professional resume/);
   assert.match(html, /Stephen M Abbott/);
-  assert.match(html, /Full career r(?:é|&eacute;|&#xE9;)sum(?:é|&eacute;|&#xE9;) available on request/i);
+  assert.match(html, /Professional experience/);
+  assert.match(html, /16 years/);
+  assert.match(html, /92%/);
+  assert.match(html, /75%/);
+  assert.match(html, /99\.99%/);
+  assert.match(html, /2024-2026/);
+  assert.match(html, /2021-2024/);
+  assert.match(html, /2019-2021/);
+  assert.match(html, /2014-2019/);
+  assert.match(html, /2010-2014/);
+  assert.match(html, /Employer names intentionally omitted/);
   assert.match(html, /Print \/ save as PDF/);
-  assert.doesNotMatch(html, /Chief Information Security Officer|CISO|university|certification/i);
+  assert.doesNotMatch(html, /American Express/i);
+  assert.doesNotMatch(html, /Full career r(?:é|&eacute;|&#xE9;)sum(?:é|&eacute;|&#xE9;) available on request/i);
 });
 
 test("custom domain is configured", async () => {

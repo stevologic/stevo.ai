@@ -408,13 +408,14 @@ export function PortfolioExperience({
               <div className="profile-frame">
                 <Image
                   src="/stephen-abbott-profile.png"
-                  alt="Stephen M Abbott"
+                  alt="Portrait of Stephen M Abbott"
                   width={311}
                   height={296}
+                  sizes="(max-width: 760px) calc(100vw - 72px), (max-width: 1050px) 45vw, 420px"
                   priority
                 />
               </div>
-              <div>
+              <div className="identity-details">
                 <strong>Stephen M Abbott</strong>
                 <span>Hands-on AI & security builder</span>
                 <a
