@@ -80,6 +80,21 @@ test("command palette and navigation hotkeys are removed", async () => {
   );
 });
 
+test("desktop project grid uses four compact cards per row", async () => {
+  const styles = await readFile(
+    new URL("../app/globals.css", import.meta.url),
+    "utf8",
+  );
+
+  assert.match(styles, /@media \(min-width: 1280px\)/);
+  assert.match(
+    styles,
+    /grid-template-columns: repeat\(4, minmax\(0, 1fr\)\)/,
+  );
+  assert.match(styles, /grid-column: span 1/);
+  assert.match(styles, /min-height: 560px/);
+});
+
 test("professional resume is detailed, private, and print-ready", async () => {
   const html = await exportedPage("resume/index.html");
 
