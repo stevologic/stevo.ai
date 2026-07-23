@@ -8,12 +8,19 @@ async function exportedPage(path) {
   return readFile(new URL(`../out/${path}`, import.meta.url), "utf8");
 }
 
-test("exports the portfolio and professional profile", async () => {
+test("exports the site, install icons, and social assets", async () => {
   await Promise.all([
     access(new URL("../out/index.html", import.meta.url)),
     access(new URL("../out/resume/index.html", import.meta.url)),
     access(new URL("../out/CNAME", import.meta.url)),
     access(new URL("../out/og.png", import.meta.url)),
+    access(new URL("../out/favicon.ico", import.meta.url)),
+    access(new URL("../out/favicon-16x16.png", import.meta.url)),
+    access(new URL("../out/favicon-32x32.png", import.meta.url)),
+    access(new URL("../out/apple-touch-icon.png", import.meta.url)),
+    access(new URL("../out/icon-192.png", import.meta.url)),
+    access(new URL("../out/icon-512.png", import.meta.url)),
+    access(new URL("../out/site.webmanifest", import.meta.url)),
   ]);
 });
 
@@ -26,7 +33,51 @@ test("portfolio contains the finished content and social metadata", async () => 
   assert.match(html, /security-recipes\.ai/);
   assert.match(html, /Services/);
   assert.match(html, /https:\/\/stevo\.ai\/og\.png/);
+  assert.match(html, /summary_large_image/);
+  assert.match(html, /twitter:image/);
+  assert.match(html, /twitter:image:alt/);
+  assert.match(html, /og:image:width/);
+  assert.match(html, /Explore shipped AI products/);
+  assert.match(html, /rel="apple-touch-icon"/);
+  assert.match(html, /href="\/apple-touch-icon\.png"/);
+  assert.match(html, /rel="manifest"/);
+  assert.match(html, /href="\/site\.webmanifest"/);
+  assert.match(html, /apple-mobile-web-app-capable/);
   assert.doesNotMatch(html, /Your site is taking shape|codex-preview/i);
+  assert.doesNotMatch(html, />Navigate<|⌘ K|Site navigator/i);
+});
+
+test("site manifest uses installable Stevo.AI icons", async () => {
+  const manifest = JSON.parse(
+    await readFile(new URL("../out/site.webmanifest", import.meta.url), "utf8"),
+  );
+
+  assert.equal(manifest.short_name, "Stevo.AI");
+  assert.equal(manifest.display, "standalone");
+  assert.equal(manifest.theme_color, "#0a0f0d");
+  assert.deepEqual(
+    manifest.icons.map(({ src, sizes, purpose }) => ({ src, sizes, purpose })),
+    [
+      { src: "/icon-192.png", sizes: "192x192", purpose: "any" },
+      { src: "/icon-512.png", sizes: "512x512", purpose: "any maskable" },
+    ],
+  );
+});
+
+test("command palette and navigation hotkeys are removed", async () => {
+  const [component, styles] = await Promise.all([
+    readFile(new URL("../components/PortfolioExperience.tsx", import.meta.url), "utf8"),
+    readFile(new URL("../app/globals.css", import.meta.url), "utf8"),
+  ]);
+
+  assert.doesNotMatch(
+    component,
+    /paletteOpen|paletteQuery|command-button|metaKey|ctrlKey|Site navigator|⌘ K/,
+  );
+  assert.doesNotMatch(
+    styles,
+    /command-button|command-overlay|command-dialog|command-search|command-results/,
+  );
 });
 
 test("professional resume is detailed, private, and print-ready", async () => {

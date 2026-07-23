@@ -18,13 +18,6 @@ const filters: Array<"All work" | ProjectCategory> = [
   "Product lab",
 ];
 
-interface PaletteItem {
-  label: string;
-  href: string;
-  kind: string;
-  external?: boolean;
-}
-
 const serviceTracks = [
   {
     id: "govern",
@@ -202,11 +195,8 @@ export function PortfolioExperience({
   const [activeService, setActiveService] = useState<
     (typeof serviceTracks)[number]["id"]
   >(serviceTracks[0].id);
-  const [paletteOpen, setPaletteOpen] = useState(false);
-  const [paletteQuery, setPaletteQuery] = useState("");
   const [mobileOpen, setMobileOpen] = useState(false);
   const rootRef = useRef<HTMLDivElement>(null);
-  const searchRef = useRef<HTMLInputElement>(null);
 
   const visibleProjects =
     activeFilter === "All work"
@@ -217,43 +207,9 @@ export function PortfolioExperience({
     serviceTracks.find((service) => service.id === activeService) ||
     serviceTracks[0];
 
-  const paletteItems: PaletteItem[] = [
-    { label: "Selected work", href: "#work", kind: "Navigate" },
-    { label: "Services", href: "#services", kind: "Navigate" },
-    { label: "Profile", href: "#profile", kind: "Navigate" },
-    { label: "Professional profile", href: "/resume/", kind: "Navigate" },
-    ...projects.map((project) => ({
-      label: project.name,
-      href: project.siteUrl,
-      kind: project.category,
-      external: true,
-    })),
-  ];
-
-  const matchingPaletteItems = paletteItems.filter((item) =>
-    `${item.label} ${item.kind}`
-      .toLowerCase()
-      .includes(paletteQuery.trim().toLowerCase()),
-  );
-
   useEffect(() => {
     const onKeyDown = (event: KeyboardEvent) => {
-      const target = event.target as HTMLElement | null;
-      const isTyping =
-        target?.tagName === "INPUT" ||
-        target?.tagName === "TEXTAREA" ||
-        target?.isContentEditable;
-
-      if ((event.metaKey || event.ctrlKey) && event.key.toLowerCase() === "k") {
-        event.preventDefault();
-        setPaletteQuery("");
-        setPaletteOpen((open) => !open);
-      } else if (event.key === "/" && !isTyping) {
-        event.preventDefault();
-        setPaletteOpen(true);
-      } else if (event.key === "Escape") {
-        setPaletteOpen(false);
-        setPaletteQuery("");
+      if (event.key === "Escape") {
         setMobileOpen(false);
       }
     };
@@ -261,12 +217,6 @@ export function PortfolioExperience({
     window.addEventListener("keydown", onKeyDown);
     return () => window.removeEventListener("keydown", onKeyDown);
   }, []);
-
-  useEffect(() => {
-    if (paletteOpen) {
-      searchRef.current?.focus();
-    }
-  }, [paletteOpen]);
 
   useEffect(() => {
     const reveal = new IntersectionObserver(
@@ -341,18 +291,6 @@ export function PortfolioExperience({
           </Link>
         </nav>
         <div className="header-actions">
-          <button
-            className="command-button"
-            type="button"
-            onClick={() => {
-              setPaletteQuery("");
-              setPaletteOpen(true);
-            }}
-            aria-label="Open site navigator"
-          >
-            <span>Navigate</span>
-            <kbd>⌘ K</kbd>
-          </button>
           <button
             className="menu-button"
             type="button"
@@ -644,62 +582,6 @@ export function PortfolioExperience({
         <p>AI systems · Cybersecurity · Product engineering</p>
         <span>© {new Date().getFullYear()} stevo.ai</span>
       </footer>
-
-      {paletteOpen && (
-        <div
-          className="command-overlay"
-          role="presentation"
-          onMouseDown={(event) => {
-            if (event.currentTarget === event.target) {
-              setPaletteOpen(false);
-              setPaletteQuery("");
-            }
-          }}
-        >
-          <section
-            className="command-dialog"
-            role="dialog"
-            aria-modal="true"
-            aria-label="Site navigator"
-          >
-            <div className="command-search">
-              <span aria-hidden="true">⌘</span>
-              <input
-                ref={searchRef}
-                value={paletteQuery}
-                onChange={(event) => setPaletteQuery(event.target.value)}
-                placeholder="Navigate or find a project…"
-                aria-label="Search navigation"
-              />
-              <kbd>ESC</kbd>
-            </div>
-            <div className="command-results">
-              {matchingPaletteItems.slice(0, 8).map((item) => (
-                <a
-                  key={`${item.kind}-${item.label}`}
-                  href={item.href}
-                  target={item.external ? "_blank" : undefined}
-                  rel={item.external ? "noreferrer" : undefined}
-                  onClick={() => {
-                    setPaletteOpen(false);
-                    setPaletteQuery("");
-                  }}
-                >
-                  <span>
-                    <small>{item.kind}</small>
-                    {item.label}
-                  </span>
-                  <Arrow />
-                </a>
-              ))}
-              {matchingPaletteItems.length === 0 && (
-                <p className="command-empty">No matching destination.</p>
-              )}
-            </div>
-            <p className="command-hint">Tip: press / anywhere to open this navigator.</p>
-          </section>
-        </div>
-      )}
     </div>
   );
 }
