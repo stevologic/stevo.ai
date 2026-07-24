@@ -478,15 +478,16 @@ test("professional resume is detailed, private, and print-ready", async () => {
   assert.doesNotMatch(html, /American Express/i);
   assert.doesNotMatch(html, /Full career r(?:é|&eacute;|&#xE9;)sum(?:é|&eacute;|&#xE9;) available on request/i);
 
-  // Contact is email only. Scope to the printed document: the site-wide JSON-LD
-  // in the page head legitimately carries the social profiles on every page.
-  const document = html.match(
-    /<article class="resume-document">[\s\S]*?<\/article>/,
+  // Contact is email only. Assert on the contact list itself: the site-wide
+  // JSON-LD in the page head legitimately carries the social profiles, and the
+  // resume document cannot be matched with a lazy regex because career roles
+  // are nested <article> elements that terminate it early.
+  const contact = html.match(
+    /<ul class="resume-contact"[^>]*>[\s\S]*?<\/ul>/,
   )?.[0];
-  assert.ok(document, "resume document markup not found");
-  assert.match(document, /class="resume-contact"/);
-  assert.equal((document.match(/<li>/g) || []).length > 0, true);
-  assert.doesNotMatch(document, /MadeItHappen|twitch\.tv|discord\.com|x\.com/i);
+  assert.ok(contact, "resume contact list not found");
+  assert.doesNotMatch(contact, /MadeItHappen|twitch\.tv|discord\.com|x\.com/i);
+  assert.equal((contact.match(/<li>/g) || []).length, 1, "email only");
 
   // Sections are unnumbered.
   assert.doesNotMatch(html, /resume-section-index/);
