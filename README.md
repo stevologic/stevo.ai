@@ -60,6 +60,14 @@ always overrides it, so promote a discovered project by curating it. Settings
 (owner, exclusions, site-URL and name overrides, category keywords) live in
 `content/discovery.json`; run `npm run discover` to preview locally.
 
+Project cards show each site's own icon on the colour that site declares — the
+same signals iOS uses for a home-screen bookmark. `npm run icons:projects`
+resolves them in the daily deploy: apple-touch-icon first, then the web
+manifest, then `<link rel="icon">`, then `/favicon.ico`, with `theme-color` (or
+the manifest's background) as the card colour. Icons land in
+`public/project-icons/`; a project whose site declares none keeps the lettered
+monogram, and the workflow logs which.
+
 Editorial project copy and display order live in `content/projects.json`.
 `scripts/sync-github.mjs` merges current public repository metadata into
 `data/github.generated.json`; raw GitHub descriptions never replace the curated

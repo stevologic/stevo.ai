@@ -82,7 +82,7 @@ test("professional services precede delivery proof and portfolio", async () => {
   assert.ok(workIndex > servicesIndex);
   assert.ok(profileIndex > workIndex);
   assert.match(html, /01 \/ Professional services/);
-  assert.match(html, /02 \/ Proof of delivery/);
+  assert.match(html, /02 \/ Portfolio/);
   assert.match(html, /03 \/ Profile/);
   assert.match(html, /Fractional leadership/);
   assert.match(html, /Advisory intensive/);
@@ -649,6 +649,52 @@ test("the deploy workflow runs discovery daily, before the metadata sync", async
     discoverAt < syncAt,
     "discovery must run before the sync so new repos are enriched in the same build",
   );
+});
+
+test("project cards carry each site's own icon and theme colour", async () => {
+  const [html, snapshotText] = await Promise.all([
+    exportedPage("index.html"),
+    readFile(
+      new URL("../data/project-icons.generated.json", import.meta.url),
+      "utf8",
+    ),
+  ]);
+  const snapshot = JSON.parse(snapshotText);
+  const icons = Object.entries(snapshot.icons || {});
+
+  assert.ok(icons.length > 0, "no project icons were collected");
+
+  const projects = await publishedProjects();
+  assert.equal(
+    icons.length,
+    projects.length,
+    "every project should resolve a site icon",
+  );
+
+  for (const [repo, icon] of icons) {
+    assert.match(icon.src, /^\/project-icons\//, `${repo} icon path`);
+    // The file must actually ship, or the card renders a broken image.
+    await access(new URL(`../out${icon.src}`, import.meta.url));
+    if (icon.background) {
+      assert.match(
+        icon.background,
+        /^#[0-9a-f]{3,8}$|^rgba?\(/i,
+        `${repo} background colour`,
+      );
+    }
+  }
+
+  // Cards render the icon rather than the old sequence number.
+  assert.equal(
+    (html.match(/class="project-favicon"/g) || []).length,
+    projects.length,
+  );
+  assert.doesNotMatch(html, /class="project-index"/);
+
+  // At least one card should paint the project's declared colour.
+  assert.match(html, /class="project-visual project-visual-branded"/);
+  const backgrounds = icons.filter(([, icon]) => icon.background).length;
+  assert.ok(backgrounds > 0, "no project declared a theme colour");
 });
 
 test("custom domain is configured", async () => {

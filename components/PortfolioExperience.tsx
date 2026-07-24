@@ -105,16 +105,40 @@ const ProjectCard = memo(function ProjectCard({
         </span>
       </div>
 
-      <div className="project-visual" aria-hidden="true">
+      {/* The project's own home-screen presentation: its icon on the theme
+          colour its site declares, the way iOS renders an added bookmark. */}
+      <div
+        className={`project-visual ${project.icon ? "project-visual-branded" : ""}`}
+        aria-hidden="true"
+        style={
+          project.icon?.background
+            ? { background: project.icon.background }
+            : undefined
+        }
+      >
         <div className="project-visual-grid" />
-        <span className="project-index">{String(index + 1).padStart(2, "0")}</span>
-        <span className="project-monogram">
-          {project.name
-            .split(/\s+/)
-            .slice(0, 2)
-            .map((word) => word[0])
-            .join("")}
-        </span>
+        {project.icon ? (
+          <span className="project-favicon">
+            {/* eslint-disable-next-line @next/next/no-img-element --
+                these are fixed 46px marks fetched from each project's own site,
+                and the export runs with images.unoptimized, so next/image would
+                add markup without optimising anything. */}
+            <img src={project.icon.src} alt="" loading="lazy" decoding="async" />
+          </span>
+        ) : (
+          <span className="project-index">
+            {String(index + 1).padStart(2, "0")}
+          </span>
+        )}
+        {!project.icon && (
+          <span className="project-monogram">
+            {project.name
+              .split(/\s+/)
+              .slice(0, 2)
+              .map((word) => word[0])
+              .join("")}
+          </span>
+        )}
         <span className="project-signal">{latestSignal}</span>
       </div>
 
@@ -271,7 +295,7 @@ export function PortfolioExperience({
             Services
           </a>
           <a href="#work" onClick={() => setMobileOpen(false)}>
-            Proof
+            Portfolio
           </a>
           <a href="#profile" onClick={() => setMobileOpen(false)}>
             Profile
@@ -353,7 +377,7 @@ export function PortfolioExperience({
               </div>
               <div className="identity-details">
                 <strong>Stephen M Abbott</strong>
-                <span>Stevo.AI · Security & AI advisor</span>
+                <span>Security &amp; AI advisor</span>
                 <Link href="/resume/">Professional profile <Arrow /></Link>
               </div>
             </div>
@@ -531,7 +555,7 @@ export function PortfolioExperience({
 
         <section className="work-section section" id="work">
           <div className="section-heading" data-reveal>
-            <p className="section-number">02 / Proof of delivery</p>
+            <p className="section-number">02 / Portfolio</p>
             <h2>Independent products. Verifiable capability.</h2>
             <p>
               Products and open-source systems built by Stephen M

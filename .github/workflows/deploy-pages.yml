@@ -63,6 +63,10 @@ jobs:
           GITHUB_TRAFFIC_TOKEN: ${{ secrets.PROJECT_TRAFFIC_TOKEN }}
         run: node scripts/sync-github.mjs
 
+      # Collects each project site's own icon and theme colour for the cards.
+      - name: Refresh project site icons
+        run: node scripts/fetch-project-icons.mjs
+
       - name: Build static site
         run: npm run build
 
