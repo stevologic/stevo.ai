@@ -6,7 +6,7 @@ product engineering, shipped work, and focused advisory services.
 ## What is included
 
 - An interactive, responsive portfolio with keyboard navigation and project filters
-- Eight curated live products enriched with current GitHub activity and releases
+- Curated live products enriched with current GitHub activity, releases, and traffic
 - AI, security, product, and technical advisory service offerings
 - A semantic professional profile at `/resume/` that prints to exactly two pages
 - Social, search, sitemap, custom-domain, and reduced-motion support
