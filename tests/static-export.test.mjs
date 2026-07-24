@@ -98,11 +98,15 @@ test("credentials are named rather than counted", async () => {
   for (const credential of [
     "OSCP",
     "AWS Certified Cloud Practitioner",
-    "Formal CRISC training",
     "Harvard &amp; Duke leadership programs",
+    "BA, ASU - Walter Cronkite School of Journalism",
   ]) {
     assert.ok(strip.includes(credential), `credential strip omits ${credential}`);
   }
+
+  // CRISC is training, not a certification, so it stays off the headline strip
+  // and is disclosed in full on the resume instead.
+  assert.doesNotMatch(strip, /CRISC/);
 
   // Completed training must never be presented as a held certification.
   assert.doesNotMatch(html, /CRISC certified|Certified in Risk and Information/i);
