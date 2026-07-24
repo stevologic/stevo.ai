@@ -47,6 +47,17 @@ test("portfolio contains the finished content and social metadata", async () => 
   assert.doesNotMatch(html, />Navigate<|⌘ K|Site navigator/i);
 });
 
+test("hero career strip summarizes professional experience", async () => {
+  const html = await exportedPage("index.html");
+
+  assert.match(html, /Career highlights/);
+  assert.match(html, />16<\/strong><span>Years of IT experience/);
+  assert.match(html, />11<\/strong><span>Years of cybersecurity experience/);
+  assert.match(html, />8<\/strong><span>Live products/);
+  assert.match(html, />3<\/strong><span>Professional certifications/);
+  assert.doesNotMatch(html, /CVE records indexed|Package ecosystems/);
+});
+
 test("site manifest uses installable Stevo.AI icons", async () => {
   const manifest = JSON.parse(
     await readFile(new URL("../out/site.webmanifest", import.meta.url), "utf8"),

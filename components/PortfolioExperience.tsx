@@ -461,22 +461,22 @@ export function PortfolioExperience({
           </aside>
         </section>
 
-        <section className="signal-strip" aria-label="Portfolio highlights">
+        <section className="signal-strip" aria-label="Career highlights">
           <div>
-            <strong>08</strong>
+            <strong>16</strong>
+            <span>Years of IT experience</span>
+          </div>
+          <div>
+            <strong>11</strong>
+            <span>Years of cybersecurity experience</span>
+          </div>
+          <div>
+            <strong>8</strong>
             <span>Live products</span>
           </div>
           <div>
-            <strong>266K+</strong>
-            <span>CVE records indexed</span>
-          </div>
-          <div>
-            <strong>08</strong>
-            <span>Package ecosystems</span>
-          </div>
-          <div>
-            <strong>2013</strong>
-            <span>Building in public since</span>
+            <strong>3</strong>
+            <span>Professional certifications</span>
           </div>
         </section>
 
