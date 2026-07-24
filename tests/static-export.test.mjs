@@ -49,13 +49,17 @@ test("portfolio contains the finished content and social metadata", async () => 
 
 test("hero career strip summarizes professional experience", async () => {
   const html = await exportedPage("index.html");
+  const careerStrip = html.match(
+    /<section class="signal-strip"[^>]*>[\s\S]*?<\/section>/,
+  )?.[0];
 
-  assert.match(html, /Career highlights/);
-  assert.match(html, />16<\/strong><span>Years of IT experience/);
-  assert.match(html, />11<\/strong><span>Years of cybersecurity experience/);
-  assert.match(html, />8<\/strong><span>Live products/);
-  assert.match(html, />3<\/strong><span>Professional certifications/);
-  assert.doesNotMatch(html, /CVE records indexed|Package ecosystems/);
+  assert.ok(careerStrip);
+  assert.match(careerStrip, /Career highlights/);
+  assert.match(careerStrip, />16<\/strong><span>Years of IT experience/);
+  assert.match(careerStrip, />11<\/strong><span>Years of cybersecurity experience/);
+  assert.match(careerStrip, />8<\/strong><span>Live products/);
+  assert.match(careerStrip, />3<\/strong><span>Professional certifications/);
+  assert.doesNotMatch(careerStrip, /CVE records indexed|Package ecosystems/);
 });
 
 test("site manifest uses installable Stevo.AI icons", async () => {
