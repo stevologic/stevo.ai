@@ -462,7 +462,8 @@ test("professional resume is detailed, private, and print-ready", async () => {
 
   assert.match(html, /Professional resume/);
   assert.match(html, /Stephen M Abbott/);
-  assert.match(html, /Stevo\.AI · Cybersecurity/);
+  // The role line stands alone; the resume is the person, not the company.
+  assert.match(html, /class="resume-role">Cybersecurity &amp; AI enablement</);
   assert.match(html, /Professional experience/);
   assert.match(html, /16 years/);
   assert.match(html, /11 years/);

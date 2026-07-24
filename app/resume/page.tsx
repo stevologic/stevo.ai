@@ -230,9 +230,7 @@ export default function ResumePage() {
         <header className="resume-header">
           <p className="resume-eyebrow">Professional resume</p>
           <h1 className="resume-name">Stephen M Abbott</h1>
-          <p className="resume-role">
-            Stevo.AI · Cybersecurity &amp; AI enablement
-          </p>
+          <p className="resume-role">Cybersecurity &amp; AI enablement</p>
           <p className="resume-introduction">
             Cybersecurity and engineering leader with 16 years building and
             scaling security programs in highly regulated enterprise
