@@ -16,6 +16,8 @@ const defaultOwner = process.env.GITHUB_OWNER?.trim() || "stevologic";
 const apiVersion = "2022-11-28";
 const apiBaseUrl = "https://api.github.com";
 const token = process.env.GITHUB_TOKEN || process.env.GH_TOKEN || "";
+const trafficToken = process.env.GITHUB_TRAFFIC_TOKEN?.trim() || "";
+const trafficWindowDays = 14;
 const isCi = process.env.CI === "true" || process.env.GITHUB_ACTIONS === "true";
 const strict = isCi || process.env.GITHUB_SYNC_STRICT === "1";
 const offline = process.env.GITHUB_SYNC_OFFLINE === "1";
@@ -135,7 +137,8 @@ function collectRepositories(projects) {
 function snapshotCovers(snapshot, repositories) {
   if (
     !snapshot ||
-    snapshot.schemaVersion !== 1 ||
+    typeof snapshot.schemaVersion !== "number" ||
+    snapshot.schemaVersion < 1 ||
     !Array.isArray(snapshot.repositories)
   ) {
     return false;
@@ -175,14 +178,14 @@ function wait(milliseconds) {
   return new Promise((resolve) => setTimeout(resolve, milliseconds));
 }
 
-async function githubRequest(endpoint) {
+async function githubRequest(endpoint, { authToken = token } = {}) {
   const headers = {
     Accept: "application/vnd.github+json",
     "User-Agent": "stevo.ai-project-sync",
     "X-GitHub-Api-Version": apiVersion,
   };
 
-  if (token) headers.Authorization = `Bearer ${token}`;
+  if (authToken) headers.Authorization = `Bearer ${authToken}`;
 
   let lastError;
   for (let attempt = 0; attempt < 3; attempt += 1) {
@@ -248,15 +251,71 @@ function cleanRelease(release) {
   };
 }
 
-async function fetchRepository({ fullName, projectKeys }) {
+function cleanTrafficAggregate(payload, label) {
+  const count = Number(payload?.count);
+  const uniques = Number(payload?.uniques);
+
+  if (!Number.isFinite(count) || !Number.isFinite(uniques)) {
+    throw new Error(`GitHub returned unexpected ${label} traffic data.`);
+  }
+
+  return {
+    count: Math.max(0, Math.trunc(count)),
+    uniques: Math.max(0, Math.trunc(uniques)),
+  };
+}
+
+async function fetchTraffic(encodedName, previousTraffic) {
+  if (!trafficToken) return previousTraffic || null;
+
+  try {
+    const [views, clones] = await Promise.all([
+      githubRequest(`/repos/${encodedName}/traffic/views?per=day`, {
+        authToken: trafficToken,
+      }),
+      githubRequest(`/repos/${encodedName}/traffic/clones?per=day`, {
+        authToken: trafficToken,
+      }),
+    ]);
+
+    return {
+      windowDays: trafficWindowDays,
+      fetchedAt: new Date().toISOString(),
+      views: cleanTrafficAggregate(views, "view"),
+      clones: cleanTrafficAggregate(clones, "clone"),
+    };
+  } catch (error) {
+    const fallback = previousTraffic || null;
+    const fallbackMessage = fallback
+      ? "Keeping the previously captured traffic aggregates."
+      : "Traffic aggregates will be omitted for this repository.";
+    console.warn(
+      `[sync-github] ${error.message} ${fallbackMessage}`,
+    );
+    return fallback;
+  }
+}
+
+function previousRepositoryIndex(snapshot) {
+  if (!snapshot || !Array.isArray(snapshot.repositories)) return new Map();
+
+  return new Map(
+    snapshot.repositories
+      .filter((repository) => typeof repository?.fullName === "string")
+      .map((repository) => [repository.fullName.toLowerCase(), repository]),
+  );
+}
+
+async function fetchRepository({ fullName, projectKeys }, previousRepository) {
   const encodedName = fullName
     .split("/")
     .map((part) => encodeURIComponent(part))
     .join("/");
 
-  const [repository, releasePayload] = await Promise.all([
+  const [repository, releasePayload, traffic] = await Promise.all([
     githubRequest(`/repos/${encodedName}`),
     githubRequest(`/repos/${encodedName}/releases?per_page=100`),
+    fetchTraffic(encodedName, previousRepository?.traffic),
   ]);
 
   if (!repository?.full_name || !Array.isArray(releasePayload)) {
@@ -304,6 +363,7 @@ async function fetchRepository({ fullName, projectKeys }) {
       : null,
     latestRelease: releases[0] || null,
     releases,
+    ...(traffic ? { traffic } : {}),
   };
 }
 
@@ -327,6 +387,13 @@ async function mapWithConcurrency(values, concurrency, mapper) {
 
 async function main() {
   let repositories = [];
+  let previousSnapshot = null;
+
+  try {
+    previousSnapshot = await readJson(snapshotPath);
+  } catch {
+    // A first run can create the snapshot from scratch.
+  }
 
   try {
     const projects = projectListFrom(await readJson(projectsPath));
@@ -348,13 +415,18 @@ async function main() {
   }
 
   try {
+    const previousRepositories = previousRepositoryIndex(previousSnapshot);
     const metadata = await mapWithConcurrency(
       repositories,
       4,
-      fetchRepository,
+      (repository) =>
+        fetchRepository(
+          repository,
+          previousRepositories.get(repository.fullName.toLowerCase()),
+        ),
     );
     const snapshot = {
-      schemaVersion: 1,
+      schemaVersion: 2,
       generatedAt: new Date().toISOString(),
       source: apiBaseUrl,
       apiVersion,

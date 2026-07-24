@@ -3,6 +3,19 @@ import generatedSnapshot from "@/data/github.generated.json";
 
 export type ProjectCategory = "Security" | "AI systems" | "Product lab";
 
+export interface GitHubTraffic {
+  windowDays: number;
+  fetchedAt?: string;
+  views: {
+    count: number;
+    uniques: number;
+  };
+  clones: {
+    count: number;
+    uniques: number;
+  };
+}
+
 export interface PortfolioProject {
   repo: string;
   slug: string;
@@ -26,6 +39,7 @@ export interface PortfolioProject {
     releaseTag?: string;
     releaseUrl?: string;
     topics?: string[];
+    traffic?: GitHubTraffic;
   };
 }
 
@@ -43,6 +57,16 @@ function stringValue(...values: unknown[]) {
 
 function numberValue(...values: unknown[]) {
   return values.find((value): value is number => typeof value === "number");
+}
+
+function trafficAggregate(value: unknown) {
+  const source = record(value);
+  const count = numberValue(source.count);
+  const uniques = numberValue(source.uniques);
+
+  return typeof count === "number" && typeof uniques === "number"
+    ? { count, uniques }
+    : undefined;
 }
 
 function buildRepositoryIndex(snapshot: unknown) {
@@ -74,6 +98,19 @@ export const githubSyncedAt = stringValue(
 export const projects: PortfolioProject[] = curatedProjects.map((project) => {
   const source = record(repositories[project.repo]);
   const release = record(source.latestRelease ?? source.release);
+  const traffic = record(source.traffic);
+  const trafficWindowDays = numberValue(traffic.windowDays);
+  const trafficViews = trafficAggregate(traffic.views);
+  const trafficClones = trafficAggregate(traffic.clones);
+  const trafficData =
+    typeof trafficWindowDays === "number" && trafficViews && trafficClones
+      ? {
+          windowDays: trafficWindowDays,
+          fetchedAt: stringValue(traffic.fetchedAt),
+          views: trafficViews,
+          clones: trafficClones,
+        }
+      : undefined;
   const topics = Array.isArray(source.topics)
     ? source.topics.filter((topic): topic is string => typeof topic === "string")
     : undefined;
@@ -100,6 +137,7 @@ export const projects: PortfolioProject[] = curatedProjects.map((project) => {
         source.latestReleaseUrl,
       ),
       topics,
+      traffic: trafficData,
     },
   };
 });

@@ -92,6 +92,13 @@ function formatDate(value?: string) {
   }).format(date);
 }
 
+function formatCompactNumber(value: number) {
+  return new Intl.NumberFormat("en-US", {
+    notation: "compact",
+    maximumFractionDigits: 1,
+  }).format(value);
+}
+
 function Arrow() {
   return <span aria-hidden="true">↗</span>;
 }
@@ -106,6 +113,7 @@ const ProjectCard = memo(function ProjectCard({
   const latestSignal = project.github.releaseTag
     ? `Release ${project.github.releaseTag}`
     : project.github.language || project.statusLabel;
+  const traffic = project.github.traffic;
 
   function handlePointerMove(event: ReactPointerEvent<HTMLElement>) {
     const bounds = event.currentTarget.getBoundingClientRect();
@@ -164,6 +172,32 @@ const ProjectCard = memo(function ProjectCard({
         <span>{project.github.language || project.tech[0]}</span>
         <span>Updated {formatDate(project.github.pushedAt)}</span>
       </div>
+
+      {traffic && (
+        <dl
+          className="project-traffic"
+          aria-label={`${project.name} GitHub traffic during the last ${traffic.windowDays} days, captured ${formatDate(traffic.fetchedAt)}`}
+        >
+          <div>
+            <dt>GitHub views / {traffic.windowDays}d</dt>
+            <dd>
+              {formatCompactNumber(traffic.views.count)}
+              <small>
+                {formatCompactNumber(traffic.views.uniques)} visitors
+              </small>
+            </dd>
+          </div>
+          <div>
+            <dt>GitHub clones / {traffic.windowDays}d</dt>
+            <dd>
+              {formatCompactNumber(traffic.clones.count)}
+              <small>
+                {formatCompactNumber(traffic.clones.uniques)} cloners
+              </small>
+            </dd>
+          </div>
+        </dl>
+      )}
 
       <div className="project-links">
         <a href={project.siteUrl} target="_blank" rel="noreferrer">

@@ -945,6 +945,55 @@ img {
   text-transform: uppercase;
 }
 
+.project-traffic {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1px;
+  margin: 12px 7px 0;
+  padding: 0;
+  overflow: hidden;
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  background: var(--line);
+}
+
+.project-traffic > div {
+  min-width: 0;
+  padding: 9px 10px;
+  background: rgba(255, 253, 249, 0.92);
+}
+
+.project-traffic dt {
+  overflow: hidden;
+  color: var(--muted);
+  font-family: var(--mono);
+  font-size: 0.5rem;
+  letter-spacing: 0.04em;
+  text-overflow: ellipsis;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
+.project-traffic dd {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 7px;
+  margin: 5px 0 0;
+  font-family: var(--serif);
+  font-size: 1.05rem;
+  line-height: 1;
+}
+
+.project-traffic small {
+  overflow: hidden;
+  color: var(--muted);
+  font-family: var(--mono);
+  font-size: 0.49rem;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
 .project-links {
   display: flex;
   align-items: center;
@@ -1059,6 +1108,27 @@ img {
     margin: auto 4px 0;
     padding-top: 18px;
     font-size: 0.52rem;
+  }
+
+  .project-traffic {
+    margin: 9px 4px 0;
+  }
+
+  .project-traffic > div {
+    padding: 7px;
+  }
+
+  .project-traffic dt {
+    font-size: 0.43rem;
+  }
+
+  .project-traffic dd {
+    gap: 4px;
+    font-size: 0.88rem;
+  }
+
+  .project-traffic small {
+    font-size: 0.42rem;
   }
 
   .project-links {

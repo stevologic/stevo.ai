@@ -13,7 +13,8 @@ GitHub does not start a branch-based Pages deployment when a workflow pushes
 with its built-in `GITHUB_TOKEN`. This workflow therefore uses a dedicated,
 repository-scoped Ed25519 deploy key for the final `gh-pages` push. The key has
 no access to other repositories or account resources. Public project metadata
-is read with the workflow's read-only `GITHUB_TOKEN`.
+is read with the workflow's read-only `GITHUB_TOKEN`; owner-only traffic
+aggregates use the separate, read-only token described below.
 
 1. Generate a dedicated SSH key pair with no passphrase.
 2. In **Settings → Deploy keys**, add the public key with write access.
@@ -78,9 +79,29 @@ top-level array; each project with a GitHub repository uses a `repo` value such
 as `mouseclicker` or `stevologic/mouseclicker`. Full GitHub URLs are also
 accepted. Projects without a repository can omit `repo`.
 
-`scripts/sync-github.mjs` fetches public repository metadata and up to 100
-public releases per listed repository, then replaces
-`data/github.generated.json` only after every request succeeds.
+`scripts/sync-github.mjs` fetches public repository metadata, up to 100 public
+releases, and optional 14-day Traffic Insights aggregates for each listed
+repository. It replaces `data/github.generated.json` only after every required
+metadata request succeeds.
+
+### Traffic Insights token
+
+GitHub restricts repository views and clone analytics to accounts with push
+access. To refresh those values during the daily deployment:
+
+1. Create a fine-grained personal access token owned by `stevologic`.
+2. Grant it access to the portfolio repositories, including future projects
+   that should appear on the site.
+3. Grant only **Administration: read** repository permission.
+4. In **Settings > Secrets and variables > Actions**, add the token as a
+   repository secret named `PROJECT_TRAFFIC_TOKEN`.
+
+The workflow passes that secret only to the data-refresh process. The generated
+site publishes aggregate views, unique visitors, clones, and unique cloners for
+GitHub's rolling 14-day window. It does not publish referrers, popular paths, or
+day-by-day activity. If the secret is absent or a traffic request temporarily
+fails, the sync retains the previously captured aggregates and continues the
+deployment.
 
 In GitHub Actions, synchronization is strict: a missing project file, malformed
 repository identifier, private or unavailable repository, API failure, or
@@ -94,10 +115,11 @@ node scripts/sync-github.mjs
 ```
 
 An API token is optional for public data. Set `GITHUB_TOKEN` or `GH_TOKEN` to
-raise the API rate limit. If GitHub is unavailable locally, the script keeps the
-committed snapshot when it covers every configured repository. To explicitly
-work offline, set `GITHUB_SYNC_OFFLINE=1`. To reproduce CI failure behavior,
-set `GITHUB_SYNC_STRICT=1`.
+raise the API rate limit. Set `GITHUB_TRAFFIC_TOKEN` to refresh the owner-only
+traffic aggregates locally. If GitHub is unavailable locally, the script keeps
+the committed snapshot when it covers every configured repository. To
+explicitly work offline, set `GITHUB_SYNC_OFFLINE=1`. To reproduce CI failure
+behavior, set `GITHUB_SYNC_STRICT=1`.
 
 The workflow runs on every `main` push, by manual dispatch, and daily at 08:17
 UTC (01:17 America/Phoenix). Scheduled builds fetch new repository activity and
@@ -107,6 +129,8 @@ releases without adding generated commits to `main`.
 
 - **`ACTIONS_DEPLOY_KEY is not configured`**: create or replace the repository
   secret with the exact name `ACTIONS_DEPLOY_KEY`.
+- **Traffic values stop changing**: confirm `PROJECT_TRAFFIC_TOKEN` exists, has
+  not expired, covers every listed repository, and grants Administration read.
 - **Push rejected**: confirm the matching public key is installed as a writable
   deploy key and is allowed by branch protection.
 - **Workflow succeeds but the site does not update**: confirm Pages is set to

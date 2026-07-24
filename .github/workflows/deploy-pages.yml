@@ -48,10 +48,11 @@ jobs:
             exit 1
           fi
 
-      - name: Refresh public GitHub project data
+      - name: Refresh GitHub project and traffic data
         env:
           GITHUB_SYNC_STRICT: "1"
           GITHUB_TOKEN: ${{ github.token }}
+          GITHUB_TRAFFIC_TOKEN: ${{ secrets.PROJECT_TRAFFIC_TOKEN }}
         run: node scripts/sync-github.mjs
 
       - name: Build static site

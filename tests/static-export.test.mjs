@@ -95,6 +95,43 @@ test("desktop project grid uses four compact cards per row", async () => {
   assert.match(styles, /min-height: 560px/);
 });
 
+test("every project card includes privacy-conscious GitHub traffic aggregates", async () => {
+  const [html, snapshotText, syncScript, workflow] = await Promise.all([
+    exportedPage("index.html"),
+    readFile(new URL("../data/github.generated.json", import.meta.url), "utf8"),
+    readFile(new URL("../scripts/sync-github.mjs", import.meta.url), "utf8"),
+    readFile(
+      new URL("../.github/workflows/deploy-pages.yml", import.meta.url),
+      "utf8",
+    ),
+  ]);
+  const snapshot = JSON.parse(snapshotText);
+
+  assert.equal(snapshot.schemaVersion, 2);
+  assert.ok(snapshot.repositories.length > 0);
+  for (const repository of snapshot.repositories) {
+    assert.equal(repository.traffic.windowDays, 14);
+    assert.equal(typeof repository.traffic.fetchedAt, "string");
+    assert.equal(typeof repository.traffic.views.count, "number");
+    assert.equal(typeof repository.traffic.views.uniques, "number");
+    assert.equal(typeof repository.traffic.clones.count, "number");
+    assert.equal(typeof repository.traffic.clones.uniques, "number");
+  }
+
+  assert.equal(
+    (html.match(/class="project-traffic"/g) || []).length,
+    snapshot.repositories.length,
+  );
+  assert.match(html, /GitHub views \//);
+  assert.match(html, /GitHub clones \//);
+  assert.match(html, /visitors/);
+  assert.match(html, /cloners/);
+  assert.match(syncScript, /\/traffic\/views\?per=day/);
+  assert.match(syncScript, /\/traffic\/clones\?per=day/);
+  assert.match(workflow, /PROJECT_TRAFFIC_TOKEN/);
+  assert.doesNotMatch(snapshotText, /referrers|popularPaths|daily/i);
+});
+
 test("professional theme follows the formal portrait palette", async () => {
   const styles = await readFile(
     new URL("../app/globals.css", import.meta.url),
