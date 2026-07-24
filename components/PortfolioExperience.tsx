@@ -613,9 +613,9 @@ export function PortfolioExperience({
             <p className="section-number">Profile</p>
             <blockquote>Stephen M Abbott</blockquote>
             <p>
-              Stephen leads Stevo.AI with 16 years of experience across
-              enterprise technology, security engineering, program leadership,
-              and product delivery—including 11 years focused on cybersecurity.
+              Stephen leads with over 16 years of experience across enterprise
+              technology, security engineering, program leadership, and product
+              delivery—including 11 years focused on cybersecurity.
             </p>
             <p>
               His résumé and portfolio show the operating range behind the
