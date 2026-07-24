@@ -203,6 +203,18 @@ test("professional theme follows the formal portrait palette", async () => {
   assert.match(styles, /--accent-deep: #56547b/);
   assert.match(styles, /--accent-cool: #7e93a7/);
   assert.match(styles, /\.hero-orbit\s*{[^}]*opacity: 0\.2/s);
+  assert.match(
+    styles,
+    /\.identity-card\s*{[^}]*background: rgba\(21, 22, 28, 0\.72\)/s,
+  );
+  assert.match(
+    styles,
+    /\.profile-frame\s*{[^}]*width: calc\(100% - 24px\)[^}]*margin: 12px auto 0/s,
+  );
+  assert.doesNotMatch(
+    styles,
+    /\.identity-card\s*{[^}]*background: var\(--paper\)/s,
+  );
   assert.doesNotMatch(styles, /#b8f34b|#ff6b52|#69d8ff/i);
 });
 

@@ -422,18 +422,20 @@ img {
 
 .identity-card {
   overflow: hidden;
-  border: 1px solid rgba(10, 15, 13, 0.1);
+  border: 1px solid rgba(170, 168, 207, 0.2);
   border-radius: 18px;
-  background: var(--paper);
-  color: var(--ink);
+  background: rgba(21, 22, 28, 0.72);
+  color: var(--paper);
 }
 
 .profile-frame {
   position: relative;
-  width: 100%;
+  width: calc(100% - 24px);
   aspect-ratio: 4 / 3;
+  margin: 12px auto 0;
   overflow: hidden;
-  background: #cbc9c0;
+  border-radius: 12px;
+  background: #202129;
 }
 
 .profile-frame::after {
@@ -464,7 +466,7 @@ img {
 
 .identity-details {
   padding: 18px 20px 20px;
-  border-top: 3px solid var(--accent);
+  border-top: 1px solid rgba(170, 168, 207, 0.2);
 }
 
 .identity-card strong,
@@ -482,13 +484,13 @@ img {
 
 .identity-card span {
   margin-top: 4px;
-  color: var(--muted);
+  color: rgba(241, 239, 231, 0.62);
   font-size: 0.78rem;
 }
 
 .identity-card a {
   margin-top: 12px;
-  color: var(--accent-deep);
+  color: var(--accent);
   font-family: var(--mono);
   font-size: 0.69rem;
   font-weight: 700;
