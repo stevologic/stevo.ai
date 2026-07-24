@@ -44,6 +44,13 @@ Editorial project copy and display order live in `content/projects.json`.
 `data/github.generated.json`; raw GitHub descriptions never replace the curated
 portfolio narrative.
 
+Icons are generated, not hand-drawn. `npm run icons` renders the header brand
+mark — an accent circle with an italic serif "S" — at every required size using
+headless Chrome, reading `--ink` and `--accent` straight from the theme. Small
+sizes go full bleed with a proportionally larger glyph, because italic serif
+hairlines disappear into anti-aliasing at 16px. Re-run it after changing either
+colour token.
+
 Contact handles live in `lib/contact.ts` and feed the contact block, the footer,
 the résumé header, and the `sameAs` structured data from one list. The email
 address is stored XOR-masked and decoded in the browser, so it never appears in

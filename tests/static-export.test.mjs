@@ -284,6 +284,39 @@ test("the site never claims a CEO title", async () => {
 
   assert.doesNotMatch(html, /\bCEO\b/);
   assert.doesNotMatch(resumeHtml, /\bCEO\b/);
+
+  // The manifest ships to installed apps, so it needs the same guard.
+  const manifest = await readFile(
+    new URL("../out/site.webmanifest", import.meta.url),
+    "utf8",
+  );
+  assert.doesNotMatch(manifest, /\bCEO\b/);
+});
+
+test("icons are the generated brand mark, not photo-derived art", async () => {
+  const icons = [
+    "favicon.ico",
+    "favicon-16x16.png",
+    "favicon-32x32.png",
+    "apple-touch-icon.png",
+    "icon-192.png",
+    "icon-512.png",
+  ];
+
+  for (const icon of icons) {
+    const bytes = await readFile(new URL(`../out/${icon}`, import.meta.url));
+    // The flat two-colour mark compresses to a few KB. The previous
+    // photo-derived set was 30-210KB, so this catches a regression to it.
+    assert.ok(
+      bytes.length < 20_000,
+      `${icon} is ${(bytes.length / 1024).toFixed(0)}KB - expected the flat brand mark`,
+    );
+  }
+
+  const ico = await readFile(new URL("../out/favicon.ico", import.meta.url));
+  assert.equal(ico.readUInt16LE(0), 0, "favicon.ico reserved field");
+  assert.equal(ico.readUInt16LE(2), 1, "favicon.ico must declare type 1 (icon)");
+  assert.equal(ico.readUInt16LE(4), 3, "favicon.ico should carry 16/32/48px");
 });
 
 test("desktop project grid uses four compact cards per row", async () => {
