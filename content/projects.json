@@ -259,5 +259,30 @@
       "Static-only publishing"
     ],
     "statusLabel": "Live"
+  },
+  {
+    "slug": "desert-wander-supply",
+    "name": "Desert Wander Supply Co.",
+    "category": "Product lab",
+    "featured": false,
+    "tagline": "Southwest outdoor gear for unscripted desert journeys.",
+    "description": "A hosted storefront for desert exploration gear spanning apparel, outdoor accessories, and pet gear, with a merchandised catalog, checkout, and customer email capture.",
+    "siteUrl": "https://desertwandersupplyco.com",
+    "metrics": [
+      "Shopify storefront",
+      "24+ products",
+      "Apparel · Outdoor · Pet"
+    ],
+    "tech": [
+      "Shopify",
+      "Liquid",
+      "Hosted checkout"
+    ],
+    "capabilities": [
+      "Merchandised catalog",
+      "Checkout and fulfilment",
+      "Email capture"
+    ],
+    "statusLabel": "Live"
   }
 ]

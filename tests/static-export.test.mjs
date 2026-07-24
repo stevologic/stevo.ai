@@ -11,11 +11,14 @@ async function publishedProjects() {
     readFile(new URL("data/discovered.generated.json", root), "utf8"),
   ]);
   const curatedProjects = JSON.parse(curated);
+  // Not every project has a repository: hosted storefronts have no source.
   const curatedRepos = new Set(
-    curatedProjects.map((project) => project.repo.toLowerCase()),
+    curatedProjects
+      .map((project) => project.repo?.toLowerCase())
+      .filter(Boolean),
   );
   const extra = (JSON.parse(discovered).projects || []).filter(
-    (project) => !curatedRepos.has(project.repo.toLowerCase()),
+    (project) => !curatedRepos.has(project.repo?.toLowerCase()),
   );
   return [...curatedProjects, ...extra];
 }
@@ -613,7 +616,9 @@ test("project discovery publishes newly public repositories safely", async () =>
 
   // A discovered card must never shadow curated editorial copy.
   const curatedRepos = new Set(
-    curatedProjects.map((project) => project.repo.toLowerCase()),
+    curatedProjects
+      .map((project) => project.repo?.toLowerCase())
+      .filter(Boolean),
   );
   for (const project of snapshot.projects) {
     assert.ok(
@@ -629,9 +634,13 @@ test("project discovery publishes newly public repositories safely", async () =>
     assert.match(
       project.siteUrl,
       /^https?:\/\//,
-      `${project.repo} has no live site URL`,
+      `${project.slug} has no live site URL`,
     );
-    assert.ok(project.name?.trim(), `${project.repo} has no name`);
+    assert.ok(project.name?.trim(), `${project.slug} has no name`);
+    // Source links are optional, but must be real when present.
+    if (project.sourceUrl) {
+      assert.match(project.sourceUrl, /^https:\/\/github\.com\//);
+    }
   }
 });
 
@@ -732,6 +741,40 @@ test("the printed resume breaks between career history and focus areas", async (
     1,
     "exactly one forced page break",
   );
+});
+
+test("projects without a public repository still publish", async () => {
+  const html = await exportedPage("index.html");
+  const projects = await publishedProjects();
+
+  const storefront = projects.find(
+    (project) => project.slug === "desert-wander-supply",
+  );
+  assert.ok(storefront, "Desert Wander Supply Co. is missing");
+  assert.equal(storefront.repo, undefined, "it has no GitHub repository");
+  assert.equal(storefront.sourceUrl, undefined, "it has no public source");
+  assert.match(html, /Desert Wander Supply Co\./);
+  assert.match(html, /https:\/\/desertwandersupplyco\.com/);
+
+  // A card with no source must not render an empty Source link, and a project
+  // with no repository cannot have GitHub traffic.
+  const card = html
+    .match(/<article class="project-card[\s\S]*?<\/article>/g)
+    ?.find((markup) => markup.includes("Desert Wander Supply"));
+  assert.ok(card, "storefront card not found");
+  assert.doesNotMatch(card, /class="project-source"/);
+  assert.doesNotMatch(card, /class="project-traffic"/);
+  assert.match(card, /class="project-favicon"/);
+  // No repository means no last-pushed date, so the meta line must not fall
+  // back to the "Updated Active now" placeholder.
+  assert.doesNotMatch(card, /Updated Active now/i);
+
+  // The sync must not try to fetch a repository that does not exist.
+  const snapshot = JSON.parse(
+    await readFile(new URL("../data/github.generated.json", import.meta.url), "utf8"),
+  );
+  const withRepos = projects.filter((project) => project.repo).length;
+  assert.equal(snapshot.repositories.length, withRepos);
 });
 
 test("custom domain is configured", async () => {

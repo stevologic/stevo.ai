@@ -25,7 +25,8 @@ export interface ProjectIcon {
 }
 
 export interface PortfolioProject {
-  repo: string;
+  /** Absent for projects that have no public repository, e.g. hosted stores. */
+  repo?: string;
   slug: string;
   name: string;
   category: ProjectCategory;
@@ -37,7 +38,8 @@ export interface PortfolioProject {
   tagline: string;
   description: string;
   siteUrl: string;
-  sourceUrl: string;
+  /** Absent when the source is not public. */
+  sourceUrl?: string;
   metrics: string[];
   tech: string[];
   capabilities: string[];
@@ -107,21 +109,36 @@ export const githubSyncedAt = stringValue(
   snapshotRoot.updatedAt,
 );
 
-type SourceProject = (typeof curatedProjects)[number] & {
+interface SourceProject {
+  repo?: string;
+  slug: string;
+  name: string;
+  category: string;
+  featured: boolean;
   discovered?: boolean;
-};
+  tagline: string;
+  description: string;
+  siteUrl: string;
+  sourceUrl?: string;
+  metrics: string[];
+  tech: string[];
+  capabilities: string[];
+  statusLabel: string;
+}
 
 /**
  * Curated cards first, then anything discovery found. A curated entry always
  * wins: adding a repo to content/projects.json replaces its generated copy.
  */
 function sourceProjects(): SourceProject[] {
-  const curated = curatedProjects as SourceProject[];
+  const curated = curatedProjects as unknown as SourceProject[];
   const curatedRepos = new Set(
-    curated.map((project) => project.repo.toLowerCase()),
+    curated
+      .map((project) => project.repo?.toLowerCase())
+      .filter((repo): repo is string => Boolean(repo)),
   );
   const discovered = Array.isArray(discoveredSnapshot?.projects)
-    ? (discoveredSnapshot.projects as SourceProject[]).filter(
+    ? (discoveredSnapshot.projects as unknown as SourceProject[]).filter(
         (project) =>
           project?.repo && !curatedRepos.has(project.repo.toLowerCase()),
       )
@@ -130,15 +147,15 @@ function sourceProjects(): SourceProject[] {
   return [...curated, ...discovered];
 }
 
-function projectIcon(repo: string): ProjectIcon | undefined {
-  const entry = record(record(projectIcons.icons)[repo]);
+function projectIcon(slug: string): ProjectIcon | undefined {
+  const entry = record(record(projectIcons.icons)[slug]);
   const src = stringValue(entry.src);
   if (!src) return undefined;
   return { src, background: stringValue(entry.background) };
 }
 
 export const projects: PortfolioProject[] = sourceProjects().map((project) => {
-  const source = record(repositories[project.repo]);
+  const source = project.repo ? record(repositories[project.repo]) : {};
   const release = record(source.latestRelease ?? source.release);
   const traffic = record(source.traffic);
   const trafficWindowDays = numberValue(traffic.windowDays);
@@ -161,7 +178,7 @@ export const projects: PortfolioProject[] = sourceProjects().map((project) => {
     ...project,
     category: project.category as ProjectCategory,
     discovered: Boolean(project.discovered),
-    icon: projectIcon(project.repo),
+    icon: projectIcon(project.slug),
     github: {
       language: stringValue(source.language, source.primaryLanguage),
       stars: numberValue(source.stars, source.stargazers_count),

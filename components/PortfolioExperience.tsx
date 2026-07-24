@@ -156,7 +156,13 @@ const ProjectCard = memo(function ProjectCard({
 
       <div className="project-meta">
         <span>{project.github.language || project.tech[0]}</span>
-        <span>Updated {formatDate(project.github.pushedAt)}</span>
+        {/* Only projects with a repository have a last-pushed date; without one
+            "Updated Active now" is just the fallback leaking through. */}
+        <span>
+          {project.github.pushedAt
+            ? `Updated ${formatDate(project.github.pushedAt)}`
+            : project.statusLabel}
+        </span>
       </div>
 
       {traffic && (
@@ -189,14 +195,16 @@ const ProjectCard = memo(function ProjectCard({
         <a href={project.siteUrl} target="_blank" rel="noreferrer">
           Visit live product <Arrow />
         </a>
-        <a
-          className="project-source"
-          href={project.sourceUrl}
-          target="_blank"
-          rel="noreferrer"
-        >
-          Source
-        </a>
+        {project.sourceUrl && (
+          <a
+            className="project-source"
+            href={project.sourceUrl}
+            target="_blank"
+            rel="noreferrer"
+          >
+            Source
+          </a>
+        )}
       </div>
     </article>
   );
@@ -585,7 +593,7 @@ export function PortfolioExperience({
 
           <div className="project-grid">
             {visibleProjects.map((project, index) => (
-              <ProjectCard project={project} index={index} key={project.repo} />
+              <ProjectCard project={project} index={index} key={project.slug} />
             ))}
           </div>
         </section>

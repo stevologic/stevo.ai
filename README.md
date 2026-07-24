@@ -68,6 +68,12 @@ the manifest's background) as the card colour. Icons land in
 `public/project-icons/`; a project whose site declares none keeps the lettered
 monogram, and the workflow logs which.
 
+A project does not need a GitHub repository. Omit `repo` and `sourceUrl` for a
+hosted product such as a Shopify storefront: the card drops its Source link and
+GitHub traffic block, and the metadata sync skips it rather than trying to fetch
+a repository that does not exist. Only `slug`, `name`, and `siteUrl` are
+structurally required.
+
 Editorial project copy and display order live in `content/projects.json`.
 `scripts/sync-github.mjs` merges current public repository metadata into
 `data/github.generated.json`; raw GitHub descriptions never replace the curated

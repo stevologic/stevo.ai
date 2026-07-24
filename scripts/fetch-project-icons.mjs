@@ -30,7 +30,7 @@ const iconDirectory = path.join(rootDirectory, "public", "project-icons");
 const isCi = process.env.CI === "true" || process.env.GITHUB_ACTIONS === "true";
 const offline = process.env.GITHUB_SYNC_OFFLINE === "1";
 const timeoutMs = 15_000;
-const maxIconBytes = 250_000;
+const maxIconBytes = 400_000;
 
 async function readJson(filePath) {
   return JSON.parse(await readFile(filePath, "utf8"));
@@ -146,14 +146,27 @@ async function resolvePresentation(siteUrl) {
     ? await readManifest(absolute(attribute(manifestTag, "href"), finalUrl))
     : {};
 
-  const iconUrl =
-    (appleIcons[0] && absolute(attribute(appleIcons[0], "href"), finalUrl)) ||
-    manifest.iconUrl ||
-    (plainIcons[0] && absolute(attribute(plainIcons[0], "href"), finalUrl)) ||
-    absolute("/favicon.ico", finalUrl);
+  // og:image is a last resort: many hosted storefronts declare no icon at all,
+  // but do declare a square logo here.
+  const ogImage = metaTags.find((tag) =>
+    ["og:image", "twitter:image"].includes(
+      attribute(tag, "property").toLowerCase() ||
+        attribute(tag, "name").toLowerCase(),
+    ),
+  );
+
+  // Ordered candidates rather than one guess: a declared icon that 404s must
+  // not cost the project its card.
+  const candidates = [
+    appleIcons[0] && absolute(attribute(appleIcons[0], "href"), finalUrl),
+    manifest.iconUrl,
+    plainIcons[0] && absolute(attribute(plainIcons[0], "href"), finalUrl),
+    absolute("/favicon.ico", finalUrl),
+    ogImage && absolute(attribute(ogImage, "content"), finalUrl),
+  ].filter(Boolean);
 
   return {
-    iconUrl,
+    candidates,
     // iOS paints the icon on the declared theme/background colour.
     background:
       normalizeColor(themeMeta && attribute(themeMeta, "content")) ||
@@ -223,23 +236,40 @@ async function main() {
 
   for (const project of projects) {
     const slug = String(project.slug || project.repo).toLowerCase();
+    const key = slug;
     if (!project.siteUrl) continue;
     try {
       const presentation = await resolvePresentation(project.siteUrl);
-      if (!presentation.iconUrl) throw new Error("no icon was declared");
-      const downloaded = await downloadIcon(presentation.iconUrl, slug);
-      icons[project.repo] = {
+      if (presentation.candidates.length === 0) {
+        throw new Error("no icon was declared");
+      }
+
+      let downloaded;
+      let usedUrl;
+      const reasons = [];
+      for (const candidate of presentation.candidates) {
+        try {
+          downloaded = await downloadIcon(candidate, slug);
+          usedUrl = candidate;
+          break;
+        } catch (error) {
+          reasons.push(`${candidate}: ${error.message}`);
+        }
+      }
+      if (!downloaded) throw new Error(reasons.join("; "));
+
+      icons[key] = {
         src: downloaded.file,
         background: presentation.background,
-        source: presentation.iconUrl,
+        source: usedUrl,
         fetchedAt: new Date().toISOString(),
       };
       console.log(
-        `[project-icons] ${project.repo}: ${downloaded.file} ` +
+        `[project-icons] ${key}: ${downloaded.file} ` +
           `(${(downloaded.bytes / 1024).toFixed(1)}KB, background ${presentation.background || "default"})`,
       );
     } catch (error) {
-      failures.push({ repo: project.repo, reason: error.message });
+      failures.push({ repo: project.name || slug, reason: error.message });
     }
   }
 
