@@ -68,6 +68,19 @@ breakpoints are scoped with `@media screen and (max-width: …)`. Without the
 the résumé to the mobile single-column layout, and silently adds a third page.
 A test enforces this.
 
+Verify the page count against a real PDF, not a screen approximation. Emulating
+print by measuring the DOM in a normal viewport is unreliable: `break-inside`
+pushes and Chrome's widow/orphan handling both add height that a naive
+content-height calculation misses. Print the built export with headless Chrome
+and count the pages:
+
+```sh
+chrome --headless=new --no-pdf-header-footer --print-to-pdf=resume.pdf http://127.0.0.1:PORT/resume/
+```
+
+The layout currently measures ~1650px of content against a 1950px two-page
+budget, so there is roughly one third of a page in reserve for reflow.
+
 ## Publishing
 
 The deployment workflow refreshes project data, builds the static export, and

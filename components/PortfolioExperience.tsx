@@ -391,8 +391,8 @@ export function PortfolioExperience({
             <span>Live products</span>
           </div>
           <div>
-            <strong>26</strong>
-            <span>Largest engineering org led</span>
+            <strong>92%</strong>
+            <span>Sensitive-data reduction</span>
           </div>
         </section>
 
@@ -586,9 +586,10 @@ export function PortfolioExperience({
             </p>
             <p>
               His résumé and portfolio show the operating range behind the
-              consultancy: executive-level judgment, teams of up to 26,
-              measurable risk reduction, and the ability to build the systems
-              being advised—not merely describe them.
+              consultancy: executive and board-level risk judgment, leadership
+              of multi-team engineering organizations, measurable risk
+              reduction at enterprise scale, and the ability to build the
+              systems being advised—not merely describe them.
             </p>
             <div className="profile-actions">
               <Link className="text-link" href="/resume/">

@@ -84,8 +84,15 @@ test("hero career strip summarizes professional experience", async () => {
   assert.match(careerStrip, />16<\/strong><span>Years of IT experience/);
   assert.match(careerStrip, />11<\/strong><span>Years of cybersecurity experience/);
   assert.match(careerStrip, />8<\/strong><span>Live products/);
-  assert.match(careerStrip, />26<\/strong><span>Largest engineering org led/);
+  assert.match(careerStrip, />92%<\/strong><span>Sensitive-data reduction/);
   assert.doesNotMatch(careerStrip, /CVE records indexed|Package ecosystems/);
+});
+
+test("leadership scale is described in executive terms, not a headcount", async () => {
+  const html = await exportedPage("index.html");
+
+  assert.match(html, /leadership\s+of multi-team engineering organizations/);
+  assert.doesNotMatch(html, /teams of up to \d+/i);
 });
 
 test("credentials are named rather than counted", async () => {

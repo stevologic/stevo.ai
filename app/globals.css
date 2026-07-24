@@ -2711,6 +2711,16 @@ img {
     display: none;
   }
 
+  .resume-page,
+  .resume-document,
+  .resume-section,
+  .resume-profile-copy,
+  .resume-career-highlights,
+  .resume-career-highlights li {
+    orphans: 1;
+    widows: 1;
+  }
+
   .resume-document {
     max-width: none;
     padding: 0;
@@ -2720,7 +2730,7 @@ img {
   }
 
   .resume-header {
-    padding-bottom: 14px;
+    padding-bottom: 11px;
     border-bottom-width: 2px;
   }
 
@@ -2747,14 +2757,14 @@ img {
 
   .resume-introduction {
     max-width: none;
-    margin-top: 8px;
-    font-size: 0.66rem;
-    line-height: 1.46;
+    margin-top: 7px;
+    font-size: 0.655rem;
+    line-height: 1.42;
   }
 
   .resume-contact {
-    gap: 3px 16px;
-    margin-top: 10px;
+    gap: 2px 14px;
+    margin-top: 8px;
   }
 
   .resume-contact a,
@@ -2775,12 +2785,12 @@ img {
   }
 
   .resume-profile-summary {
-    margin-top: 12px;
+    margin-top: 10px;
   }
 
   .resume-profile-summary-item,
   .resume-profile-summary-item + .resume-profile-summary-item {
-    padding: 6px 10px 6px 0;
+    padding: 5px 9px 5px 0;
   }
 
   .resume-profile-summary-item + .resume-profile-summary-item {
@@ -2793,9 +2803,9 @@ img {
   }
 
   .resume-section {
-    grid-template-columns: 1in 1fr;
-    gap: 0.2in;
-    padding: 11px 0;
+    grid-template-columns: 0.78in 1fr;
+    gap: 0.16in;
+    padding: 9px 0;
   }
 
   .resume-section-title {
@@ -2804,12 +2814,12 @@ img {
   }
 
   .resume-profile-copy {
-    font-size: 0.66rem;
-    line-height: 1.5;
+    font-size: 0.655rem;
+    line-height: 1.45;
   }
 
   .resume-profile-copy + .resume-profile-copy {
-    margin-top: 7px;
+    margin-top: 6px;
   }
 
   .resume-section.resume-career-section {
@@ -2828,7 +2838,7 @@ img {
   }
 
   .resume-career-role {
-    padding: 0 0 9px 14px;
+    padding: 0 0 7px 12px;
     break-inside: avoid;
     page-break-inside: avoid;
   }
@@ -2851,20 +2861,22 @@ img {
   }
 
   .resume-career-highlights {
-    gap: 2px;
-    margin-top: 6px;
-    padding-left: 13px;
+    gap: 1px;
+    margin-top: 5px;
+    padding-left: 12px;
     font-size: 0.62rem;
-    line-height: 1.38;
+    line-height: 1.32;
   }
 
   .resume-focus-grid {
-    gap: 8px;
+    gap: 9px 22px;
   }
 
   .resume-focus-card {
-    padding: 9px 11px;
-    border-radius: 7px;
+    padding: 0;
+    border: 0;
+    border-radius: 0;
+    background: none;
     break-inside: avoid;
   }
 
@@ -2884,7 +2896,7 @@ img {
   }
 
   .resume-project {
-    padding: 8px 0;
+    padding: 7px 0;
     break-inside: avoid;
   }
 
@@ -2932,7 +2944,7 @@ img {
   .resume-technical-item,
   .resume-product-item {
     gap: 12px;
-    padding: 6px 0;
+    padding: 5px 0;
     break-inside: avoid;
   }
 
@@ -2962,7 +2974,7 @@ img {
   }
 
   .resume-footer {
-    padding-top: 12px;
+    padding-top: 10px;
   }
 
   .resume-availability {
