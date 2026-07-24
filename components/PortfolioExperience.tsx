@@ -611,7 +611,7 @@ export function PortfolioExperience({
           </div>
           <div className="profile-copy" data-reveal>
             <p className="section-number">Profile</p>
-            <blockquote>Stephen M Abbott.</blockquote>
+            <blockquote>Stephen M Abbott</blockquote>
             <p>
               Stephen leads Stevo.AI with 16 years of experience across
               enterprise technology, security engineering, program leadership,
