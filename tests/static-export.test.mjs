@@ -4,6 +4,22 @@ import test from "node:test";
 
 const root = new URL("../", import.meta.url);
 
+/** Curated cards plus discovered ones, mirroring lib/project-data.ts. */
+async function publishedProjects() {
+  const [curated, discovered] = await Promise.all([
+    readFile(new URL("content/projects.json", root), "utf8"),
+    readFile(new URL("data/discovered.generated.json", root), "utf8"),
+  ]);
+  const curatedProjects = JSON.parse(curated);
+  const curatedRepos = new Set(
+    curatedProjects.map((project) => project.repo.toLowerCase()),
+  );
+  const extra = (JSON.parse(discovered).projects || []).filter(
+    (project) => !curatedRepos.has(project.repo.toLowerCase()),
+  );
+  return [...curatedProjects, ...extra];
+}
+
 async function exportedPage(path) {
   return readFile(new URL(`../out/${path}`, import.meta.url), "utf8");
 }
@@ -83,7 +99,12 @@ test("hero career strip summarizes professional experience", async () => {
   assert.match(careerStrip, /Career highlights/);
   assert.match(careerStrip, />16<\/strong><span>Years of IT experience/);
   assert.match(careerStrip, />11<\/strong><span>Years of cybersecurity experience/);
-  assert.match(careerStrip, />8<\/strong><span>Live products/);
+  // Derived from the project data, so discovery cannot leave it stale.
+  const projects = await publishedProjects();
+  assert.match(
+    careerStrip,
+    new RegExp(`>${projects.length}</strong><span>Live products`),
+  );
   assert.match(careerStrip, />92%<\/strong><span>Sensitive-data reduction/);
   assert.doesNotMatch(careerStrip, /CVE records indexed|Package ecosystems/);
 });
@@ -334,7 +355,7 @@ test("desktop project grid uses four compact cards per row", async () => {
   assert.match(styles, /min-height: 560px/);
 });
 
-test("every project card includes privacy-conscious GitHub traffic aggregates", async () => {
+test("GitHub traffic aggregates stay privacy-conscious wherever they appear", async () => {
   const [html, snapshotText, syncScript, workflow] = await Promise.all([
     exportedPage("index.html"),
     readFile(new URL("../data/github.generated.json", import.meta.url), "utf8"),
@@ -348,7 +369,15 @@ test("every project card includes privacy-conscious GitHub traffic aggregates", 
 
   assert.equal(snapshot.schemaVersion, 2);
   assert.ok(snapshot.repositories.length > 0);
-  for (const repository of snapshot.repositories) {
+
+  // Traffic needs PROJECT_TRAFFIC_TOKEN, which only CI holds, so a repository
+  // added or discovered since the last CI run legitimately has none yet.
+  // Require every aggregate present to be well formed, not universal coverage:
+  // demanding the latter would fail the build for any newly published project.
+  const withTraffic = snapshot.repositories.filter(
+    (repository) => repository.traffic,
+  );
+  for (const repository of withTraffic) {
     assert.equal(repository.traffic.windowDays, 14);
     assert.equal(typeof repository.traffic.fetchedAt, "string");
     assert.equal(typeof repository.traffic.views.count, "number");
@@ -359,8 +388,10 @@ test("every project card includes privacy-conscious GitHub traffic aggregates", 
 
   assert.equal(
     (html.match(/class="project-traffic"/g) || []).length,
-    snapshot.repositories.length,
+    withTraffic.length,
+    "every repository with traffic data should render a traffic block",
   );
+  assert.ok(withTraffic.length > 0, "traffic data has stopped being collected");
   assert.match(html, /GitHub views \//);
   assert.match(html, /GitHub clones \//);
   assert.match(html, /visitors/);
@@ -468,6 +499,76 @@ test("responsive breakpoints never leak into the print layout", async () => {
     unscoped,
     [],
     `max-width breakpoints must be scoped to screen: ${unscoped.join(", ")}`,
+  );
+});
+
+test("Arrowhead Paesano is published as a project", async () => {
+  const html = await exportedPage("index.html");
+
+  assert.match(html, /Arrowhead Paesano/);
+  assert.match(html, /https:\/\/arrowheadpaesano\.com/);
+  assert.match(html, /arrowheadpaesanowebsite/);
+});
+
+test("project discovery publishes newly public repositories safely", async () => {
+  const [config, curated, discovered] = await Promise.all([
+    readFile(new URL("../content/discovery.json", import.meta.url), "utf8"),
+    readFile(new URL("../content/projects.json", import.meta.url), "utf8"),
+    readFile(
+      new URL("../data/discovered.generated.json", import.meta.url),
+      "utf8",
+    ),
+  ]);
+  const settings = JSON.parse(config);
+  const curatedProjects = JSON.parse(curated);
+  const snapshot = JSON.parse(discovered);
+
+  assert.ok(Array.isArray(snapshot.projects), "discovery snapshot needs projects");
+  assert.equal(typeof snapshot.generatedAt, "string");
+
+  // The site's own repository must never appear as one of its projects.
+  const excluded = settings.exclude.map((name) => name.toLowerCase());
+  assert.ok(excluded.includes("stevo.ai"));
+
+  // A discovered card must never shadow curated editorial copy.
+  const curatedRepos = new Set(
+    curatedProjects.map((project) => project.repo.toLowerCase()),
+  );
+  for (const project of snapshot.projects) {
+    assert.ok(
+      !curatedRepos.has(project.repo.toLowerCase()),
+      `${project.repo} is curated and must not also be discovered`,
+    );
+    assert.equal(project.discovered, true);
+    assert.match(project.siteUrl, /^https?:\/\//);
+  }
+
+  // Every published project needs a real destination, however it got here.
+  for (const project of await publishedProjects()) {
+    assert.match(
+      project.siteUrl,
+      /^https?:\/\//,
+      `${project.repo} has no live site URL`,
+    );
+    assert.ok(project.name?.trim(), `${project.repo} has no name`);
+  }
+});
+
+test("the deploy workflow runs discovery daily, before the metadata sync", async () => {
+  const workflow = await readFile(
+    new URL("../.github/workflows/deploy-pages.yml", import.meta.url),
+    "utf8",
+  );
+
+  assert.match(workflow, /cron:/, "workflow must be scheduled");
+  assert.match(workflow, /discover-projects\.mjs/);
+
+  const discoverAt = workflow.indexOf("discover-projects.mjs");
+  const syncAt = workflow.indexOf("sync-github.mjs");
+  assert.ok(discoverAt > 0 && syncAt > 0);
+  assert.ok(
+    discoverAt < syncAt,
+    "discovery must run before the sync so new repos are enriched in the same build",
   );
 });
 

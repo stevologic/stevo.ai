@@ -1,0 +1,51 @@
+{
+  "$comment": [
+    "Controls automatic project discovery. scripts/discover-projects.mjs lists the",
+    "owner's public repositories daily and builds a card for any that is not already",
+    "curated in projects.json.",
+    "",
+    "A repository qualifies when it is public, not a fork, archive, or template, is",
+    "not excluded below, and resolves to a live site URL. The site URL comes from the",
+    "repository's own Website/homepage field, or from siteUrls here. Requiring one is",
+    "deliberate: it is a single field the owner sets on GitHub, needs no change to",
+    "this site, and means a scratch repository going public never auto-publishes to a",
+    "professional portfolio.",
+    "",
+    "To publish a new project: make the repository public and set its Website field.",
+    "The next daily build picks it up. Replace the generated copy by adding a full",
+    "entry to projects.json, which always wins."
+  ],
+  "owner": "stevologic",
+  "exclude": [
+    "stevo.ai",
+    "assistant-ui-langchain-example",
+    "assistant-ui-langgraph-example",
+    "assistant-ui-ollama-example",
+    "openai-linda"
+  ],
+  "siteUrls": {},
+  "names": {},
+  "categories": {
+    "Security": [
+      "security",
+      "cve",
+      "vulnerability",
+      "sbom",
+      "supply-chain",
+      "appsec",
+      "infosec"
+    ],
+    "AI systems": [
+      "ai",
+      "llm",
+      "agent",
+      "agents",
+      "mcp",
+      "openai",
+      "anthropic",
+      "machine-learning",
+      "rag"
+    ]
+  },
+  "defaultCategory": "Product lab"
+}

@@ -230,5 +230,34 @@
       "Hardware and chain telemetry"
     ],
     "statusLabel": "Live"
+  },
+  {
+    "repo": "arrowheadpaesanowebsite",
+    "slug": "arrowhead-paesano",
+    "name": "Arrowhead Paesano",
+    "category": "Product lab",
+    "featured": false,
+    "tagline": "A static fan site with an automated weekly analysis desk.",
+    "description": "The official site for the Arrowhead Paesano YouTube channel: privacy-friendly video playback over a checked-in channel snapshot, plus an engine that regenerates a sourced weekly Chiefs preview with matchups, projections, and a ready-to-shoot run-of-show.",
+    "siteUrl": "https://arrowheadpaesano.com",
+    "sourceUrl": "https://github.com/stevologic/arrowheadpaesanowebsite",
+    "metrics": [
+      "No server or database",
+      "Automated weekly analysis",
+      "Static GitHub Pages delivery"
+    ],
+    "tech": [
+      "Hugo",
+      "Python",
+      "JavaScript",
+      "CSS",
+      "GitHub Actions"
+    ],
+    "capabilities": [
+      "Automated narrative generation",
+      "Privacy-friendly video embeds",
+      "Static-only publishing"
+    ],
+    "statusLabel": "Live"
   }
 ]

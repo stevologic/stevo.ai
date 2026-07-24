@@ -8,6 +8,7 @@
   "scripts": {
     "dev": "next dev",
     "build": "next build",
+    "discover": "node scripts/discover-projects.mjs",
     "sync:github": "node scripts/sync-github.mjs",
     "verify:pdf": "node scripts/check-resume-pages.mjs",
     "icons": "node scripts/generate-icons.mjs",

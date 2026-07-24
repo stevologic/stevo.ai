@@ -387,7 +387,8 @@ export function PortfolioExperience({
             <span>Years of cybersecurity experience</span>
           </div>
           <div>
-            <strong>8</strong>
+            {/* Derived, so daily project discovery cannot leave a stale count. */}
+            <strong>{projects.length}</strong>
             <span>Live products</span>
           </div>
           <div>

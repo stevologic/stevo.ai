@@ -39,6 +39,27 @@ The production build is written to `out/`.
 
 ## Content model
 
+### Publishing a new project
+
+Projects appear automatically. `scripts/discover-projects.mjs` runs in the daily
+deploy, lists the owner's public repositories, and writes a card for any that is
+not already curated. To publish a project:
+
+1. Make the repository public.
+2. Set its **Website** field on GitHub to the live URL.
+
+The next daily build picks it up — no change to this repository. A repository
+qualifies when it is public, not a fork, archive, or template, is not listed in
+`exclude`, and resolves to a site URL. Requiring that URL is deliberate: it is a
+single field the owner controls on GitHub, and it means a scratch repository
+going public never auto-publishes to a professional portfolio. Repositories
+without one are listed in the workflow log rather than published.
+
+Generated copy is plain by design. Adding a full entry to `content/projects.json`
+always overrides it, so promote a discovered project by curating it. Settings
+(owner, exclusions, site-URL and name overrides, category keywords) live in
+`content/discovery.json`; run `npm run discover` to preview locally.
+
 Editorial project copy and display order live in `content/projects.json`.
 `scripts/sync-github.mjs` merges current public repository metadata into
 `data/github.generated.json`; raw GitHub descriptions never replace the curated

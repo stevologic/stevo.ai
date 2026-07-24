@@ -48,6 +48,14 @@ jobs:
             exit 1
           fi
 
+      # Runs before the sync so a newly public repository is picked up and then
+      # enriched in the same build. The scheduled run below makes this daily.
+      - name: Discover newly published projects
+        env:
+          GITHUB_SYNC_STRICT: "1"
+          GITHUB_TOKEN: ${{ github.token }}
+        run: node scripts/discover-projects.mjs
+
       - name: Refresh GitHub project and traffic data
         env:
           GITHUB_SYNC_STRICT: "1"

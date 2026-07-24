@@ -10,6 +10,11 @@ const rootDirectory = path.resolve(
   "..",
 );
 const projectsPath = path.join(rootDirectory, "content", "projects.json");
+const discoveredPath = path.join(
+  rootDirectory,
+  "data",
+  "discovered.generated.json",
+);
 const snapshotPath = path.join(rootDirectory, "data", "github.generated.json");
 
 const defaultOwner = process.env.GITHUB_OWNER?.trim() || "stevologic";
@@ -397,7 +402,16 @@ async function main() {
 
   try {
     const projects = projectListFrom(await readJson(projectsPath));
-    repositories = collectRepositories(projects);
+    // Discovered projects need the same metadata as curated ones, so their
+    // cards show language, release, and traffic detail rather than blanks.
+    let discovered = [];
+    try {
+      const snapshot = await readJson(discoveredPath);
+      if (Array.isArray(snapshot?.projects)) discovered = snapshot.projects;
+    } catch {
+      // Discovery has not run yet, or produced nothing. Curated is enough.
+    }
+    repositories = collectRepositories([...projects, ...discovered]);
     if (repositories.length === 0) {
       throw new Error("content/projects.json does not list any GitHub repositories.");
     }
