@@ -103,6 +103,49 @@ function Arrow() {
   return <span aria-hidden="true">↗</span>;
 }
 
+const protectedMailbox = [
+  100, 99, 114, 103, 127, 114, 121, 118, 117, 117, 120, 99, 99, 37, 39,
+];
+const protectedHost = [87, 112, 122, 118, 126, 123, 57, 116, 120, 122];
+const emailMask = 23;
+
+function decodeProtectedEmail() {
+  return [...protectedMailbox, ...protectedHost]
+    .map((value) => String.fromCharCode(value ^ emailMask))
+    .join("");
+}
+
+function ProtectedEmail() {
+  const [email, setEmail] = useState<string>();
+  const emailLinkRef = useRef<HTMLAnchorElement>(null);
+
+  useEffect(() => {
+    if (email) emailLinkRef.current?.focus();
+  }, [email]);
+
+  if (email) {
+    return (
+      <a
+        className="button button-secondary protected-email-link"
+        href={`mailto:${email}`}
+        ref={emailLinkRef}
+      >
+        {email} <Arrow />
+      </a>
+    );
+  }
+
+  return (
+    <button
+      className="button button-secondary protected-email-trigger"
+      type="button"
+      onClick={() => setEmail(decodeProtectedEmail())}
+    >
+      Reveal email
+    </button>
+  );
+}
+
 const ProjectCard = memo(function ProjectCard({
   project,
   index,
@@ -602,6 +645,7 @@ export function PortfolioExperience({
             <Link className="button button-secondary" href="/resume/">
               View profile
             </Link>
+            <ProtectedEmail />
           </div>
         </section>
       </main>

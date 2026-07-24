@@ -80,6 +80,23 @@ test("command palette and navigation hotkeys are removed", async () => {
   );
 });
 
+test("email contact is revealed interactively instead of exposed to basic scrapers", async () => {
+  const [html, component] = await Promise.all([
+    exportedPage("index.html"),
+    readFile(
+      new URL("../components/PortfolioExperience.tsx", import.meta.url),
+      "utf8",
+    ),
+  ]);
+
+  assert.match(html, /Reveal email/);
+  assert.doesNotMatch(html, /mailto:/i);
+  assert.doesNotMatch(html, /[A-Za-z0-9._%+-]+@gmail\.com/i);
+  assert.match(component, /decodeProtectedEmail/);
+  assert.match(component, /protectedMailbox/);
+  assert.doesNotMatch(component, /[A-Za-z0-9._%+-]+@gmail\.com/i);
+});
+
 test("desktop project grid uses four compact cards per row", async () => {
   const styles = await readFile(
     new URL("../app/globals.css", import.meta.url),

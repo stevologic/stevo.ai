@@ -1475,6 +1475,16 @@ img {
   color: var(--ink);
 }
 
+.protected-email-trigger {
+  cursor: pointer;
+}
+
+.protected-email-link {
+  font-family: var(--mono);
+  font-size: 0.76rem;
+  letter-spacing: -0.025em;
+}
+
 .site-footer {
   display: grid;
   grid-template-columns: 1fr auto 1fr;
