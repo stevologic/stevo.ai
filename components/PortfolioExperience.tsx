@@ -11,6 +11,13 @@ import {
 } from "react";
 import { ProtectedEmailButton } from "@/components/ProtectedEmail";
 import { socialHandles } from "@/lib/contact";
+import { credentialHighlights } from "@/lib/credentials";
+import {
+  engagementModels,
+  engagementProcess,
+  serviceTracks,
+  workingPrinciples,
+} from "@/lib/services";
 import type { PortfolioProject, ProjectCategory } from "@/lib/project-data";
 
 const filters: Array<"All work" | ProjectCategory> = [
@@ -20,70 +27,6 @@ const filters: Array<"All work" | ProjectCategory> = [
   "Product lab",
 ];
 
-const serviceTracks = [
-  {
-    id: "vciso",
-    number: "01",
-    label: "vCISO",
-    title: "vCISO & security leadership",
-    description:
-      "Embed experienced security leadership where the business needs it most: setting direction, creating an operating cadence, and turning risk into decisions executives and technical teams can act on.",
-    outcomes: [
-      "Security strategy, roadmap, and operating cadence",
-      "Executive risk measures and decision support",
-      "Program governance and incident readiness",
-      "Application and developer security leadership",
-    ],
-    bestFor:
-      "Organizations that need senior security leadership without adding a full-time CISO.",
-  },
-  {
-    id: "enable",
-    number: "02",
-    label: "Enable",
-    title: "AI enablement & governance",
-    description:
-      "Turn AI interest into governed business capability with a practical use-case roadmap, clear human authority, and controls designed for how agents and teams actually work.",
-    outcomes: [
-      "Use-case portfolio and adoption roadmap",
-      "AI policy and control architecture",
-      "Human approval, evidence, and rollback design",
-      "Agent governance and operating models",
-    ],
-    bestFor:
-      "Leadership teams moving from AI experimentation to responsible adoption.",
-  },
-  {
-    id: "deliver",
-    number: "03",
-    label: "Deliver",
-    title: "Secure AI & agent delivery",
-    description:
-      "Design and ship useful AI systems—not demos—with scoped context, durable memory, tool orchestration, and security built into the delivery path.",
-    outcomes: [
-      "MCP servers and agent toolchains",
-      "Multi-provider AI applications",
-      "Workflow automation and integrations",
-      "Production prototypes and secure architecture",
-    ],
-    bestFor: "Teams that need a working, defensible system—not another slide deck.",
-  },
-  {
-    id: "assure",
-    number: "04",
-    label: "Assure",
-    title: "Application & supply-chain assurance",
-    description:
-      "Turn dependency, vulnerability, and architecture signals into prioritized engineering action that can be verified, repeated, and explained.",
-    outcomes: [
-      "Dependency and attack-surface analysis",
-      "CVE remediation workflows",
-      "SBOM, license, and open-source risk review",
-      "Evidence-driven security automation",
-    ],
-    bestFor: "Engineering organizations that want security to accelerate delivery.",
-  },
-] as const;
 
 function formatDate(value?: string) {
   if (!value) return "Active now";
@@ -245,9 +188,7 @@ export function PortfolioExperience({
   const [activeFilter, setActiveFilter] = useState<(typeof filters)[number]>(
     "All work",
   );
-  const [activeService, setActiveService] = useState<
-    (typeof serviceTracks)[number]["id"]
-  >(serviceTracks[0].id);
+  const [activeService, setActiveService] = useState(serviceTracks[0].id);
   const [mobileOpen, setMobileOpen] = useState(false);
   const rootRef = useRef<HTMLDivElement>(null);
 
@@ -255,10 +196,6 @@ export function PortfolioExperience({
     activeFilter === "All work"
       ? projects
       : projects.filter((project) => project.category === activeFilter);
-
-  const currentService =
-    serviceTracks.find((service) => service.id === activeService) ||
-    serviceTracks[0];
 
   useEffect(() => {
     const onKeyDown = (event: KeyboardEvent) => {
@@ -454,9 +391,18 @@ export function PortfolioExperience({
             <span>Live products</span>
           </div>
           <div>
-            <strong>3</strong>
-            <span>Professional certifications</span>
+            <strong>26</strong>
+            <span>Largest engineering org led</span>
           </div>
+        </section>
+
+        <section className="credential-strip" aria-label="Credentials">
+          <p className="detail-label">Credentials</p>
+          <ul>
+            {credentialHighlights.map((credential) => (
+              <li key={credential}>{credential}</li>
+            ))}
+          </ul>
         </section>
 
         <section className="services-section section" id="services">
@@ -475,7 +421,7 @@ export function PortfolioExperience({
               {serviceTracks.map((service) => (
                 <button
                   type="button"
-                  aria-controls="service-detail"
+                  aria-controls={`service-detail-${service.id}`}
                   aria-pressed={activeService === service.id}
                   className={activeService === service.id ? "is-active" : ""}
                   key={service.id}
@@ -486,32 +432,46 @@ export function PortfolioExperience({
                 </button>
               ))}
             </div>
-            <article
-              className="service-detail"
-              id="service-detail"
-              aria-live="polite"
-            >
-              <p className="service-signal">
-                <span className="status-dot" aria-hidden="true" />
-                Considering select professional engagements
-              </p>
-              <h3>{currentService.title}</h3>
-              <p>{currentService.description}</p>
-              <div className="service-detail-grid">
-                <div>
-                  <span className="detail-label">Typical outcomes</span>
-                  <ul>
-                    {currentService.outcomes.map((outcome) => (
-                      <li key={outcome}>{outcome}</li>
+            {/* Every panel stays in the document and inactive ones are hidden,
+                so all four service descriptions and their reference frameworks
+                are reachable without JavaScript and visible to crawlers. */}
+            {serviceTracks.map((service) => (
+              <article
+                className="service-detail"
+                id={`service-detail-${service.id}`}
+                key={service.id}
+                hidden={activeService !== service.id}
+              >
+                <p className="service-signal">
+                  <span className="status-dot" aria-hidden="true" />
+                  Considering select professional engagements
+                </p>
+                <h3>{service.title}</h3>
+                <p>{service.description}</p>
+                <div className="service-detail-grid">
+                  <div>
+                    <span className="detail-label">Typical outcomes</span>
+                    <ul>
+                      {service.outcomes.map((outcome) => (
+                        <li key={outcome}>{outcome}</li>
+                      ))}
+                    </ul>
+                  </div>
+                  <div className="best-for">
+                    <span className="detail-label">Best for</span>
+                    <p>{service.bestFor}</p>
+                  </div>
+                </div>
+                <div className="service-standards">
+                  <span className="detail-label">Measured against</span>
+                  <ul aria-label={`${service.title} reference frameworks`}>
+                    {service.standards.map((standard) => (
+                      <li key={standard}>{standard}</li>
                     ))}
                   </ul>
                 </div>
-                <div className="best-for">
-                  <span className="detail-label">Best for</span>
-                  <p>{currentService.bestFor}</p>
-                </div>
-              </div>
-            </article>
+              </article>
+            ))}
           </div>
 
           <div
@@ -519,26 +479,52 @@ export function PortfolioExperience({
             id="engagements"
             aria-label="Professional engagement models"
           >
-            {[
-              [
-                "Fractional leadership",
-                "Ongoing vCISO direction, operating cadence, and executive security decision support.",
-              ],
-              [
-                "Advisory intensive",
-                "A bounded strategy, governance, risk, or architecture decision moved to resolution.",
-              ],
-              [
-                "Delivery sprint",
-                "Hands-on implementation, prototype, or security improvement with evidence and transfer.",
-              ],
-            ].map(([title, description], index) => (
-              <article key={title} data-reveal>
+            {engagementModels.map((model, index) => (
+              <article key={model.title} data-reveal>
                 <span>0{index + 1}</span>
-                <h3>{title}</h3>
-                <p>{description}</p>
+                <h3>{model.title}</h3>
+                <p>{model.description}</p>
+                <ul
+                  className="engagement-deliverables"
+                  aria-label={`${model.title} deliverables`}
+                >
+                  {model.deliverables.map((deliverable) => (
+                    <li key={deliverable}>{deliverable}</li>
+                  ))}
+                </ul>
               </article>
             ))}
+          </div>
+
+          <div className="engagement-process" data-reveal>
+            <div className="engagement-process-heading">
+              <span className="detail-label">How an engagement runs</span>
+              <h3>
+                Baseline the truth, prioritize honestly, operate the cadence,
+                then hand it over.
+              </h3>
+            </div>
+            <ol>
+              {engagementProcess.map((phase) => (
+                <li key={phase.step}>
+                  <span className="engagement-step">{phase.step}</span>
+                  <h4>{phase.title}</h4>
+                  <p>{phase.description}</p>
+                </li>
+              ))}
+            </ol>
+          </div>
+
+          <div className="working-principles" data-reveal>
+            <span className="detail-label">Working principles</span>
+            <div className="working-principles-grid">
+              {workingPrinciples.map((principle) => (
+                <article key={principle.title}>
+                  <h3>{principle.title}</h3>
+                  <p>{principle.description}</p>
+                </article>
+              ))}
+            </div>
           </div>
         </section>
 
@@ -657,7 +643,12 @@ export function PortfolioExperience({
           </span>
           <span>Stevo.AI</span>
         </div>
-        <p>vCISO · Cybersecurity consulting · AI enablement</p>
+        <p>
+          vCISO · Cybersecurity consulting · AI enablement
+          <a className="footer-security-link" href="/.well-known/security.txt">
+            Security disclosure policy
+          </a>
+        </p>
         <span className="site-footer-legal">
           Led by Stephen M Abbott · © {new Date().getFullYear()}
         </span>

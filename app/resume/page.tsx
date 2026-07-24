@@ -4,6 +4,7 @@ import Link from "next/link";
 import { PrintButton } from "../../components/PrintButton";
 import { ProtectedEmailAddress } from "../../components/ProtectedEmail";
 import { socialHandles } from "@/lib/contact";
+import { credentials } from "@/lib/credentials";
 
 export const metadata: Metadata = {
   title: "Stephen M Abbott | Cybersecurity & AI",
@@ -158,26 +159,13 @@ const technicalBreadth = [
     value:
       "Next.js, React, Django, FastMCP, Docker, Playwright, SQLite, Redis, WinForms, and OpenCL",
   },
+  {
+    label: "Frameworks",
+    value:
+      "NIST CSF 2.0, ISO/IEC 27001, SOC 2, CIS Controls v8, FAIR, NIST AI RMF, ISO/IEC 42001, OWASP ASVS, and NIST SSDF",
+  },
 ] as const;
 
-const credentials = [
-  {
-    label: "Education",
-    value: "BA, Walter Cronkite School of Journalism, Arizona State University",
-  },
-  {
-    label: "Security certification",
-    value: "Offensive Security Certified Professional (OSCP)",
-  },
-  {
-    label: "Cloud and risk",
-    value: "AWS Certified Cloud Practitioner · Formal CRISC training",
-  },
-  {
-    label: "Leadership development",
-    value: "Harvard and Duke University leadership training programs",
-  },
-] as const;
 
 const additionalProducts = [
   {

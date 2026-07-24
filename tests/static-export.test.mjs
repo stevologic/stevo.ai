@@ -84,8 +84,89 @@ test("hero career strip summarizes professional experience", async () => {
   assert.match(careerStrip, />16<\/strong><span>Years of IT experience/);
   assert.match(careerStrip, />11<\/strong><span>Years of cybersecurity experience/);
   assert.match(careerStrip, />8<\/strong><span>Live products/);
-  assert.match(careerStrip, />3<\/strong><span>Professional certifications/);
+  assert.match(careerStrip, />26<\/strong><span>Largest engineering org led/);
   assert.doesNotMatch(careerStrip, /CVE records indexed|Package ecosystems/);
+});
+
+test("credentials are named rather than counted", async () => {
+  const html = await exportedPage("index.html");
+  const strip = html.match(
+    /<section class="credential-strip"[^>]*>[\s\S]*?<\/section>/,
+  )?.[0];
+
+  assert.ok(strip, "index is missing the credential strip");
+  for (const credential of [
+    "OSCP",
+    "AWS Certified Cloud Practitioner",
+    "Formal CRISC training",
+    "Harvard &amp; Duke leadership programs",
+  ]) {
+    assert.ok(strip.includes(credential), `credential strip omits ${credential}`);
+  }
+
+  // Completed training must never be presented as a held certification.
+  assert.doesNotMatch(html, /CRISC certified|Certified in Risk and Information/i);
+});
+
+test("service tracks name the frameworks they are measured against", async () => {
+  const html = await exportedPage("index.html");
+
+  for (const standard of [
+    "NIST CSF 2.0",
+    "ISO/IEC 27001",
+    "SOC 2",
+    "CIS Controls v8",
+    "FAIR risk quantification",
+    "NIST AI RMF 1.0",
+    "ISO/IEC 42001",
+    "EU AI Act",
+    "OWASP ASVS",
+    "NIST SSDF (SP 800-218)",
+    "CISA KEV",
+    "OpenSSF Scorecard",
+  ]) {
+    assert.ok(html.includes(standard), `index never names ${standard}`);
+  }
+
+  assert.match(html, /Measured against/);
+});
+
+test("engagement models state deliverables and a process", async () => {
+  const html = await exportedPage("index.html");
+
+  assert.match(html, /class="engagement-deliverables"/);
+  assert.match(html, /How an engagement runs/);
+  for (const phase of ["Baseline", "Prioritize", "Operate", "Transfer"]) {
+    assert.ok(html.includes(`<h4>${phase}</h4>`), `process omits ${phase}`);
+  }
+
+  assert.match(html, /Working principles/);
+  assert.match(html, /Client confidentiality/);
+  assert.match(html, /Built to be handed over/);
+});
+
+test("the site publishes a coordinated disclosure policy", async () => {
+  const [policy, html, securityMd] = await Promise.all([
+    readFile(new URL("../out/.well-known/security.txt", import.meta.url), "utf8"),
+    exportedPage("index.html"),
+    readFile(new URL("../SECURITY.md", import.meta.url), "utf8"),
+  ]);
+
+  // RFC 9116 requires Contact and Expires; Expires must still be in the future.
+  assert.match(policy, /^Contact: https:\/\//m);
+  assert.match(policy, /^Canonical: https:\/\/stevo\.ai\/\.well-known\/security\.txt$/m);
+  const expires = policy.match(/^Expires: (.+)$/m)?.[1];
+  assert.ok(expires, "security.txt is missing the required Expires field");
+  assert.ok(
+    new Date(expires).getTime() > Date.now(),
+    `security.txt Expires (${expires}) is in the past`,
+  );
+
+  // The policy must not undo the email masking used everywhere else.
+  assert.doesNotMatch(policy, /[A-Za-z0-9._%+-]+@gmail\.com/i);
+
+  assert.match(html, /\/\.well-known\/security\.txt/);
+  assert.match(securityMd, /Reporting a vulnerability/);
 });
 
 test("site manifest uses installable Stevo.AI icons", async () => {
@@ -292,6 +373,29 @@ test("professional resume is detailed, private, and print-ready", async () => {
   assert.match(html, /Print \/ save as PDF/);
   assert.doesNotMatch(html, /American Express/i);
   assert.doesNotMatch(html, /Full career r(?:é|&eacute;|&#xE9;)sum(?:é|&eacute;|&#xE9;) available on request/i);
+});
+
+test("responsive breakpoints never leak into the print layout", async () => {
+  const styles = await readFile(
+    new URL("../app/globals.css", import.meta.url),
+    "utf8",
+  );
+
+  // A Letter page with 0.42in margins is ~735 CSS px wide, so an unscoped
+  // `(max-width: 760px)` block matches while printing and silently collapses
+  // the resume to the single-column mobile layout -- which adds a third page.
+  const unscoped = [...styles.matchAll(/@media ([^{]+)\{/g)]
+    .map((match) => match[1].trim())
+    .filter(
+      (condition) =>
+        /max-width/.test(condition) && !/^screen and /.test(condition),
+    );
+
+  assert.deepEqual(
+    unscoped,
+    [],
+    `max-width breakpoints must be scoped to screen: ${unscoped.join(", ")}`,
+  );
 });
 
 test("custom domain is configured", async () => {

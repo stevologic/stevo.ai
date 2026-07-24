@@ -1,5 +1,7 @@
 import type { Metadata, Viewport } from "next";
 import { socialProfileUrls } from "@/lib/contact";
+import { credentials } from "@/lib/credentials";
+import { serviceTracks } from "@/lib/services";
 import "./globals.css";
 
 const siteUrl = "https://stevo.ai";
@@ -115,7 +117,9 @@ const structuredData = {
       logo: `${siteUrl}/icon-512.png`,
       description: socialDescription,
       employee: { "@id": `${siteUrl}/#stephen-abbott` },
+      founder: { "@id": `${siteUrl}/#stephen-abbott` },
       sameAs: socialProfileUrls,
+      areaServed: "Worldwide",
       knowsAbout: [
         "vCISO services",
         "Cybersecurity leadership",
@@ -124,6 +128,20 @@ const structuredData = {
         "Application security",
         "Software supply chain security",
       ],
+      hasOfferCatalog: {
+        "@type": "OfferCatalog",
+        name: "Professional services",
+        itemListElement: serviceTracks.map((service) => ({
+          "@type": "Offer",
+          itemOffered: {
+            "@type": "Service",
+            name: service.title,
+            description: service.description,
+            serviceType: service.label,
+            provider: { "@id": `${siteUrl}/#organization` },
+          },
+        })),
+      },
     },
     {
       "@type": "Person",
@@ -134,6 +152,21 @@ const structuredData = {
       jobTitle: "Cybersecurity and AI advisor",
       worksFor: { "@id": `${siteUrl}/#organization` },
       sameAs: socialProfileUrls,
+      alumniOf: {
+        "@type": "CollegeOrUniversity",
+        name: "Arizona State University",
+      },
+      hasCredential: credentials
+        .filter((credential) => credential.certification)
+        .map((credential) => ({
+          "@type": "EducationalOccupationalCredential",
+          credentialCategory: "certification",
+          name: credential.certification?.name,
+          recognizedBy: {
+            "@type": "Organization",
+            name: credential.certification?.issuer,
+          },
+        })),
       knowsAbout: [
         "Artificial intelligence",
         "Cybersecurity",

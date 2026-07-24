@@ -49,10 +49,24 @@ the résumé header, and the `sameAs` structured data from one list. The email
 address is stored XOR-masked and decoded in the browser, so it never appears in
 the static export.
 
+Service tracks, engagement models, the engagement process, and working
+principles live in `lib/services.ts`; credentials live in `lib/credentials.ts`.
+Both feed the page and the structured data, so the marketing copy and the
+machine-readable claims cannot drift apart. Credential wording is deliberate —
+completed training is described as training, never as certification — and the
+`standards` on each service track name frameworks the work is measured against,
+not certifications held.
+
 The `@media print` block in `app/globals.css` is tuned so `/resume/` exports to
 exactly two Letter pages. It sets print sizes explicitly rather than inheriting
 the screen scale, so changing screen typography cannot silently add a page.
 After editing résumé content, re-check the page count before publishing.
+
+A Letter page with 0.42in margins is roughly 735 CSS px wide, so responsive
+breakpoints are scoped with `@media screen and (max-width: …)`. Without the
+`screen` keyword a `max-width: 760px` block matches while printing, collapses
+the résumé to the mobile single-column layout, and silently adds a third page.
+A test enforces this.
 
 ## Publishing
 
