@@ -9,6 +9,8 @@ import {
   useState,
   type PointerEvent as ReactPointerEvent,
 } from "react";
+import { ProtectedEmailButton } from "@/components/ProtectedEmail";
+import { socialHandles } from "@/lib/contact";
 import type { PortfolioProject, ProjectCategory } from "@/lib/project-data";
 
 const filters: Array<"All work" | ProjectCategory> = [
@@ -105,46 +107,18 @@ function Arrow() {
   return <span aria-hidden="true">↗</span>;
 }
 
-const protectedMailbox = [
-  100, 99, 114, 103, 127, 114, 121, 118, 117, 117, 120, 99, 99, 37, 39,
-];
-const protectedHost = [87, 112, 122, 118, 126, 123, 57, 116, 120, 122];
-const emailMask = 23;
-
-function decodeProtectedEmail() {
-  return [...protectedMailbox, ...protectedHost]
-    .map((value) => String.fromCharCode(value ^ emailMask))
-    .join("");
-}
-
-function ProtectedEmail() {
-  const [email, setEmail] = useState<string>();
-  const emailLinkRef = useRef<HTMLAnchorElement>(null);
-
-  useEffect(() => {
-    if (email) emailLinkRef.current?.focus();
-  }, [email]);
-
-  if (email) {
-    return (
-      <a
-        className="button button-primary protected-email-link"
-        href={`mailto:${email}`}
-        ref={emailLinkRef}
-      >
-        {email} <Arrow />
-      </a>
-    );
-  }
-
+function SocialHandles({ label }: { label: string }) {
   return (
-    <button
-      className="button button-primary protected-email-trigger"
-      type="button"
-      onClick={() => setEmail(decodeProtectedEmail())}
-    >
-      Discuss an engagement
-    </button>
+    <ul className="social-handles" aria-label={label}>
+      {socialHandles.map((profile) => (
+        <li key={profile.id}>
+          <a href={profile.href} target="_blank" rel="me noreferrer">
+            <span className="social-network">{profile.network}</span>
+            <span className="social-handle">{profile.handle}</span>
+          </a>
+        </li>
+      ))}
+    </ul>
   );
 }
 
@@ -363,7 +337,7 @@ export function PortfolioExperience({
             Proof
           </a>
           <a href="#profile" onClick={() => setMobileOpen(false)}>
-            CEO
+            Profile
           </a>
           <Link href="/resume/" onClick={() => setMobileOpen(false)}>
             Résumé
@@ -442,7 +416,7 @@ export function PortfolioExperience({
               </div>
               <div className="identity-details">
                 <strong>Stephen M Abbott</strong>
-                <span>CEO, Stevo.AI · Security & AI advisor</span>
+                <span>Stevo.AI · Security & AI advisor</span>
                 <Link href="/resume/">Professional profile <Arrow /></Link>
               </div>
             </div>
@@ -573,9 +547,9 @@ export function PortfolioExperience({
             <p className="section-number">02 / Proof of delivery</p>
             <h2>Independent products. Verifiable capability.</h2>
             <p>
-              Products and open-source systems built by Stephen M Abbott, CEO
-              of Stevo.AI—evidence of the technical depth behind every
-              professional engagement.
+              Products and open-source systems built by Stephen M
+              Abbott—evidence of the technical depth behind every professional
+              engagement.
             </p>
           </div>
 
@@ -614,11 +588,11 @@ export function PortfolioExperience({
               height={1288}
               loading="lazy"
             />
-            <span className="photo-caption">CEO · Builder · Advisor</span>
+            <span className="photo-caption">Advisor · Engineer · Builder</span>
           </div>
           <div className="profile-copy" data-reveal>
-            <p className="section-number">03 / CEO profile</p>
-            <blockquote>Stephen M Abbott, CEO.</blockquote>
+            <p className="section-number">03 / Profile</p>
+            <blockquote>Stephen M Abbott.</blockquote>
             <p>
               Stephen leads Stevo.AI with 16 years of experience across
               enterprise technology, security engineering, program leadership,
@@ -640,7 +614,7 @@ export function PortfolioExperience({
                 target="_blank"
                 rel="noreferrer"
               >
-                Explore the CEO portfolio <Arrow />
+                Explore the portfolio <Arrow />
               </a>
             </div>
           </div>
@@ -655,9 +629,9 @@ export function PortfolioExperience({
             traction, or a system that must become both useful and defensible.
           </p>
           <div className="hero-actions">
-            <ProtectedEmail />
+            <ProtectedEmailButton />
             <Link className="button button-secondary" href="/resume/">
-              Review CEO résumé
+              Review résumé
             </Link>
             <a
               className="button button-secondary"
@@ -667,6 +641,11 @@ export function PortfolioExperience({
             >
               Explore portfolio <Arrow />
             </a>
+          </div>
+
+          <div className="closing-connect">
+            <p className="detail-label">Elsewhere</p>
+            <SocialHandles label="Social profiles and channels" />
           </div>
         </section>
       </main>
@@ -679,7 +658,10 @@ export function PortfolioExperience({
           <span>Stevo.AI</span>
         </div>
         <p>vCISO · Cybersecurity consulting · AI enablement</p>
-        <span>Led by Stephen M Abbott · © {new Date().getFullYear()}</span>
+        <span className="site-footer-legal">
+          Led by Stephen M Abbott · © {new Date().getFullYear()}
+        </span>
+        <SocialHandles label="Stevo.AI social profiles" />
       </footer>
     </div>
   );

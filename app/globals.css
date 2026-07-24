@@ -245,11 +245,13 @@ img {
 .hero {
   position: relative;
   display: grid;
-  min-height: 100svh;
+  /* Content is bottom-anchored, so this floor is what creates the empty band
+     above the eyebrow. Keep it under a full viewport to tighten that gap. */
+  min-height: 88svh;
   grid-template-columns: minmax(0, 1.38fr) minmax(360px, 0.72fr);
   align-items: end;
   gap: clamp(48px, 7vw, 116px);
-  padding: clamp(120px, 15vh, 190px) max(5vw, calc((100vw - 1480px) / 2)) 64px;
+  padding: clamp(104px, 10vh, 132px) max(5vw, calc((100vw - 1480px) / 2)) 64px;
   overflow: hidden;
   background:
     linear-gradient(rgba(255, 255, 255, 0.028) 1px, transparent 1px),
@@ -282,7 +284,7 @@ img {
   display: flex;
   align-items: center;
   gap: 12px;
-  margin: 0 0 clamp(32px, 5vw, 64px);
+  margin: 0 0 clamp(20px, 3vw, 38px);
   color: rgba(241, 239, 231, 0.64);
   font-family: var(--mono);
   font-size: clamp(0.68rem, 1vw, 0.79rem);
@@ -1508,6 +1510,85 @@ img {
   letter-spacing: -0.025em;
 }
 
+.social-handles {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.social-handles a {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 8px;
+  padding: 9px 14px;
+  border: 1px solid currentcolor;
+  border-radius: 999px;
+  transition:
+    background 180ms ease,
+    color 180ms ease,
+    transform 180ms ease;
+}
+
+.social-network {
+  font-family: var(--mono);
+  font-size: 0.6rem;
+  letter-spacing: 0.09em;
+  opacity: 0.65;
+  text-transform: uppercase;
+}
+
+.social-handle {
+  font-size: 0.76rem;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+}
+
+.closing-connect {
+  max-width: 1150px;
+  margin-top: clamp(46px, 6vw, 78px);
+}
+
+.closing-connect .detail-label {
+  margin-bottom: 14px;
+  color: rgba(10, 15, 13, 0.55);
+}
+
+.closing-connect .social-handles a {
+  border-color: rgba(10, 15, 13, 0.32);
+}
+
+.closing-connect .social-handles a:hover,
+.closing-connect .social-handles a:focus-visible {
+  transform: translateY(-1px);
+  background: var(--ink);
+  color: var(--paper);
+}
+
+.site-footer .social-handles {
+  grid-column: 1 / -1;
+  justify-content: center;
+  padding-top: 24px;
+  border-top: 1px solid rgba(241, 239, 231, 0.12);
+}
+
+.site-footer .social-handles a {
+  padding: 7px 12px;
+  border-color: rgba(241, 239, 231, 0.2);
+}
+
+.site-footer .social-handles a:hover,
+.site-footer .social-handles a:focus-visible {
+  border-color: var(--accent);
+  color: var(--white);
+}
+
+.site-footer .social-handle {
+  font-size: 0.7rem;
+}
+
 .site-footer {
   display: grid;
   grid-template-columns: 1fr auto 1fr;
@@ -1519,7 +1600,7 @@ img {
   font-size: 0.69rem;
 }
 
-.site-footer > span:last-child {
+.site-footer-legal {
   justify-self: end;
   font-family: var(--mono);
   text-transform: uppercase;
@@ -1675,6 +1756,44 @@ img {
   color: #59615d;
   font-size: 1rem;
   line-height: 1.7;
+}
+
+.resume-contact {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin: 26px 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.resume-contact a,
+.resume-contact > li > span {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 7px;
+  padding: 7px 12px;
+  border: 1px solid rgba(10, 15, 13, 0.16);
+  border-radius: 999px;
+  color: #4c5b54;
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: -0.015em;
+}
+
+.resume-contact a:hover,
+.resume-contact a:focus-visible {
+  border-color: var(--accent-deep);
+  color: var(--ink);
+}
+
+.resume-contact-network {
+  color: #7a827d;
+  font-family: var(--mono);
+  font-size: 0.56rem;
+  font-weight: 400;
+  letter-spacing: 0.09em;
+  text-transform: uppercase;
 }
 
 .resume-profile-summary {
@@ -2086,7 +2205,7 @@ img {
   .hero {
     min-height: auto;
     gap: 56px;
-    padding: 150px 20px 58px;
+    padding: 112px 20px 58px;
   }
 
   .hero h1 {
@@ -2243,8 +2362,12 @@ img {
     text-align: left;
   }
 
-  .site-footer > span:last-child {
+  .site-footer-legal {
     justify-self: start;
+  }
+
+  .site-footer .social-handles {
+    justify-content: flex-start;
   }
 
   .resume-page {
@@ -2331,10 +2454,15 @@ img {
   }
 }
 
+/*
+ * Print: the résumé is tuned to land on exactly two Letter pages. Sizes are
+ * deliberately explicit here rather than inherited from the screen scale, so
+ * editing screen typography cannot silently push the export to a third page.
+ */
 @media print {
   @page {
     size: letter;
-    margin: 0.48in;
+    margin: 0.42in;
   }
 
   html,
@@ -2360,46 +2488,115 @@ img {
   }
 
   .resume-header {
-    padding-bottom: 28px;
+    padding-bottom: 14px;
+    border-bottom-width: 2px;
+  }
+
+  .resume-eyebrow,
+  .resume-section-index,
+  .resume-project-category,
+  .resume-profile-summary-label,
+  .resume-career-scope,
+  .resume-career-dates {
+    font-size: 0.54rem;
+    letter-spacing: 0.08em;
   }
 
   .resume-name {
-    margin-top: 14px;
-    font-size: 4rem;
+    margin-top: 7px;
+    font-size: 2.35rem;
+    line-height: 0.95;
   }
 
-  .resume-role,
+  .resume-role {
+    margin-top: 6px;
+    font-size: 0.9rem;
+  }
+
   .resume-introduction {
-    margin-top: 12px;
+    max-width: none;
+    margin-top: 8px;
+    font-size: 0.66rem;
+    line-height: 1.46;
+  }
+
+  .resume-contact {
+    gap: 3px 16px;
+    margin-top: 10px;
+  }
+
+  .resume-contact a,
+  .resume-contact > li > span {
+    gap: 5px;
+    padding: 0;
+    border: 0;
+    font-size: 0.66rem;
+  }
+
+  .resume-contact > li {
+    display: flex;
+    align-items: baseline;
+  }
+
+  .resume-contact-network {
+    font-size: 0.52rem;
   }
 
   .resume-profile-summary {
-    margin-top: 20px;
+    margin-top: 12px;
   }
 
   .resume-profile-summary-item,
   .resume-profile-summary-item + .resume-profile-summary-item {
-    padding: 10px 12px 10px 0;
+    padding: 6px 10px 6px 0;
+  }
+
+  .resume-profile-summary-item + .resume-profile-summary-item {
+    padding-left: 10px;
+  }
+
+  .resume-profile-summary-value {
+    margin-top: 3px;
+    font-size: 0.9rem;
   }
 
   .resume-section {
-    grid-template-columns: 1.25in 1fr;
-    gap: 0.3in;
-    padding: 24px 0;
-    break-inside: avoid;
+    grid-template-columns: 1in 1fr;
+    gap: 0.2in;
+    padding: 11px 0;
+  }
+
+  .resume-section-title {
+    margin-top: 3px;
+    font-size: 0.95rem;
+  }
+
+  .resume-profile-copy {
+    font-size: 0.66rem;
+    line-height: 1.5;
+  }
+
+  .resume-profile-copy + .resume-profile-copy {
+    margin-top: 7px;
   }
 
   .resume-section.resume-career-section {
     display: block;
-    break-inside: auto;
   }
 
   .resume-career-section .resume-section-heading {
-    margin-bottom: 22px;
+    display: flex;
+    align-items: baseline;
+    gap: 10px;
+    margin-bottom: 10px;
+  }
+
+  .resume-career-section .resume-section-title {
+    margin-top: 0;
   }
 
   .resume-career-role {
-    padding: 0 0 18px 18px;
+    padding: 0 0 9px 14px;
     break-inside: avoid;
     page-break-inside: avoid;
   }
@@ -2408,34 +2605,144 @@ img {
     display: none;
   }
 
+  .resume-career-role-header {
+    gap: 12px;
+  }
+
   .resume-career-title {
-    font-size: 1.08rem;
+    font-size: 0.9rem;
+    line-height: 1.15;
+  }
+
+  .resume-career-scope {
+    margin-top: 3px;
   }
 
   .resume-career-highlights {
-    gap: 3px;
-    margin-top: 10px;
-    font-size: 0.68rem;
+    gap: 2px;
+    margin-top: 6px;
+    padding-left: 13px;
+    font-size: 0.62rem;
     line-height: 1.38;
   }
 
-  .resume-focus-card,
-  .resume-project {
-    break-inside: avoid;
+  .resume-focus-grid {
+    gap: 8px;
   }
 
   .resume-focus-card {
-    padding: 14px;
+    padding: 9px 11px;
+    border-radius: 7px;
+    break-inside: avoid;
+  }
+
+  .resume-focus-title {
+    font-size: 0.86rem;
+  }
+
+  .resume-focus-description {
+    margin-top: 4px;
+    font-size: 0.62rem;
+    line-height: 1.4;
+  }
+
+  .resume-project-list {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 0 22px;
   }
 
   .resume-project {
-    padding: 16px 0;
+    padding: 8px 0;
+    break-inside: avoid;
+  }
+
+  .resume-project:nth-child(2) {
+    padding-top: 0;
+    border-top: 0;
+  }
+
+  .resume-project-header {
+    align-items: baseline;
+    gap: 10px;
+  }
+
+  .resume-project-title {
+    font-size: 0.86rem;
+  }
+
+  .resume-project-category {
+    margin-top: 2px;
+  }
+
+  .resume-project-description {
+    margin-top: 4px;
+    font-size: 0.62rem;
+    line-height: 1.4;
+  }
+
+  .resume-project-capabilities {
+    gap: 4px;
+    margin-top: 6px;
+  }
+
+  .resume-project-capability {
+    padding: 3px 7px;
+    font-size: 0.52rem;
+  }
+
+  .resume-technical-list,
+  .resume-product-list {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 0 22px;
+  }
+
+  .resume-technical-item,
+  .resume-product-item {
+    gap: 12px;
+    padding: 6px 0;
+    break-inside: avoid;
+  }
+
+  .resume-technical-item {
+    grid-template-columns: 0.72in 1fr;
+  }
+
+  .resume-technical-item:nth-child(2),
+  .resume-product-item:nth-child(2) {
+    padding-top: 0;
+    border-top: 0;
+  }
+
+  .resume-technical-label {
+    font-size: 0.57rem;
+  }
+
+  .resume-technical-value,
+  .resume-product-description {
+    font-size: 0.62rem;
+    line-height: 1.4;
+  }
+
+  .resume-product-item {
+    grid-template-columns: minmax(0, 0.85fr) 1fr;
+    gap: 12px;
+  }
+
+  .resume-footer {
+    padding-top: 12px;
+  }
+
+  .resume-availability {
+    font-size: 0.8rem;
   }
 
   .resume-project-link,
   .resume-product-link,
   .resume-github-link {
+    padding-bottom: 0;
     border-bottom: 0;
+    font-size: 0.57rem;
   }
 
   .resume-project-link::after,

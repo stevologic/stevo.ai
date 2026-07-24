@@ -1,4 +1,5 @@
 import type { Metadata, Viewport } from "next";
+import { socialProfileUrls } from "@/lib/contact";
 import "./globals.css";
 
 const siteUrl = "https://stevo.ai";
@@ -6,7 +7,7 @@ const socialTitle = "Stevo.AI — vCISO, Cybersecurity & AI Enablement";
 const socialDescription =
   "Principal-led cybersecurity and AI enablement consulting: vCISO services, AI governance, secure agent delivery, application security, and software supply-chain assurance.";
 const socialImageAlt =
-  "Stevo.AI: security leadership, AI enablement, vCISO services, cybersecurity consulting, and professional engagements led by CEO Stephen M Abbott.";
+  "Stevo.AI: security leadership, AI enablement, vCISO services, cybersecurity consulting, and professional engagements led by Stephen M Abbott.";
 
 export const metadata: Metadata = {
   metadataBase: new URL(siteUrl),
@@ -114,6 +115,7 @@ const structuredData = {
       logo: `${siteUrl}/icon-512.png`,
       description: socialDescription,
       employee: { "@id": `${siteUrl}/#stephen-abbott` },
+      sameAs: socialProfileUrls,
       knowsAbout: [
         "vCISO services",
         "Cybersecurity leadership",
@@ -129,9 +131,9 @@ const structuredData = {
       name: "Stephen M Abbott",
       url: `${siteUrl}/resume/`,
       image: `${siteUrl}/stephen-abbott-profile.png`,
-      jobTitle: "CEO",
+      jobTitle: "Cybersecurity and AI advisor",
       worksFor: { "@id": `${siteUrl}/#organization` },
-      sameAs: ["https://github.com/stevologic"],
+      sameAs: socialProfileUrls,
       knowsAbout: [
         "Artificial intelligence",
         "Cybersecurity",

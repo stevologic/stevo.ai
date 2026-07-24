@@ -2,11 +2,13 @@ import type { Metadata } from "next";
 import Link from "next/link";
 
 import { PrintButton } from "../../components/PrintButton";
+import { ProtectedEmailAddress } from "../../components/ProtectedEmail";
+import { socialHandles } from "@/lib/contact";
 
 export const metadata: Metadata = {
-  title: "Stephen M Abbott | CEO, Stevo.AI",
+  title: "Stephen M Abbott | Cybersecurity & AI",
   description:
-    "The employer-anonymized professional resume of Stephen M Abbott, CEO of Stevo.AI, spanning cybersecurity leadership, applied AI, enterprise engineering, and shipped products.",
+    "The employer-anonymized professional resume of Stephen M Abbott, spanning cybersecurity leadership, applied AI, enterprise engineering, and shipped products.",
 };
 
 const careerMetrics = [
@@ -212,19 +214,34 @@ export default function ResumePage() {
 
       <article className="resume-document">
         <header className="resume-header">
-          <p className="resume-eyebrow">Professional resume · CEO profile</p>
+          <p className="resume-eyebrow">Professional resume</p>
           <h1 className="resume-name">Stephen M Abbott</h1>
           <p className="resume-role">
-            CEO, Stevo.AI · Cybersecurity &amp; AI enablement
+            Stevo.AI · Cybersecurity &amp; AI enablement
           </p>
           <p className="resume-introduction">
-            CEO of Stevo.AI and a cybersecurity and engineering leader with 16
-            years building and scaling security programs in highly regulated
-            enterprise environments. Combines executive risk governance,
-            exposure management, application and supply-chain security,
-            sensitive-data protection, governed AI-assisted remediation, and
-            hands-on product engineering.
+            Cybersecurity and engineering leader with 16 years building and
+            scaling security programs in highly regulated enterprise
+            environments. Combines risk governance, exposure management,
+            application and supply-chain security, sensitive-data protection,
+            governed AI-assisted remediation, and hands-on product engineering.
           </p>
+
+          <ul className="resume-contact" aria-label="Contact and profiles">
+            <li>
+              <ProtectedEmailAddress />
+            </li>
+            {socialHandles.map((profile) => (
+              <li key={profile.id}>
+                <a href={profile.href} target="_blank" rel="me noreferrer">
+                  <span className="resume-contact-network">
+                    {profile.network}
+                  </span>
+                  {profile.handle}
+                </a>
+              </li>
+            ))}
+          </ul>
 
           <dl className="resume-profile-summary">
             {careerMetrics.map((metric) => (

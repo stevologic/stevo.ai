@@ -34,7 +34,7 @@ test("site contains service-first positioning and social metadata", async () => 
   assert.match(html, /Considering select professional engagements/i);
   assert.match(html, /Shiba Studio/);
   assert.match(html, /security-recipes\.ai/);
-  assert.match(html, /Stephen M Abbott, CEO/);
+  assert.match(html, /Stephen M Abbott/);
   assert.match(html, /https:\/\/stevo\.ai\/og-services\.png/);
   assert.match(html, /summary_large_image/);
   assert.match(html, /twitter:image/);
@@ -50,7 +50,7 @@ test("site contains service-first positioning and social metadata", async () => 
   assert.doesNotMatch(html, />Navigate<|⌘ K|Site navigator/i);
 });
 
-test("professional services precede CEO proof and portfolio", async () => {
+test("professional services precede delivery proof and portfolio", async () => {
   const html = await exportedPage("index.html");
   const servicesIndex = html.indexOf(
     '<section class="services-section section" id="services">',
@@ -67,7 +67,7 @@ test("professional services precede CEO proof and portfolio", async () => {
   assert.ok(profileIndex > workIndex);
   assert.match(html, /01 \/ Professional services/);
   assert.match(html, /02 \/ Proof of delivery/);
-  assert.match(html, /03 \/ CEO profile/);
+  assert.match(html, /03 \/ Profile/);
   assert.match(html, /Fractional leadership/);
   assert.match(html, /Advisory intensive/);
   assert.match(html, /Delivery sprint/);
@@ -124,10 +124,12 @@ test("command palette and navigation hotkeys are removed", async () => {
 });
 
 test("email contact is revealed interactively instead of exposed to basic scrapers", async () => {
-  const [html, component] = await Promise.all([
+  const [html, resumeHtml, contact, component] = await Promise.all([
     exportedPage("index.html"),
+    exportedPage("resume/index.html"),
+    readFile(new URL("../lib/contact.ts", import.meta.url), "utf8"),
     readFile(
-      new URL("../components/PortfolioExperience.tsx", import.meta.url),
+      new URL("../components/ProtectedEmail.tsx", import.meta.url),
       "utf8",
     ),
   ]);
@@ -135,9 +137,61 @@ test("email contact is revealed interactively instead of exposed to basic scrape
   assert.match(html, /Discuss an engagement/);
   assert.doesNotMatch(html, /mailto:/i);
   assert.doesNotMatch(html, /[A-Za-z0-9._%+-]+@gmail\.com/i);
+  assert.doesNotMatch(resumeHtml, /mailto:/i);
+  assert.doesNotMatch(resumeHtml, /[A-Za-z0-9._%+-]+@gmail\.com/i);
+  assert.match(contact, /decodeProtectedEmail/);
+  assert.match(contact, /protectedMailbox/);
   assert.match(component, /decodeProtectedEmail/);
-  assert.match(component, /protectedMailbox/);
+  assert.doesNotMatch(contact, /[A-Za-z0-9._%+-]+@gmail\.com/i);
   assert.doesNotMatch(component, /[A-Za-z0-9._%+-]+@gmail\.com/i);
+});
+
+test("obfuscated mailbox still decodes to the real contact address", async () => {
+  const { decodeProtectedEmail } = await import("../lib/contact.ts");
+  assert.equal(decodeProtectedEmail(), "stephenabbott20@gmail.com");
+});
+
+test("social handles are published on the site and in structured data", async () => {
+  const [html, resumeHtml] = await Promise.all([
+    exportedPage("index.html"),
+    exportedPage("resume/index.html"),
+  ]);
+
+  const profiles = [
+    "https://github.com/stevologic",
+    "https://www.youtube.com/@MadeItHappenDaily",
+    "https://x.com/MadeItHappenX",
+    "https://www.twitch.tv/madeithappen",
+    "https://discord.com/users/317149305452363776",
+  ];
+
+  for (const profile of profiles) {
+    assert.ok(html.includes(profile), `index is missing ${profile}`);
+    assert.ok(resumeHtml.includes(profile), `resume is missing ${profile}`);
+  }
+
+  assert.match(html, /@MadeItHappenDaily/);
+  assert.match(html, /@MadeItHappenX/);
+  assert.match(html, /madeithappen3/);
+
+  const structuredData = html.match(
+    /<script type="application\/ld\+json">([\s\S]*?)<\/script>/,
+  )?.[1];
+  assert.ok(structuredData);
+  const graph = JSON.parse(structuredData)["@graph"];
+  for (const node of graph) {
+    assert.deepEqual(node.sameAs, profiles);
+  }
+});
+
+test("the site never claims a CEO title", async () => {
+  const [html, resumeHtml] = await Promise.all([
+    exportedPage("index.html"),
+    exportedPage("resume/index.html"),
+  ]);
+
+  assert.doesNotMatch(html, /\bCEO\b/);
+  assert.doesNotMatch(resumeHtml, /\bCEO\b/);
 });
 
 test("desktop project grid uses four compact cards per row", async () => {
@@ -223,7 +277,7 @@ test("professional resume is detailed, private, and print-ready", async () => {
 
   assert.match(html, /Professional resume/);
   assert.match(html, /Stephen M Abbott/);
-  assert.match(html, /CEO, Stevo\.AI/);
+  assert.match(html, /Stevo\.AI · Cybersecurity/);
   assert.match(html, /Professional experience/);
   assert.match(html, /16 years/);
   assert.match(html, /92%/);

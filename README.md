@@ -8,7 +8,7 @@ product engineering, shipped work, and focused advisory services.
 - An interactive, responsive portfolio with keyboard navigation and project filters
 - Eight curated live products enriched with current GitHub activity and releases
 - AI, security, product, and technical advisory service offerings
-- A semantic, print-ready professional profile at `/resume/`
+- A semantic professional profile at `/resume/` that prints to exactly two pages
 - Social, search, sitemap, custom-domain, and reduced-motion support
 - Automated daily project refresh and deployment to the `gh-pages` branch
 
@@ -43,6 +43,16 @@ Editorial project copy and display order live in `content/projects.json`.
 `scripts/sync-github.mjs` merges current public repository metadata into
 `data/github.generated.json`; raw GitHub descriptions never replace the curated
 portfolio narrative.
+
+Contact handles live in `lib/contact.ts` and feed the contact block, the footer,
+the résumé header, and the `sameAs` structured data from one list. The email
+address is stored XOR-masked and decoded in the browser, so it never appears in
+the static export.
+
+The `@media print` block in `app/globals.css` is tuned so `/resume/` exports to
+exactly two Letter pages. It sets print sizes explicitly rather than inheriting
+the screen scale, so changing screen typography cannot silently add a page.
+After editing résumé content, re-check the page count before publishing.
 
 ## Publishing
 
