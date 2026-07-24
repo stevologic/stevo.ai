@@ -203,6 +203,27 @@ img {
   gap: 8px;
 }
 
+.header-contact {
+  display: inline-flex;
+  min-height: 42px;
+  align-items: center;
+  padding: 0 16px;
+  border-radius: 10px;
+  background: var(--accent);
+  color: var(--ink);
+  font-size: 0.78rem;
+  font-weight: 700;
+  transition:
+    background 180ms ease,
+    transform 180ms ease;
+}
+
+.header-contact:hover,
+.header-contact:focus-visible {
+  transform: translateY(-1px);
+  background: var(--white);
+}
+
 .menu-button {
   display: none;
   width: 42px;
@@ -2054,6 +2075,10 @@ img {
 
   .menu-button {
     display: grid;
+  }
+
+  .header-contact {
+    display: none;
   }
 
   .hero {

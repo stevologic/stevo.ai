@@ -20,64 +20,66 @@ const filters: Array<"All work" | ProjectCategory> = [
 
 const serviceTracks = [
   {
-    id: "govern",
+    id: "vciso",
     number: "01",
-    label: "Govern",
-    title: "AI security & operating models",
+    label: "vCISO",
+    title: "vCISO & security leadership",
     description:
-      "Move from AI experimentation to a defensible program with explicit boundaries, human authority, evidence, and rollback built into the way work gets done.",
+      "Embed experienced security leadership where the business needs it most: setting direction, creating an operating cadence, and turning risk into decisions executives and technical teams can act on.",
     outcomes: [
-      "AI risk and control architecture",
-      "Human-in-the-loop approval design",
-      "Agent governance and auditability",
-      "Practical adoption roadmaps",
+      "Security strategy, roadmap, and operating cadence",
+      "Executive risk measures and decision support",
+      "Program governance and incident readiness",
+      "Application and developer security leadership",
     ],
-    bestFor: "Leaders introducing agents into high-consequence workflows.",
+    bestFor:
+      "Organizations that need senior security leadership without adding a full-time CISO.",
   },
   {
-    id: "build",
+    id: "enable",
     number: "02",
-    label: "Build",
-    title: "Agent systems & applied AI products",
+    label: "Enable",
+    title: "AI enablement & governance",
     description:
-      "Design and ship useful AI systems—not demos—with scoped context, durable memory, tool orchestration, local-first options, and production-grade product thinking.",
+      "Turn AI interest into governed business capability with a practical use-case roadmap, clear human authority, and controls designed for how agents and teams actually work.",
+    outcomes: [
+      "Use-case portfolio and adoption roadmap",
+      "AI policy and control architecture",
+      "Human approval, evidence, and rollback design",
+      "Agent governance and operating models",
+    ],
+    bestFor:
+      "Leadership teams moving from AI experimentation to responsible adoption.",
+  },
+  {
+    id: "deliver",
+    number: "03",
+    label: "Deliver",
+    title: "Secure AI & agent delivery",
+    description:
+      "Design and ship useful AI systems—not demos—with scoped context, durable memory, tool orchestration, and security built into the delivery path.",
     outcomes: [
       "MCP servers and agent toolchains",
       "Multi-provider AI applications",
       "Workflow automation and integrations",
-      "Rapid product prototyping",
+      "Production prototypes and secure architecture",
     ],
-    bestFor: "Teams that need a working system, not another slide deck.",
+    bestFor: "Teams that need a working, defensible system—not another slide deck.",
   },
   {
     id: "assure",
-    number: "03",
+    number: "04",
     label: "Assure",
-    title: "Application & supply-chain security",
+    title: "Application & supply-chain assurance",
     description:
       "Turn dependency, vulnerability, and architecture signals into prioritized engineering action that can be verified, repeated, and explained.",
     outcomes: [
       "Dependency and attack-surface analysis",
       "CVE remediation workflows",
-      "SBOM, license, and OSS risk review",
+      "SBOM, license, and open-source risk review",
       "Evidence-driven security automation",
     ],
     bestFor: "Engineering organizations that want security to accelerate delivery.",
-  },
-  {
-    id: "advise",
-    number: "04",
-    label: "Advise",
-    title: "Technical strategy & product advisory",
-    description:
-      "Clarify a difficult technology decision, pressure-test the plan, and leave with an executable path that aligns product ambition, engineering reality, and security risk.",
-    outcomes: [
-      "Architecture and build-vs-buy decisions",
-      "Technical product positioning",
-      "Security-first modernization plans",
-      "Hands-on executive working sessions",
-    ],
-    bestFor: "Founders and technical leaders at an inflection point.",
   },
 ] as const;
 
@@ -126,7 +128,7 @@ function ProtectedEmail() {
   if (email) {
     return (
       <a
-        className="button button-secondary protected-email-link"
+        className="button button-primary protected-email-link"
         href={`mailto:${email}`}
         ref={emailLinkRef}
       >
@@ -137,11 +139,11 @@ function ProtectedEmail() {
 
   return (
     <button
-      className="button button-secondary protected-email-trigger"
+      className="button button-primary protected-email-trigger"
       type="button"
       onClick={() => setEmail(decodeProtectedEmail())}
     >
-      Reveal email
+      Discuss an engagement
     </button>
   );
 }
@@ -354,20 +356,23 @@ export function PortfolioExperience({
           <span>stevo.ai</span>
         </a>
         <nav className={mobileOpen ? "nav-links nav-links-open" : "nav-links"}>
-          <a href="#work" onClick={() => setMobileOpen(false)}>
-            Work
-          </a>
           <a href="#services" onClick={() => setMobileOpen(false)}>
             Services
           </a>
+          <a href="#work" onClick={() => setMobileOpen(false)}>
+            Proof
+          </a>
           <a href="#profile" onClick={() => setMobileOpen(false)}>
-            Profile
+            CEO
           </a>
           <Link href="/resume/" onClick={() => setMobileOpen(false)}>
             Résumé
           </Link>
         </nav>
         <div className="header-actions">
+          <a className="header-contact" href="#contact">
+            Discuss an engagement
+          </a>
           <button
             className="menu-button"
             type="button"
@@ -390,33 +395,38 @@ export function PortfolioExperience({
           </div>
           <div className="hero-copy" data-reveal>
             <p className="eyebrow">
-              <span>Stephen M Abbott</span>
-              <span>Applied AI + Cybersecurity</span>
+              <span>Stevo.AI</span>
+              <span>vCISO · Cybersecurity · AI enablement</span>
             </p>
             <h1>
-              Build what&apos;s next.
-              <span>Secure what matters.</span>
+              Secure the business.
+              <span>Enable what&apos;s next.</span>
             </h1>
             <p className="hero-intro">
-              I design human-governed AI systems, open security infrastructure,
-              and polished products that turn difficult technology into useful,
-              defensible outcomes.
+              Stevo.AI helps leaders strengthen cybersecurity, govern AI
+              adoption, and turn high-consequence technology decisions into
+              executable programs and working systems—through vCISO leadership,
+              focused advisory, and hands-on delivery.
             </p>
             <div className="hero-actions">
-              <a className="button button-primary" href="#work">
-                Explore selected work <Arrow />
+              <a className="button button-primary" href="#contact">
+                Discuss an engagement <Arrow />
               </a>
               <a className="button button-secondary" href="#services">
-                View services
+                Explore services
               </a>
             </div>
           </div>
 
-          <aside className="hero-console" data-reveal aria-label="Current activity">
+          <aside
+            className="hero-console"
+            data-reveal
+            aria-label="Professional engagement options"
+          >
             <div className="console-header">
-              <span className="console-kicker">Builder signal</span>
+              <span className="console-kicker">Engagement signal</span>
               <span className="console-live">
-                <span className="status-dot" aria-hidden="true" /> Live
+                <span className="status-dot" aria-hidden="true" /> Select availability
               </span>
             </div>
             <div className="identity-card">
@@ -432,31 +442,26 @@ export function PortfolioExperience({
               </div>
               <div className="identity-details">
                 <strong>Stephen M Abbott</strong>
-                <span>Hands-on AI & security builder</span>
-                <a
-                  href="https://github.com/stevologic"
-                  target="_blank"
-                  rel="noreferrer"
-                >
-                  @stevologic <Arrow />
-                </a>
+                <span>CEO, Stevo.AI · Security & AI advisor</span>
+                <Link href="/resume/">Professional profile <Arrow /></Link>
               </div>
             </div>
             <div className="activity-list">
-              {projects.slice(0, 3).map((project) => (
-                <a
-                  href={project.siteUrl}
-                  target="_blank"
-                  rel="noreferrer"
-                  key={project.repo}
-                >
-                  <span>{project.name}</span>
-                  <small>{formatDate(project.github.pushedAt)}</small>
-                </a>
-              ))}
+              <a href="#services" onClick={() => setActiveService("vciso")}>
+                <span>vCISO & security leadership</span>
+                <small>Fractional</small>
+              </a>
+              <a href="#services" onClick={() => setActiveService("enable")}>
+                <span>AI enablement & governance</span>
+                <small>Advisory</small>
+              </a>
+              <a href="#services" onClick={() => setActiveService("deliver")}>
+                <span>Secure AI & agent delivery</span>
+                <small>Hands-on</small>
+              </a>
             </div>
             <p className="console-footnote">
-              Portfolio data refreshed {formatDate(syncedAt)}
+              Principal-led engagements · Focused scope · Accountable outcomes
             </p>
           </aside>
         </section>
@@ -480,49 +485,14 @@ export function PortfolioExperience({
           </div>
         </section>
 
-        <section className="work-section section" id="work">
-          <div className="section-heading" data-reveal>
-            <p className="section-number">01 / Selected work</p>
-            <h2>Proof lives in the product.</h2>
-            <p>
-              A working portfolio across AI agents, cybersecurity, developer
-              infrastructure, desktop automation, and independent product
-              experiments.
-            </p>
-          </div>
-
-          <div className="project-toolbar" data-reveal>
-            <div className="project-filters" aria-label="Filter projects">
-              {filters.map((filter) => (
-                <button
-                  type="button"
-                  key={filter}
-                  className={activeFilter === filter ? "is-active" : ""}
-                  aria-pressed={activeFilter === filter}
-                  onClick={() => setActiveFilter(filter)}
-                >
-                  {filter}
-                </button>
-              ))}
-            </div>
-            <span>{visibleProjects.length} projects</span>
-          </div>
-
-          <div className="project-grid">
-            {visibleProjects.map((project, index) => (
-              <ProjectCard project={project} index={index} key={project.repo} />
-            ))}
-          </div>
-        </section>
-
         <section className="services-section section" id="services">
           <div className="section-heading section-heading-light" data-reveal>
-            <p className="section-number">02 / Services</p>
-            <h2>Strategy with fingerprints on it.</h2>
+            <p className="section-number">01 / Professional services</p>
+            <h2>Security leadership and AI enablement that move with the business.</h2>
             <p>
-              Senior-level thinking paired with enough hands-on depth to move
-              from ambiguity to architecture, working software, and verifiable
-              results.
+              Principal-led engagements for leaders who need experienced
+              judgment, an executable path, and enough hands-on depth to turn
+              strategy into measurable progress.
             </p>
           </div>
 
@@ -549,7 +519,7 @@ export function PortfolioExperience({
             >
               <p className="service-signal">
                 <span className="status-dot" aria-hidden="true" />
-                Available for focused engagements
+                Considering select professional engagements
               </p>
               <h3>{currentService.title}</h3>
               <p>{currentService.description}</p>
@@ -570,17 +540,67 @@ export function PortfolioExperience({
             </article>
           </div>
 
-          <div className="operating-model">
+          <div
+            className="operating-model"
+            id="engagements"
+            aria-label="Professional engagement models"
+          >
             {[
-              ["Frame", "Define the real decision, boundaries, and success evidence."],
-              ["Build", "Create the smallest complete system that proves the path."],
-              ["Prove", "Test the controls, document the result, and transfer capability."],
+              [
+                "Fractional leadership",
+                "Ongoing vCISO direction, operating cadence, and executive security decision support.",
+              ],
+              [
+                "Advisory intensive",
+                "A bounded strategy, governance, risk, or architecture decision moved to resolution.",
+              ],
+              [
+                "Delivery sprint",
+                "Hands-on implementation, prototype, or security improvement with evidence and transfer.",
+              ],
             ].map(([title, description], index) => (
               <article key={title} data-reveal>
                 <span>0{index + 1}</span>
                 <h3>{title}</h3>
                 <p>{description}</p>
               </article>
+            ))}
+          </div>
+        </section>
+
+        <section className="work-section section" id="work">
+          <div className="section-heading" data-reveal>
+            <p className="section-number">02 / Proof of delivery</p>
+            <h2>Independent products. Verifiable capability.</h2>
+            <p>
+              Products and open-source systems built by Stephen M Abbott, CEO
+              of Stevo.AI—evidence of the technical depth behind every
+              professional engagement.
+            </p>
+          </div>
+
+          <div className="project-toolbar" data-reveal>
+            <div className="project-filters" aria-label="Filter projects">
+              {filters.map((filter) => (
+                <button
+                  type="button"
+                  key={filter}
+                  className={activeFilter === filter ? "is-active" : ""}
+                  aria-pressed={activeFilter === filter}
+                  onClick={() => setActiveFilter(filter)}
+                >
+                  {filter}
+                </button>
+              ))}
+            </div>
+            <span>
+              {visibleProjects.length} projects · refreshed {formatDate(syncedAt)}
+            </span>
+          </div>
+
+          <div className="project-grid">
+            {visibleProjects.map((project, index) => (
+              <ProjectCard project={project} index={index} key={project.repo} />
             ))}
           </div>
         </section>
@@ -594,25 +614,25 @@ export function PortfolioExperience({
               height={1288}
               loading="lazy"
             />
-            <span className="photo-caption">Outside the interface</span>
+            <span className="photo-caption">CEO · Builder · Advisor</span>
           </div>
           <div className="profile-copy" data-reveal>
-            <p className="section-number">03 / Profile</p>
-            <blockquote>“Curious enough to try it.”</blockquote>
+            <p className="section-number">03 / CEO profile</p>
+            <blockquote>Stephen M Abbott, CEO.</blockquote>
             <p>
-              That line has lived on my GitHub profile for years because it is
-              the shortest explanation of how I work. I move comfortably
-              between strategy and implementation, follow hard questions into
-              the details, and prefer a working artifact over an abstract claim.
+              Stephen leads Stevo.AI with 16 years of experience across
+              enterprise technology, security engineering, program leadership,
+              and product delivery—including 11 years focused on cybersecurity.
             </p>
             <p>
-              The common thread across my work is governed capability: powerful
-              systems that stay understandable, observable, and answerable to
-              the people who use them.
+              His résumé and portfolio show the operating range behind the
+              consultancy: executive-level judgment, teams of up to 26,
+              measurable risk reduction, and the ability to build the systems
+              being advised—not merely describe them.
             </p>
             <div className="profile-actions">
               <Link className="text-link" href="/resume/">
-                Read professional profile <Arrow />
+                Read Stephen&apos;s résumé <Arrow />
               </Link>
               <a
                 className="text-link"
@@ -620,32 +640,33 @@ export function PortfolioExperience({
                 target="_blank"
                 rel="noreferrer"
               >
-                Explore GitHub <Arrow />
+                Explore the CEO portfolio <Arrow />
               </a>
             </div>
           </div>
         </section>
 
-        <section className="closing-section section">
-          <p className="section-number">04 / Start somewhere useful</p>
-          <h2>Have a consequential system to design?</h2>
+        <section className="closing-section section" id="contact">
+          <p className="section-number">04 / Professional engagements</p>
+          <h2>Put the hard decision in motion.</h2>
           <p>
-            Bring the hard problem: a risky AI workflow, a security program that
-            needs traction, or a product idea that deserves to become real.
+            Bring Stevo.AI the consequential problem: a security program that
+            needs leadership, an AI initiative that needs guardrails and
+            traction, or a system that must become both useful and defensible.
           </p>
           <div className="hero-actions">
+            <ProtectedEmail />
+            <Link className="button button-secondary" href="/resume/">
+              Review CEO résumé
+            </Link>
             <a
-              className="button button-primary"
+              className="button button-secondary"
               href="https://github.com/stevologic"
               target="_blank"
               rel="noreferrer"
             >
-              Start on GitHub <Arrow />
+              Explore portfolio <Arrow />
             </a>
-            <Link className="button button-secondary" href="/resume/">
-              View profile
-            </Link>
-            <ProtectedEmail />
           </div>
         </section>
       </main>
@@ -655,10 +676,10 @@ export function PortfolioExperience({
           <span className="brand-mark" aria-hidden="true">
             S
           </span>
-          <span>Stephen M Abbott</span>
+          <span>Stevo.AI</span>
         </div>
-        <p>AI systems · Cybersecurity · Product engineering</p>
-        <span>© {new Date().getFullYear()} stevo.ai</span>
+        <p>vCISO · Cybersecurity consulting · AI enablement</p>
+        <span>Led by Stephen M Abbott · © {new Date().getFullYear()}</span>
       </footer>
     </div>
   );

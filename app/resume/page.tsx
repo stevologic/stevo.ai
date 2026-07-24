@@ -4,9 +4,9 @@ import Link from "next/link";
 import { PrintButton } from "../../components/PrintButton";
 
 export const metadata: Metadata = {
-  title: "Professional Resume | Stephen M Abbott",
+  title: "Stephen M Abbott | CEO, Stevo.AI",
   description:
-    "The employer-anonymized professional resume of Stephen M Abbott, spanning cybersecurity leadership, applied AI, enterprise engineering, and shipped products.",
+    "The employer-anonymized professional resume of Stephen M Abbott, CEO of Stevo.AI, spanning cybersecurity leadership, applied AI, enterprise engineering, and shipped products.",
 };
 
 const careerMetrics = [
@@ -205,25 +205,25 @@ export default function ResumePage() {
     <main className="resume-page">
       <nav className="resume-toolbar" aria-label="Professional profile actions">
         <Link className="resume-back-link" href="/">
-          Back to portfolio
+          Back to Stevo.AI
         </Link>
         <PrintButton />
       </nav>
 
       <article className="resume-document">
         <header className="resume-header">
-          <p className="resume-eyebrow">Professional resume</p>
+          <p className="resume-eyebrow">Professional resume · CEO profile</p>
           <h1 className="resume-name">Stephen M Abbott</h1>
           <p className="resume-role">
-            Cybersecurity leader · Applied AI &amp; product builder
+            CEO, Stevo.AI · Cybersecurity &amp; AI enablement
           </p>
           <p className="resume-introduction">
-            Cybersecurity and engineering leader with 16 years building and
-            scaling security programs in highly regulated enterprise
-            environments. Combines executive risk governance, exposure
-            management, application and supply-chain security, sensitive-data
-            protection, governed AI-assisted remediation, and hands-on product
-            engineering.
+            CEO of Stevo.AI and a cybersecurity and engineering leader with 16
+            years building and scaling security programs in highly regulated
+            enterprise environments. Combines executive risk governance,
+            exposure management, application and supply-chain security,
+            sensitive-data protection, governed AI-assisted remediation, and
+            hands-on product engineering.
           </p>
 
           <dl className="resume-profile-summary">

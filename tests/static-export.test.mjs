@@ -13,7 +13,7 @@ test("exports the site, install icons, and social assets", async () => {
     access(new URL("../out/index.html", import.meta.url)),
     access(new URL("../out/resume/index.html", import.meta.url)),
     access(new URL("../out/CNAME", import.meta.url)),
-    access(new URL("../out/og.png", import.meta.url)),
+    access(new URL("../out/og-services.png", import.meta.url)),
     access(new URL("../out/favicon.ico", import.meta.url)),
     access(new URL("../out/favicon-16x16.png", import.meta.url)),
     access(new URL("../out/favicon-32x32.png", import.meta.url)),
@@ -24,20 +24,23 @@ test("exports the site, install icons, and social assets", async () => {
   ]);
 });
 
-test("portfolio contains the finished content and social metadata", async () => {
+test("site contains service-first positioning and social metadata", async () => {
   const html = await exportedPage("index.html");
 
-  assert.match(html, /Build what(?:&apos;|&#x27;|')s next\./i);
-  assert.match(html, /Security leadership|Applied AI \+ Cybersecurity/i);
+  assert.match(html, /Secure the business\./i);
+  assert.match(html, /Enable what(?:&apos;|&#x27;|')s next\./i);
+  assert.match(html, /vCISO &amp; security leadership/i);
+  assert.match(html, /AI enablement &amp; governance/i);
+  assert.match(html, /Considering select professional engagements/i);
   assert.match(html, /Shiba Studio/);
   assert.match(html, /security-recipes\.ai/);
-  assert.match(html, /Services/);
-  assert.match(html, /https:\/\/stevo\.ai\/og\.png/);
+  assert.match(html, /Stephen M Abbott, CEO/);
+  assert.match(html, /https:\/\/stevo\.ai\/og-services\.png/);
   assert.match(html, /summary_large_image/);
   assert.match(html, /twitter:image/);
   assert.match(html, /twitter:image:alt/);
   assert.match(html, /og:image:width/);
-  assert.match(html, /Explore shipped AI products/);
+  assert.match(html, /Principal-led cybersecurity and AI enablement consulting/);
   assert.match(html, /rel="apple-touch-icon"/);
   assert.match(html, /href="\/apple-touch-icon\.png"/);
   assert.match(html, /rel="manifest"/);
@@ -45,6 +48,29 @@ test("portfolio contains the finished content and social metadata", async () => 
   assert.match(html, /apple-mobile-web-app-capable/);
   assert.doesNotMatch(html, /Your site is taking shape|codex-preview/i);
   assert.doesNotMatch(html, />Navigate<|⌘ K|Site navigator/i);
+});
+
+test("professional services precede CEO proof and portfolio", async () => {
+  const html = await exportedPage("index.html");
+  const servicesIndex = html.indexOf(
+    '<section class="services-section section" id="services">',
+  );
+  const workIndex = html.indexOf(
+    '<section class="work-section section" id="work">',
+  );
+  const profileIndex = html.indexOf(
+    '<section class="profile-section section" id="profile">',
+  );
+
+  assert.ok(servicesIndex > 0);
+  assert.ok(workIndex > servicesIndex);
+  assert.ok(profileIndex > workIndex);
+  assert.match(html, /01 \/ Professional services/);
+  assert.match(html, /02 \/ Proof of delivery/);
+  assert.match(html, /03 \/ CEO profile/);
+  assert.match(html, /Fractional leadership/);
+  assert.match(html, /Advisory intensive/);
+  assert.match(html, /Delivery sprint/);
 });
 
 test("hero career strip summarizes professional experience", async () => {
@@ -68,6 +94,8 @@ test("site manifest uses installable Stevo.AI icons", async () => {
   );
 
   assert.equal(manifest.short_name, "Stevo.AI");
+  assert.match(manifest.name, /Cybersecurity & AI Enablement/);
+  assert.match(manifest.description, /vCISO/);
   assert.equal(manifest.display, "standalone");
   assert.equal(manifest.theme_color, "#15161c");
   assert.deepEqual(
@@ -104,7 +132,7 @@ test("email contact is revealed interactively instead of exposed to basic scrape
     ),
   ]);
 
-  assert.match(html, /Reveal email/);
+  assert.match(html, /Discuss an engagement/);
   assert.doesNotMatch(html, /mailto:/i);
   assert.doesNotMatch(html, /[A-Za-z0-9._%+-]+@gmail\.com/i);
   assert.match(component, /decodeProtectedEmail/);
@@ -183,6 +211,7 @@ test("professional resume is detailed, private, and print-ready", async () => {
 
   assert.match(html, /Professional resume/);
   assert.match(html, /Stephen M Abbott/);
+  assert.match(html, /CEO, Stevo\.AI/);
   assert.match(html, /Professional experience/);
   assert.match(html, /16 years/);
   assert.match(html, /92%/);

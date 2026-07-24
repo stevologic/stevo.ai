@@ -2,20 +2,20 @@ import type { Metadata, Viewport } from "next";
 import "./globals.css";
 
 const siteUrl = "https://stevo.ai";
-const socialTitle = "Stephen M Abbott — Applied AI & Cybersecurity";
+const socialTitle = "Stevo.AI — vCISO, Cybersecurity & AI Enablement";
 const socialDescription =
-  "Build what's next. Secure what matters. Explore shipped AI products, open security infrastructure, enterprise security leadership, and advisory services.";
+  "Principal-led cybersecurity and AI enablement consulting: vCISO services, AI governance, secure agent delivery, application security, and software supply-chain assurance.";
 const socialImageAlt =
-  "Stevo.AI social card for Stephen M Abbott: Build what's next. Secure what matters. Applied AI, cybersecurity, and product engineering.";
+  "Stevo.AI: security leadership, AI enablement, vCISO services, cybersecurity consulting, and professional engagements led by CEO Stephen M Abbott.";
 
 export const metadata: Metadata = {
   metadataBase: new URL(siteUrl),
   title: {
-    default: "Stephen M Abbott — Applied AI & Cybersecurity",
+    default: "Stevo.AI — vCISO, Cybersecurity & AI Enablement",
     template: "%s · stevo.ai",
   },
   description:
-    "AI systems, cybersecurity, product engineering, and advisory services from Stephen M Abbott.",
+    "Principal-led cybersecurity and AI enablement consulting, including vCISO services, AI governance, secure delivery, application security, and supply-chain assurance.",
   applicationName: "stevo.ai",
   category: "technology",
   authors: [{ name: "Stephen M Abbott", url: siteUrl }],
@@ -48,6 +48,12 @@ export const metadata: Metadata = {
     "apple-mobile-web-app-capable": "yes",
   },
   keywords: [
+    "vCISO",
+    "virtual CISO",
+    "cybersecurity consultant",
+    "AI enablement consultant",
+    "fractional security leadership",
+    "AI governance",
     "AI security",
     "cybersecurity",
     "AI agents",
@@ -65,7 +71,7 @@ export const metadata: Metadata = {
     description: socialDescription,
     images: [
       {
-        url: `${siteUrl}/og.png`,
+        url: `${siteUrl}/og-services.png`,
         width: 1731,
         height: 909,
         type: "image/png",
@@ -79,7 +85,7 @@ export const metadata: Metadata = {
     description: socialDescription,
     images: [
       {
-        url: `${siteUrl}/og.png`,
+        url: `${siteUrl}/og-services.png`,
         alt: socialImageAlt,
         width: 1731,
         height: 909,
@@ -99,17 +105,41 @@ export const viewport: Viewport = {
 
 const structuredData = {
   "@context": "https://schema.org",
-  "@type": "Person",
-  name: "Stephen M Abbott",
-  url: siteUrl,
-  image: `${siteUrl}/stephen-abbott-profile.png`,
-  sameAs: ["https://github.com/stevologic"],
-  knowsAbout: [
-    "Artificial intelligence",
-    "Cybersecurity",
-    "AI agents",
-    "Software supply chain security",
-    "Product engineering",
+  "@graph": [
+    {
+      "@type": "Organization",
+      "@id": `${siteUrl}/#organization`,
+      name: "Stevo.AI",
+      url: siteUrl,
+      logo: `${siteUrl}/icon-512.png`,
+      description: socialDescription,
+      employee: { "@id": `${siteUrl}/#stephen-abbott` },
+      knowsAbout: [
+        "vCISO services",
+        "Cybersecurity leadership",
+        "AI enablement",
+        "AI governance",
+        "Application security",
+        "Software supply chain security",
+      ],
+    },
+    {
+      "@type": "Person",
+      "@id": `${siteUrl}/#stephen-abbott`,
+      name: "Stephen M Abbott",
+      url: `${siteUrl}/resume/`,
+      image: `${siteUrl}/stephen-abbott-profile.png`,
+      jobTitle: "CEO",
+      worksFor: { "@id": `${siteUrl}/#organization` },
+      sameAs: ["https://github.com/stevologic"],
+      knowsAbout: [
+        "Artificial intelligence",
+        "Cybersecurity",
+        "AI agents",
+        "Software supply chain security",
+        "Product engineering",
+      ],
+    },
   ],
 };
 
