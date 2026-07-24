@@ -309,7 +309,12 @@ export default function ResumePage() {
           </div>
         </section>
 
-        <section className="resume-section" aria-labelledby="resume-focus-heading">
+        {/* Print starts page two here, so the career history finishes a page
+            rather than spilling a few roles onto the next one. */}
+        <section
+          className="resume-section resume-section-page-break"
+          aria-labelledby="resume-focus-heading"
+        >
           <div className="resume-section-heading">
             <h2 id="resume-focus-heading" className="resume-section-title">
               Focus areas

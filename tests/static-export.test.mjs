@@ -699,6 +699,41 @@ test("project cards carry each site's own icon and theme colour", async () => {
   assert.ok(backgrounds > 0, "no project declared a theme colour");
 });
 
+test("the printed resume breaks between career history and focus areas", async () => {
+  const [html, styles] = await Promise.all([
+    exportedPage("resume/index.html"),
+    readFile(new URL("../app/globals.css", import.meta.url), "utf8"),
+  ]);
+
+  // The break is carried by a class on the focus-areas section, so the career
+  // history finishes page one instead of spilling roles onto page two.
+  const focus = html.match(
+    /<section class="([^"]*)"[^>]*aria-labelledby="resume-focus-heading"/,
+  )?.[1];
+  assert.ok(focus, "focus areas section not found");
+  assert.match(focus, /resume-section-page-break/);
+
+  const print = styles.slice(styles.indexOf("@media print {"));
+  assert.match(
+    print,
+    /\.resume-section-page-break\s*{[^}]*break-before: page/s,
+    "the page break must be declared inside @media print",
+  );
+  // page-break-before is the legacy alias; keep both for older engines.
+  assert.match(
+    print,
+    /\.resume-section-page-break\s*{[^}]*page-break-before: always/s,
+  );
+
+  // Nothing else may force a break, or the page count grows. Count rendered
+  // sections only: Next inlines a flight payload that repeats class names.
+  assert.equal(
+    (html.match(/<section class="[^"]*resume-section-page-break/g) || []).length,
+    1,
+    "exactly one forced page break",
+  );
+});
+
 test("custom domain is configured", async () => {
   const cname = await readFile(new URL("public/CNAME", root), "utf8");
   assert.equal(cname.trim(), "stevo.ai");

@@ -2836,7 +2836,7 @@ img {
   .resume-section {
     grid-template-columns: 0.78in 1fr;
     gap: 0.16in;
-    padding: 9px 0;
+    padding: 7px 0;
   }
 
   .resume-section-title {
@@ -2855,6 +2855,15 @@ img {
 
   .resume-section.resume-career-section {
     display: block;
+  }
+
+  /* Force the page boundary between the career history and everything after
+     it, so each printed page holds a complete set of sections. */
+  .resume-section-page-break {
+    break-before: page;
+    page-break-before: always;
+    padding-top: 0;
+    border-top: 0;
   }
 
   .resume-career-section .resume-section-heading {
@@ -2900,7 +2909,7 @@ img {
   }
 
   .resume-focus-grid {
-    gap: 9px 22px;
+    gap: 7px 22px;
   }
 
   .resume-focus-card {
@@ -2927,7 +2936,7 @@ img {
   }
 
   .resume-project {
-    padding: 7px 0;
+    padding: 6px 0;
     break-inside: avoid;
   }
 
@@ -2975,7 +2984,7 @@ img {
   .resume-technical-item,
   .resume-product-item {
     gap: 12px;
-    padding: 5px 0;
+    padding: 4px 0;
     break-inside: avoid;
   }
 
@@ -3005,7 +3014,7 @@ img {
   }
 
   .resume-footer {
-    padding-top: 10px;
+    padding-top: 8px;
   }
 
   .resume-availability {
