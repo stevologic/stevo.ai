@@ -465,8 +465,8 @@ test("professional resume is detailed, private, and print-ready", async () => {
   assert.match(html, /Stevo\.AI · Cybersecurity/);
   assert.match(html, /Professional experience/);
   assert.match(html, /16 years/);
-  assert.match(html, /92%/);
-  assert.match(html, /75%/);
+  assert.match(html, /11 years/);
+  assert.match(html, /Fortune 100/);
   assert.match(html, /99\.99%/);
   assert.match(html, /2024-2026/);
   assert.match(html, /2021-2024/);
@@ -477,6 +477,85 @@ test("professional resume is detailed, private, and print-ready", async () => {
   assert.match(html, /Print \/ save as PDF/);
   assert.doesNotMatch(html, /American Express/i);
   assert.doesNotMatch(html, /Full career r(?:é|&eacute;|&#xE9;)sum(?:é|&eacute;|&#xE9;) available on request/i);
+
+  // Contact is email only. Scope to the printed document: the site-wide JSON-LD
+  // in the page head legitimately carries the social profiles on every page.
+  const document = html.match(
+    /<article class="resume-document">[\s\S]*?<\/article>/,
+  )?.[0];
+  assert.ok(document, "resume document markup not found");
+  assert.match(document, /class="resume-contact"/);
+  assert.equal((document.match(/<li>/g) || []).length > 0, true);
+  assert.doesNotMatch(document, /MadeItHappen|twitch\.tv|discord\.com|x\.com/i);
+
+  // Sections are unnumbered.
+  assert.doesNotMatch(html, /resume-section-index/);
+});
+
+test("resume reflects the current skills, tooling, and credentials", async () => {
+  const html = await exportedPage("resume/index.html");
+
+  // Focus areas: four, with governed adoption and agent architecture merged.
+  for (const area of [
+    "Application and supply-chain security",
+    "Agentic cybersecurity enablement",
+    "Governed AI adoption and agent architecture",
+    "AI product engineering",
+  ]) {
+    assert.ok(html.includes(area), `focus areas omit ${area}`);
+  }
+  assert.equal((html.match(/class="resume-focus-card"/g) || []).length, 4);
+
+  // Security breadth names the full testing surface.
+  for (const capability of [
+    "SAST",
+    "SCA",
+    "DAST",
+    "secret-detection engineering",
+    "container and image scanning",
+    "secure CI/CD pipeline orchestration",
+  ]) {
+    assert.ok(html.includes(capability), `security breadth omits ${capability}`);
+  }
+  assert.match(html, /GitHub Actions/);
+
+  // Commercial products actually operated.
+  assert.match(html, /Commercial products/);
+  for (const product of [
+    "Sonatype Nexus",
+    "PortSwigger Burp Suite",
+    "DefectDojo",
+    "JFrog Artifactory",
+    "Jenkins",
+    "GitHub Enterprise",
+    "GitHub Advanced Security",
+    "NetWitness",
+    "ServiceNow",
+    "Jira",
+    "Confluence",
+    "ChatGPT Enterprise",
+    "Zafran CTEM",
+    "Dependabot",
+    "Kubernetes",
+    "ArgoCD",
+  ]) {
+    assert.ok(html.includes(product), `commercial products omit ${product}`);
+  }
+
+  // Certifications are awarded; training is training. The distinction matters.
+  assert.match(html, /Certifications/);
+  assert.match(html, /Offensive Security Certified Professional \(OSCP\)/);
+  assert.match(html, /AWS Certified Cloud Practitioner/);
+  assert.match(html, /Training/);
+  assert.match(html, /CRISC/);
+  assert.match(html, /SpecterOps Adversary Tactics/);
+  assert.match(html, /Harvard Leadership Training Course/);
+  assert.match(html, /Duke University Accelerate Your Growth/);
+  assert.doesNotMatch(html, /Cloud and risk/i);
+
+  // Arrowhead Paesano joins the shipped products.
+  assert.match(html, /Arrowhead Paesano/);
+  assert.match(html, /arrowheadpaesano\.com/);
 });
 
 test("responsive breakpoints never leak into the print layout", async () => {

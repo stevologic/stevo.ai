@@ -157,14 +157,14 @@ const structuredData = {
         name: "Arizona State University",
       },
       hasCredential: credentials
-        .filter((credential) => credential.certification)
-        .map((credential) => ({
+        .flatMap((credential) => credential.certifications ?? [])
+        .map((certification) => ({
           "@type": "EducationalOccupationalCredential",
           credentialCategory: "certification",
-          name: credential.certification?.name,
+          name: certification.name,
           recognizedBy: {
             "@type": "Organization",
-            name: credential.certification?.issuer,
+            name: certification.issuer,
           },
         })),
       knowsAbout: [

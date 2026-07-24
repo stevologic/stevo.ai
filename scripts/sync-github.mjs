@@ -21,7 +21,11 @@ const defaultOwner = process.env.GITHUB_OWNER?.trim() || "stevologic";
 const apiVersion = "2022-11-28";
 const apiBaseUrl = "https://api.github.com";
 const token = process.env.GITHUB_TOKEN || process.env.GH_TOKEN || "";
-const trafficToken = process.env.GITHUB_TRAFFIC_TOKEN?.trim() || "";
+// The traffic endpoints need push access, so a dedicated PAT is preferred.
+// Fall back to the general token: a local run authenticated with `repo` scope
+// then still collects traffic instead of silently producing none.
+const trafficToken =
+  process.env.GITHUB_TRAFFIC_TOKEN?.trim() || process.env.GITHUB_TOKEN?.trim() || "";
 const trafficWindowDays = 14;
 const isCi = process.env.CI === "true" || process.env.GITHUB_ACTIONS === "true";
 const strict = isCi || process.env.GITHUB_SYNC_STRICT === "1";
@@ -270,8 +274,18 @@ function cleanTrafficAggregate(payload, label) {
   };
 }
 
+/** Repositories whose traffic could not be read this run, with the reason. */
+const trafficFailures = [];
+
 async function fetchTraffic(encodedName, previousTraffic) {
-  if (!trafficToken) return previousTraffic || null;
+  if (!trafficToken) {
+    trafficFailures.push({
+      repository: decodeURIComponent(encodedName),
+      reason: "no traffic token was provided",
+      hadPrevious: Boolean(previousTraffic),
+    });
+    return previousTraffic || null;
+  }
 
   try {
     const [views, clones] = await Promise.all([
@@ -291,12 +305,11 @@ async function fetchTraffic(encodedName, previousTraffic) {
     };
   } catch (error) {
     const fallback = previousTraffic || null;
-    const fallbackMessage = fallback
-      ? "Keeping the previously captured traffic aggregates."
-      : "Traffic aggregates will be omitted for this repository.";
-    console.warn(
-      `[sync-github] ${error.message} ${fallbackMessage}`,
-    );
+    trafficFailures.push({
+      repository: decodeURIComponent(encodedName),
+      reason: error.message,
+      hadPrevious: Boolean(fallback),
+    });
     return fallback;
   }
 }
@@ -370,6 +383,37 @@ async function fetchRepository({ fullName, projectKeys }, previousRepository) {
     releases,
     ...(traffic ? { traffic } : {}),
   };
+}
+
+/**
+ * Traffic gaps used to be a buried warning, so a repository could sit on the
+ * live site with no view or clone counts and nothing obvious to explain it.
+ * Report coverage every run, and annotate it in Actions so it is visible in the
+ * workflow summary rather than only in the raw log.
+ */
+function reportTrafficCoverage(metadata) {
+  const missing = metadata.filter((repository) => !repository.traffic);
+  const covered = metadata.length - missing.length;
+  console.log(
+    `[sync-github] Traffic aggregates: ${covered}/${metadata.length} repositories.`,
+  );
+
+  if (missing.length === 0) return;
+
+  const annotate = process.env.GITHUB_ACTIONS === "true";
+  for (const repository of missing) {
+    const failure = trafficFailures.find(
+      (entry) =>
+        entry.repository.toLowerCase() === repository.fullName.toLowerCase(),
+    );
+    const reason = failure?.reason || "no traffic data was returned";
+    const message =
+      `${repository.fullName} has no GitHub views/clones data: ${reason}. ` +
+      "The traffic endpoints need push access, so PROJECT_TRAFFIC_TOKEN must " +
+      "include this repository.";
+    if (annotate) console.log(`::warning title=Missing GitHub traffic::${message}`);
+    console.warn(`[sync-github] ${message}`);
+  }
 }
 
 async function mapWithConcurrency(values, concurrency, mapper) {
@@ -453,6 +497,7 @@ async function main() {
     console.log(
       `[sync-github] Updated ${path.relative(rootDirectory, snapshotPath)} with ${metadata.length} repositories.`,
     );
+    reportTrafficCoverage(metadata);
   } catch (error) {
     await retainSnapshotOrThrow(error, repositories);
   }

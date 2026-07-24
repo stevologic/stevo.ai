@@ -610,7 +610,7 @@ export function PortfolioExperience({
 
         <section className="closing-section section" id="contact">
           <p className="section-number">04 / Professional engagements</p>
-          <h2>Put the hard decision in motion.</h2>
+          <h2>Let&apos;s start with a conversation.</h2>
           <p>
             Bring Stevo.AI the consequential problem: a security program that
             needs leadership, an AI initiative that needs guardrails and

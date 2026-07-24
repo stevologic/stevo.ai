@@ -3,7 +3,6 @@ import Link from "next/link";
 
 import { PrintButton } from "../../components/PrintButton";
 import { ProtectedEmailAddress } from "../../components/ProtectedEmail";
-import { socialHandles } from "@/lib/contact";
 import { credentials } from "@/lib/credentials";
 
 export const metadata: Metadata = {
@@ -14,9 +13,9 @@ export const metadata: Metadata = {
 
 const careerMetrics = [
   { value: "16 years", label: "Enterprise systems and security" },
+  { value: "11 years", label: "Cybersecurity" },
+  { value: "Fortune 100", label: "Enterprise experience" },
   { value: "Up to 26", label: "Engineers led" },
-  { value: "92%", label: "Sensitive-data reduction" },
-  { value: "75%+", label: "Open-source dependency reduction" },
 ] as const;
 
 const careerExperience = [
@@ -79,19 +78,19 @@ const careerExperience = [
 
 const focusAreas = [
   {
-    title: "Governed AI adoption",
-    description:
-      "Designing AI workflows around bounded context, human approval, evidence, rollback, and clear ownership.",
-  },
-  {
-    title: "AI agent architecture",
-    description:
-      "Building practical agent systems with tool orchestration, MCP, memory, scheduling, browser control, and local-first operation.",
-  },
-  {
     title: "Application and supply-chain security",
     description:
       "Connecting vulnerability intelligence, dependency analysis, license review, SBOMs, and secure remediation workflows.",
+  },
+  {
+    title: "Agentic cybersecurity enablement",
+    description:
+      "Putting agents to work on security operations: triage, remediation, and evidence collection that stay bounded, reviewable, and accountable to a human owner.",
+  },
+  {
+    title: "Governed AI adoption and agent architecture",
+    description:
+      "Designing AI workflows around bounded context, human approval, evidence, and rollback, then building the agent systems that deliver them with tool orchestration, MCP, memory, scheduling, and local-first operation.",
   },
   {
     title: "AI product engineering",
@@ -152,12 +151,12 @@ const technicalBreadth = [
   {
     label: "Security",
     value:
-      "CVE and CISA KEV intelligence, OSV, OpenSSF Scorecard, dependency analysis, SBOMs, and evidence-driven remediation",
+      "SAST, SCA, DAST, secret-detection engineering, container and image scanning, secure CI/CD pipeline orchestration, CVE and CISA KEV intelligence, OSV, OpenSSF Scorecard, dependency analysis, SBOMs, and evidence-driven remediation",
   },
   {
     label: "Product platforms",
     value:
-      "Next.js, React, Django, FastMCP, Docker, Playwright, SQLite, Redis, WinForms, and OpenCL",
+      "Next.js, React, Django, FastMCP, Docker, GitHub Actions, Playwright, SQLite, Redis, WinForms, and OpenCL",
   },
   {
     label: "Frameworks",
@@ -188,6 +187,33 @@ const additionalProducts = [
     url: "https://mouseclicker.app",
     description: "Portable Windows automation application",
   },
+  {
+    name: "Arrowhead Paesano",
+    url: "https://arrowheadpaesano.com",
+    description: "Static channel site with an automated weekly analysis desk",
+  },
+] as const;
+
+/** Commercial platforms operated or owned in enterprise environments. */
+const commercialProducts = [
+  {
+    label: "Application security",
+    value:
+      "PortSwigger Burp Suite, DefectDojo, Sonatype Nexus, JFrog Artifactory, and GitHub Advanced Security",
+  },
+  {
+    label: "Delivery and source",
+    value:
+      "GitHub Enterprise, GitHub Actions, Dependabot, Jenkins, ArgoCD, and Kubernetes",
+  },
+  {
+    label: "Exposure and operations",
+    value: "Zafran CTEM, NetWitness, and ServiceNow",
+  },
+  {
+    label: "Workflow and enablement",
+    value: "Jira, Confluence, and ChatGPT Enterprise",
+  },
 ] as const;
 
 export default function ResumePage() {
@@ -215,20 +241,10 @@ export default function ResumePage() {
             governed AI-assisted remediation, and hands-on product engineering.
           </p>
 
-          <ul className="resume-contact" aria-label="Contact and profiles">
+          <ul className="resume-contact" aria-label="Contact">
             <li>
               <ProtectedEmailAddress />
             </li>
-            {socialHandles.map((profile) => (
-              <li key={profile.id}>
-                <a href={profile.href} target="_blank" rel="me noreferrer">
-                  <span className="resume-contact-network">
-                    {profile.network}
-                  </span>
-                  {profile.handle}
-                </a>
-              </li>
-            ))}
           </ul>
 
           <dl className="resume-profile-summary">
@@ -243,7 +259,6 @@ export default function ResumePage() {
 
         <section className="resume-section" aria-labelledby="resume-profile-heading">
           <div className="resume-section-heading">
-            <p className="resume-section-index">01</p>
             <h2 id="resume-profile-heading" className="resume-section-title">
               Executive profile
             </h2>
@@ -272,7 +287,6 @@ export default function ResumePage() {
           aria-labelledby="resume-career-heading"
         >
           <div className="resume-section-heading">
-            <p className="resume-section-index">02</p>
             <h2 id="resume-career-heading" className="resume-section-title">
               Professional experience
             </h2>
@@ -299,7 +313,6 @@ export default function ResumePage() {
 
         <section className="resume-section" aria-labelledby="resume-focus-heading">
           <div className="resume-section-heading">
-            <p className="resume-section-index">03</p>
             <h2 id="resume-focus-heading" className="resume-section-title">
               Focus areas
             </h2>
@@ -316,7 +329,6 @@ export default function ResumePage() {
 
         <section className="resume-section" aria-labelledby="resume-work-heading">
           <div className="resume-section-heading">
-            <p className="resume-section-index">04</p>
             <h2 id="resume-work-heading" className="resume-section-title">
               Representative work
             </h2>
@@ -366,7 +378,6 @@ export default function ResumePage() {
 
         <section className="resume-section" aria-labelledby="resume-technical-heading">
           <div className="resume-section-heading">
-            <p className="resume-section-index">05</p>
             <h2 id="resume-technical-heading" className="resume-section-title">
               Technical breadth
             </h2>
@@ -381,9 +392,24 @@ export default function ResumePage() {
           </dl>
         </section>
 
+        <section className="resume-section" aria-labelledby="resume-commercial-heading">
+          <div className="resume-section-heading">
+            <h2 id="resume-commercial-heading" className="resume-section-title">
+              Commercial products
+            </h2>
+          </div>
+          <dl className="resume-technical-list">
+            {commercialProducts.map((item) => (
+              <div className="resume-technical-item" key={item.label}>
+                <dt className="resume-technical-label">{item.label}</dt>
+                <dd className="resume-technical-value">{item.value}</dd>
+              </div>
+            ))}
+          </dl>
+        </section>
+
         <section className="resume-section" aria-labelledby="resume-credentials-heading">
           <div className="resume-section-heading">
-            <p className="resume-section-index">06</p>
             <h2 id="resume-credentials-heading" className="resume-section-title">
               Credentials
             </h2>
@@ -400,7 +426,6 @@ export default function ResumePage() {
 
         <section className="resume-section" aria-labelledby="resume-products-heading">
           <div className="resume-section-heading">
-            <p className="resume-section-index">07</p>
             <h2 id="resume-products-heading" className="resume-section-title">
               Additional shipped products
             </h2>

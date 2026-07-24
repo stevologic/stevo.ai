@@ -4,10 +4,10 @@ export interface Credential {
   /** Short form used in the homepage credential strip. */
   short?: string;
   /** Set only for credentials that are awarded certifications. */
-  certification?: {
+  certifications?: Array<{
     name: string;
     issuer: string;
-  };
+  }>;
 }
 
 /**
@@ -21,26 +21,30 @@ export const credentials: Credential[] = [
     short: "BA, ASU - Walter Cronkite School of Journalism",
   },
   {
-    label: "Security certification",
-    value: "Offensive Security Certified Professional (OSCP)",
+    label: "Certifications",
+    value:
+      "Offensive Security Certified Professional (OSCP) · AWS Certified Cloud Practitioner",
     short: "OSCP",
-    certification: {
-      name: "Offensive Security Certified Professional (OSCP)",
-      issuer: "OffSec",
-    },
+    certifications: [
+      {
+        name: "Offensive Security Certified Professional (OSCP)",
+        issuer: "OffSec",
+      },
+      {
+        name: "AWS Certified Cloud Practitioner",
+        issuer: "Amazon Web Services",
+      },
+    ],
   },
   {
-    label: "Cloud and risk",
-    value: "AWS Certified Cloud Practitioner · Formal CRISC training",
-    short: "AWS Certified Cloud Practitioner",
-    certification: {
-      name: "AWS Certified Cloud Practitioner",
-      issuer: "Amazon Web Services",
-    },
+    label: "Training",
+    value: "CRISC · SpecterOps Adversary Tactics",
+    short: "CRISC and SpecterOps Adversary Tactics training",
   },
   {
     label: "Leadership development",
-    value: "Harvard and Duke University leadership training programs",
+    value:
+      "Harvard Leadership Training Course · Duke University Accelerate Your Growth leadership training course",
     short: "Harvard & Duke leadership programs",
   },
 ];
