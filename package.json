@@ -9,7 +9,8 @@
     "dev": "next dev",
     "build": "next build",
     "sync:github": "node scripts/sync-github.mjs",
-    "test": "npm run build && node --test tests/static-export.test.mjs",
+    "verify:pdf": "node scripts/check-resume-pages.mjs",
+    "test": "npm run build && node --test tests/static-export.test.mjs && npm run verify:pdf",
     "lint": "eslint . --ignore-pattern out --ignore-pattern .next",
     "typecheck": "tsc --noEmit"
   },
