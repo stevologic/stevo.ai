@@ -780,6 +780,24 @@ test("projects without a public repository still publish", async () => {
   assert.equal(snapshot.repositories.length, withRepos);
 });
 
+test("the profile name stays on one line", async () => {
+  const styles = await readFile(
+    new URL("../app/globals.css", import.meta.url),
+    "utf8",
+  );
+  const rule = styles.match(/\.profile-copy blockquote\s*{[^}]*}/s)?.[0];
+
+  assert.ok(rule, "profile name rule not found");
+  assert.match(rule, /white-space: nowrap/);
+  // The old scale reached 6rem and wrapped the surname in this column.
+  const max = rule.match(/font-size: clamp\([^,]+,[^,]+,\s*([\d.]+)rem\)/)?.[1];
+  assert.ok(max, "profile name needs a clamped font size");
+  assert.ok(
+    Number(max) <= 4.5,
+    `profile name max font size is ${max}rem, large enough to overflow`,
+  );
+});
+
 test("custom domain is configured", async () => {
   const cname = await readFile(new URL("public/CNAME", root), "utf8");
   assert.equal(cname.trim(), "stevo.ai");

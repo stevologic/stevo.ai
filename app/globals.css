@@ -1662,10 +1662,13 @@ img {
 .profile-copy blockquote {
   margin: clamp(42px, 6vw, 74px) 0 34px;
   font-family: var(--serif);
-  font-size: clamp(3rem, 5.8vw, 6rem);
+  /* Sized to keep the name on one line in this column; a wrapped surname reads
+     as a mistake rather than a line break. */
+  font-size: clamp(2.1rem, 4vw, 4.2rem);
   font-style: italic;
-  letter-spacing: -0.06em;
-  line-height: 0.95;
+  letter-spacing: -0.05em;
+  line-height: 1.02;
+  white-space: nowrap;
 }
 
 .profile-copy > p:not(.section-number) {
