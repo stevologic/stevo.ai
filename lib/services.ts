@@ -5,6 +5,8 @@ export interface ServiceTrack {
   title: string;
   description: string;
   outcomes: string[];
+  /** How the track is delivered, shown on the hero identity card. */
+  mode: string;
   /**
    * Reference frameworks the work maps to. These describe the standards an
    * engagement is measured against — not certifications held.
@@ -34,6 +36,7 @@ export const serviceTracks: ServiceTrack[] = [
       "CIS Controls v8",
       "FAIR risk quantification",
     ],
+    mode: "Fractional",
     bestFor:
       "Organizations that need senior security leadership without adding a full-time CISO.",
   },
@@ -56,6 +59,7 @@ export const serviceTracks: ServiceTrack[] = [
       "EU AI Act",
       "OWASP Top 10 for LLM Applications",
     ],
+    mode: "Advisory",
     bestFor:
       "Leadership teams moving from AI experimentation to responsible adoption.",
   },
@@ -78,6 +82,7 @@ export const serviceTracks: ServiceTrack[] = [
       "MITRE ATT&CK",
       "SLSA",
     ],
+    mode: "Hands-on",
     bestFor: "Teams that need a working, defensible system—not another slide deck.",
   },
   {
@@ -100,6 +105,7 @@ export const serviceTracks: ServiceTrack[] = [
       "OpenSSF Scorecard",
       "OSV",
     ],
+    mode: "Evidence-led",
     bestFor: "Engineering organizations that want security to accelerate delivery.",
   },
 ];

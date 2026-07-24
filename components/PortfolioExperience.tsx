@@ -346,10 +346,10 @@ export function PortfolioExperience({
               <span>Enable what&apos;s next.</span>
             </h1>
             <p className="hero-intro">
-              Stevo.AI helps leaders strengthen cybersecurity, govern AI
+              Focused on helping leaders strengthen cybersecurity, govern AI
               adoption, and turn high-consequence technology decisions into
               executable programs and working systems—through vCISO leadership,
-              focused advisory, and hands-on delivery.
+              targeted advisory, and hands-on delivery.
             </p>
             <div className="hero-actions">
               <a className="button button-primary" href="#contact">
@@ -389,19 +389,19 @@ export function PortfolioExperience({
                 <Link href="/resume/">Professional profile <Arrow /></Link>
               </div>
             </div>
+            {/* Derived from the service tracks, so the card cannot list a
+                different set of services than the section below it. */}
             <div className="activity-list">
-              <a href="#services" onClick={() => setActiveService("vciso")}>
-                <span>vCISO & security leadership</span>
-                <small>Fractional</small>
-              </a>
-              <a href="#services" onClick={() => setActiveService("enable")}>
-                <span>AI enablement & governance</span>
-                <small>Advisory</small>
-              </a>
-              <a href="#services" onClick={() => setActiveService("deliver")}>
-                <span>Secure AI & agent delivery</span>
-                <small>Hands-on</small>
-              </a>
+              {serviceTracks.map((service) => (
+                <a
+                  key={service.id}
+                  href="#services"
+                  onClick={() => setActiveService(service.id)}
+                >
+                  <span>{service.title}</span>
+                  <small>{service.mode}</small>
+                </a>
+              ))}
             </div>
             <p className="console-footnote">
               Principal-led engagements · Focused scope · Accountable outcomes
@@ -424,8 +424,8 @@ export function PortfolioExperience({
             <span>Live products</span>
           </div>
           <div>
-            <strong>92%</strong>
-            <span>Sensitive-data reduction</span>
+            <strong className="signal-strip-text">Fortune 100</strong>
+            <span>Enterprise experience</span>
           </div>
         </section>
 
@@ -440,7 +440,7 @@ export function PortfolioExperience({
 
         <section className="services-section section" id="services">
           <div className="section-heading section-heading-light" data-reveal>
-            <p className="section-number">01 / Professional services</p>
+            <p className="section-number">Professional services</p>
             <h2>Security leadership and AI enablement that move with the business.</h2>
             <p>
               Principal-led engagements for leaders who need experienced
@@ -563,7 +563,7 @@ export function PortfolioExperience({
 
         <section className="work-section section" id="work">
           <div className="section-heading" data-reveal>
-            <p className="section-number">02 / Portfolio</p>
+            <p className="section-number">Portfolio</p>
             <h2>Independent products. Verifiable capability.</h2>
             <p>
               Products and open-source systems built by Stephen M
@@ -610,7 +610,7 @@ export function PortfolioExperience({
             <span className="photo-caption">Advisor · Engineer · Builder</span>
           </div>
           <div className="profile-copy" data-reveal>
-            <p className="section-number">03 / Profile</p>
+            <p className="section-number">Profile</p>
             <blockquote>Stephen M Abbott.</blockquote>
             <p>
               Stephen leads Stevo.AI with 16 years of experience across
@@ -641,7 +641,7 @@ export function PortfolioExperience({
         </section>
 
         <section className="closing-section section" id="contact">
-          <p className="section-number">04 / Professional engagements</p>
+          <p className="section-number">Professional engagements</p>
           <h2>Let&apos;s start with a conversation.</h2>
           <p>
             Bring Stevo.AI the consequential problem: a security program that

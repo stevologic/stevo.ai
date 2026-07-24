@@ -637,6 +637,13 @@ img {
   line-height: 0.9;
 }
 
+/* A worded value cannot carry the numeral scale without wrapping to two lines
+   and unbalancing the row. */
+.signal-strip strong.signal-strip-text {
+  font-size: clamp(1.35rem, 2vw, 2.1rem);
+  letter-spacing: -0.035em;
+}
+
 .signal-strip span {
   max-width: 110px;
   font-family: var(--mono);

@@ -84,9 +84,12 @@ test("professional services precede delivery proof and portfolio", async () => {
   assert.ok(servicesIndex > 0);
   assert.ok(workIndex > servicesIndex);
   assert.ok(profileIndex > workIndex);
-  assert.match(html, /01 \/ Professional services/);
-  assert.match(html, /02 \/ Portfolio/);
-  assert.match(html, /03 \/ Profile/);
+  // Sections are labelled, not numbered.
+  assert.match(html, /class="section-number">Professional services</);
+  assert.match(html, /class="section-number">Portfolio</);
+  assert.match(html, /class="section-number">Profile</);
+  assert.match(html, /class="section-number">Professional engagements</);
+  assert.doesNotMatch(html, /class="section-number">0\d \//);
   assert.match(html, /Fractional leadership/);
   assert.match(html, /Advisory intensive/);
   assert.match(html, /Delivery sprint/);
@@ -108,7 +111,7 @@ test("hero career strip summarizes professional experience", async () => {
     careerStrip,
     new RegExp(`>${projects.length}</strong><span>Live products`),
   );
-  assert.match(careerStrip, />92%<\/strong><span>Sensitive-data reduction/);
+  assert.match(careerStrip, />Fortune 100<\/strong><span>Enterprise experience/);
   assert.doesNotMatch(careerStrip, /CVE records indexed|Package ecosystems/);
 });
 
