@@ -549,7 +549,7 @@ test("resume reflects the current skills, tooling, and credentials", async () =>
   assert.match(html, /Offensive Security Certified Professional \(OSCP\)/);
   assert.match(html, /AWS Certified Cloud Practitioner/);
   assert.match(html, /Training/);
-  assert.match(html, /CRISC/);
+  assert.match(html, /CRISC Bootcamp/);
   assert.match(html, /SpecterOps Adversary Tactics/);
   assert.match(html, /Harvard Leadership Training Course/);
   assert.match(html, /Duke University Accelerate Your Growth/);

@@ -38,8 +38,8 @@ export const credentials: Credential[] = [
   },
   {
     label: "Training",
-    value: "CRISC · SpecterOps Adversary Tactics",
-    short: "CRISC and SpecterOps Adversary Tactics training",
+    value: "CRISC Bootcamp · SpecterOps Adversary Tactics",
+    short: "CRISC Bootcamp and SpecterOps Adversary Tactics training",
   },
   {
     label: "Leadership development",
