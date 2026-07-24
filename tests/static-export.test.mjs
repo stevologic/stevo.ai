@@ -189,7 +189,7 @@ test("site manifest uses installable Stevo.AI icons", async () => {
   assert.match(manifest.name, /Cybersecurity & AI Enablement/);
   assert.match(manifest.description, /vCISO/);
   assert.equal(manifest.display, "standalone");
-  assert.equal(manifest.theme_color, "#15161c");
+  assert.equal(manifest.theme_color, "#0f1014");
   assert.deepEqual(
     manifest.icons.map(({ src, sizes, purpose }) => ({ src, sizes, purpose })),
     [
@@ -377,14 +377,14 @@ test("professional theme follows the formal portrait palette", async () => {
     "utf8",
   );
 
-  assert.match(styles, /--ink: #15161c/);
-  assert.match(styles, /--accent: #aaa8cf/);
-  assert.match(styles, /--accent-deep: #56547b/);
+  assert.match(styles, /--ink: #0f1014/);
+  assert.match(styles, /--accent: #b0aec2/);
+  assert.match(styles, /--accent-deep: #4e4c62/);
   assert.match(styles, /--accent-cool: #7e93a7/);
   assert.match(styles, /\.hero-orbit\s*{[^}]*opacity: 0\.2/s);
   assert.match(
     styles,
-    /\.identity-card\s*{[^}]*background: rgba\(21, 22, 28, 0\.72\)/s,
+    /\.identity-card\s*{[^}]*background: rgba\(15, 16, 20, 0\.72\)/s,
   );
   assert.match(
     styles,
@@ -395,6 +395,35 @@ test("professional theme follows the formal portrait palette", async () => {
     /\.identity-card\s*{[^}]*background: var\(--paper\)/s,
   );
   assert.doesNotMatch(styles, /#b8f34b|#ff6b52|#69d8ff/i);
+  // The old saturated lavender and the green-cast black must not return.
+  assert.doesNotMatch(styles, /#aaa8cf|rgba\(170, 168, 207|rgba\(10, 15, 13/i);
+
+  // Large fields set the page's colour impression, so they use the near-neutral
+  // surface rather than the accent that small elements keep.
+  assert.match(styles, /--accent-surface: #adacb4/);
+  assert.match(styles, /\.signal-strip\s*{[^}]*background: var\(--accent-surface\)/s);
+  assert.match(styles, /\.closing-section\s*{[^}]*var\(--accent-surface\)/s);
+});
+
+test("the portrait ships in a web-weight format", async () => {
+  const [html, photo] = await Promise.all([
+    exportedPage("index.html"),
+    readFile(new URL("../out/stephen-abbott-field-notes.webp", import.meta.url)),
+  ]);
+
+  assert.match(html, /stephen-abbott-field-notes\.webp/);
+  assert.doesNotMatch(html, /stephen-abbott-field-notes\.png/);
+
+  // "RIFF"...."WEBP" container header.
+  assert.equal(photo.subarray(0, 4).toString("latin1"), "RIFF");
+  assert.equal(photo.subarray(8, 12).toString("latin1"), "WEBP");
+
+  // The frame behind this photo is filled with --ink, so a heavy file shows as
+  // a black rectangle while it downloads.
+  assert.ok(
+    photo.length < 600_000,
+    `portrait is ${(photo.length / 1024).toFixed(0)}KB - too heavy for a lazy hero photo`,
+  );
 });
 
 test("professional resume is detailed, private, and print-ready", async () => {

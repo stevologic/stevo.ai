@@ -568,7 +568,7 @@ export function PortfolioExperience({
         <section className="profile-section section" id="profile">
           <div className="profile-photo-wrap" data-reveal>
             <Image
-              src="/stephen-abbott-field-notes.png"
+              src="/stephen-abbott-field-notes.webp"
               alt="Stephen Abbott outdoors above a mountain lake"
               width={1717}
               height={1288}

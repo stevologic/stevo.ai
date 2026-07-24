@@ -17,8 +17,8 @@ const PUBLIC_DIR = fileURLToPath(new URL("../public/", import.meta.url));
 const DEBUG_PORT = 9351;
 
 // Theme tokens from app/globals.css.
-const INK = "#15161c";
-const ACCENT = "#aaa8cf";
+const INK = "#0f1014";
+const ACCENT = "#b0aec2";
 
 const CANDIDATES = [
   process.env.CHROME_PATH,

@@ -44,6 +44,14 @@ Editorial project copy and display order live in `content/projects.json`.
 `data/github.generated.json`; raw GitHub descriptions never replace the curated
 portfolio narrative.
 
+The palette is derived from the portrait, which samples as a warm near-neutral
+(average `#4a4143`, low saturation, dominated by blacks and warm browns). `--ink`
+is the near-black field, `--accent` the muted violet used for small elements,
+and `--accent-surface` a near-neutral step down from it for the large panels —
+the metric strip and the closing section — because at full width the accent
+would set the page's entire colour impression. Changing `--ink` or `--accent`
+means re-running `npm run icons`.
+
 Icons are generated, not hand-drawn. `npm run icons` renders the header brand
 mark — an accent circle with an italic serif "S" — at every required size using
 headless Chrome, reading `--ink` and `--accent` straight from the theme. Small

@@ -1,16 +1,17 @@
 :root {
-  --ink: #15161c;
-  --ink-soft: #1d1f28;
+  --ink: #0f1014;
+  --ink-soft: #16171d;
   --paper: #f3f1ec;
   --paper-deep: #e7e3de;
   --white: #fffdf9;
-  --accent: #aaa8cf;
-  --accent-deep: #56547b;
+  --accent: #b0aec2;
+  --accent-surface: #adacb4;
+  --accent-deep: #4e4c62;
   --accent-warm: #936e5a;
   --accent-cool: #7e93a7;
-  --accent-plum: #83758b;
+  --accent-plum: #7c7783;
   --muted: #666770;
-  --line: rgba(21, 22, 28, 0.15);
+  --line: rgba(15, 16, 20, 0.15);
   --serif: Iowan Old Style, Baskerville, "Times New Roman", serif;
   --sans: "Helvetica Neue", Helvetica, Arial, sans-serif;
   --mono: "SFMono-Regular", Consolas, "Liberation Mono", monospace;
@@ -107,7 +108,7 @@ img {
   inset: 0;
   background: radial-gradient(
     520px circle at var(--pointer-x) var(--pointer-y),
-    rgba(170, 168, 207, 0.07),
+    rgba(176, 174, 194, 0.07),
     transparent 68%
   );
   mix-blend-mode: screen;
@@ -128,7 +129,7 @@ img {
   transform: translateX(-50%);
   border: 1px solid rgba(255, 255, 255, 0.12);
   border-radius: 18px;
-  background: rgba(10, 15, 13, 0.82);
+  background: rgba(15, 16, 20, 0.82);
   box-shadow: 0 14px 48px rgba(0, 0, 0, 0.2);
   color: var(--paper);
   backdrop-filter: blur(18px) saturate(130%);
@@ -256,7 +257,7 @@ img {
   background:
     linear-gradient(rgba(255, 255, 255, 0.028) 1px, transparent 1px),
     linear-gradient(90deg, rgba(255, 255, 255, 0.028) 1px, transparent 1px),
-    radial-gradient(circle at 86% 16%, rgba(170, 168, 207, 0.11), transparent 28%),
+    radial-gradient(circle at 86% 16%, rgba(176, 174, 194, 0.11), transparent 28%),
     var(--ink);
   background-size: 72px 72px, 72px 72px, auto, auto;
   color: var(--paper);
@@ -361,7 +362,7 @@ img {
 
 .button-primary:hover,
 .button-primary:focus-visible {
-  background: #bab8df;
+  background: #c3c1d2;
 }
 
 .button-secondary {
@@ -379,11 +380,11 @@ img {
 .hero-console {
   align-self: end;
   padding: 16px;
-  border: 1px solid rgba(170, 168, 207, 0.2);
+  border: 1px solid rgba(176, 174, 194, 0.2);
   border-radius: 24px;
   background: linear-gradient(
     180deg,
-    rgba(170, 168, 207, 0.065),
+    rgba(176, 174, 194, 0.065),
     rgba(255, 255, 255, 0.035)
   );
   box-shadow: 0 24px 90px rgba(0, 0, 0, 0.25);
@@ -419,14 +420,14 @@ img {
   height: 7px;
   border-radius: 50%;
   background: var(--accent);
-  box-shadow: 0 0 0 5px rgba(170, 168, 207, 0.1);
+  box-shadow: 0 0 0 5px rgba(176, 174, 194, 0.1);
 }
 
 .identity-card {
   overflow: hidden;
-  border: 1px solid rgba(170, 168, 207, 0.2);
+  border: 1px solid rgba(176, 174, 194, 0.2);
   border-radius: 18px;
-  background: rgba(21, 22, 28, 0.72);
+  background: rgba(15, 16, 20, 0.72);
   color: var(--paper);
 }
 
@@ -468,7 +469,7 @@ img {
 
 .identity-details {
   padding: 18px 20px 20px;
-  border-top: 1px solid rgba(170, 168, 207, 0.2);
+  border-top: 1px solid rgba(176, 174, 194, 0.2);
 }
 
 .identity-card strong,
@@ -551,7 +552,7 @@ img {
 .orbit {
   position: absolute;
   inset: 14%;
-  border: 1px solid rgba(170, 168, 207, 0.28);
+  border: 1px solid rgba(176, 174, 194, 0.28);
   border-radius: 50%;
 }
 
@@ -563,7 +564,7 @@ img {
   height: 10px;
   border-radius: 50%;
   background: var(--accent);
-  box-shadow: 0 0 28px rgba(170, 168, 207, 0.56);
+  box-shadow: 0 0 28px rgba(176, 174, 194, 0.56);
   content: "";
 }
 
@@ -613,8 +614,8 @@ img {
 .signal-strip {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
-  border-bottom: 1px solid rgba(10, 15, 13, 0.2);
-  background: var(--accent);
+  border-bottom: 1px solid rgba(15, 16, 20, 0.2);
+  background: var(--accent-surface);
 }
 
 .signal-strip > div {
@@ -624,7 +625,7 @@ img {
   justify-content: space-between;
   gap: 16px;
   padding: 30px clamp(20px, 3vw, 48px);
-  border-right: 1px solid rgba(10, 15, 13, 0.18);
+  border-right: 1px solid rgba(15, 16, 20, 0.18);
 }
 
 .signal-strip strong {
@@ -757,7 +758,7 @@ img {
 
 .project-filters button {
   padding: 9px 14px;
-  border: 1px solid rgba(10, 15, 13, 0.16);
+  border: 1px solid rgba(15, 16, 20, 0.16);
   border-radius: 999px;
   background: transparent;
   cursor: pointer;
@@ -791,10 +792,10 @@ img {
   flex-direction: column;
   padding: 16px;
   overflow: hidden;
-  border: 1px solid rgba(10, 15, 13, 0.13);
+  border: 1px solid rgba(15, 16, 20, 0.13);
   border-radius: 22px;
   background: rgba(255, 254, 250, 0.86);
-  box-shadow: 0 2px 0 rgba(10, 15, 13, 0.03);
+  box-shadow: 0 2px 0 rgba(15, 16, 20, 0.03);
   transition:
     transform 260ms ease,
     box-shadow 260ms ease,
@@ -823,8 +824,8 @@ img {
 
 .project-card:hover {
   transform: translateY(-6px);
-  border-color: rgba(10, 15, 13, 0.3);
-  box-shadow: 0 24px 70px rgba(10, 15, 13, 0.12);
+  border-color: rgba(15, 16, 20, 0.3);
+  box-shadow: 0 24px 70px rgba(15, 16, 20, 0.12);
 }
 
 .project-card-glow {
@@ -947,7 +948,7 @@ img {
   padding: 8px 11px;
   border: 1px solid rgba(255, 255, 255, 0.15);
   border-radius: 999px;
-  background: rgba(10, 15, 13, 0.65);
+  background: rgba(15, 16, 20, 0.65);
   color: rgba(241, 239, 231, 0.72);
   font-family: var(--mono);
   font-size: 0.6rem;
@@ -994,7 +995,7 @@ img {
 
 .project-metrics li {
   padding: 7px 10px;
-  border: 1px solid rgba(10, 15, 13, 0.12);
+  border: 1px solid rgba(15, 16, 20, 0.12);
   border-radius: 999px;
   color: #515955;
   font-family: var(--mono);
@@ -1066,7 +1067,7 @@ img {
   gap: 18px;
   margin: 16px 7px 2px;
   padding-top: 17px;
-  border-top: 1px solid rgba(10, 15, 13, 0.11);
+  border-top: 1px solid rgba(15, 16, 20, 0.11);
 }
 
 .project-links a {
@@ -1273,7 +1274,7 @@ img {
 }
 
 .service-tabs button.is-active span {
-  color: rgba(10, 15, 13, 0.48);
+  color: rgba(15, 16, 20, 0.48);
 }
 
 .service-detail {
@@ -1282,7 +1283,7 @@ img {
   border: 1px solid rgba(255, 255, 255, 0.1);
   border-radius: 18px;
   background:
-    radial-gradient(circle at 92% 12%, rgba(170, 168, 207, 0.11), transparent 31%),
+    radial-gradient(circle at 92% 12%, rgba(176, 174, 194, 0.11), transparent 31%),
     rgba(255, 255, 255, 0.035);
 }
 
@@ -1398,7 +1399,7 @@ img {
 
 .service-standards li {
   padding: 6px 12px;
-  border: 1px solid rgba(170, 168, 207, 0.4);
+  border: 1px solid rgba(176, 174, 194, 0.4);
   border-radius: 999px;
   color: rgba(241, 239, 231, 0.86);
   font-family: var(--mono);
@@ -1609,7 +1610,7 @@ img {
   bottom: 18px;
   padding: 9px 12px;
   border-radius: 999px;
-  background: rgba(10, 15, 13, 0.72);
+  background: rgba(15, 16, 20, 0.72);
   color: rgba(241, 239, 231, 0.72);
   font-family: var(--mono);
   font-size: 0.57rem;
@@ -1649,7 +1650,7 @@ img {
   align-items: center;
   gap: 12px;
   padding-bottom: 5px;
-  border-bottom: 1px solid rgba(10, 15, 13, 0.3);
+  border-bottom: 1px solid rgba(15, 16, 20, 0.3);
   font-size: 0.78rem;
   font-weight: 700;
   transition:
@@ -1665,12 +1666,12 @@ img {
 .closing-section {
   min-height: 76vh;
   background:
-    radial-gradient(circle at 88% 15%, rgba(10, 15, 13, 0.11), transparent 23%),
-    var(--accent);
+    radial-gradient(circle at 88% 15%, rgba(15, 16, 20, 0.11), transparent 23%),
+    var(--accent-surface);
 }
 
 .closing-section .section-number {
-  color: rgba(10, 15, 13, 0.6);
+  color: rgba(15, 16, 20, 0.6);
 }
 
 .closing-section h2 {
@@ -1693,7 +1694,7 @@ img {
 }
 
 .closing-section .button-secondary {
-  border-color: rgba(10, 15, 13, 0.35);
+  border-color: rgba(15, 16, 20, 0.35);
   color: var(--ink);
 }
 
@@ -1750,11 +1751,11 @@ img {
 
 .closing-connect .detail-label {
   margin-bottom: 14px;
-  color: rgba(10, 15, 13, 0.55);
+  color: rgba(15, 16, 20, 0.55);
 }
 
 .closing-connect .social-handles a {
-  border-color: rgba(10, 15, 13, 0.32);
+  border-color: rgba(15, 16, 20, 0.32);
 }
 
 .closing-connect .social-handles a:hover,
@@ -1836,7 +1837,7 @@ img {
   justify-items: start;
   padding: 40px;
   background:
-    radial-gradient(circle at 72% 26%, rgba(170, 168, 207, 0.12), transparent 28%),
+    radial-gradient(circle at 72% 26%, rgba(176, 174, 194, 0.12), transparent 28%),
     var(--ink);
   color: var(--paper);
 }
@@ -1878,8 +1879,8 @@ img {
   min-height: 100vh;
   padding: 28px clamp(20px, 5vw, 72px) 90px;
   background:
-    linear-gradient(rgba(10, 15, 13, 0.03) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(10, 15, 13, 0.03) 1px, transparent 1px),
+    linear-gradient(rgba(15, 16, 20, 0.03) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(15, 16, 20, 0.03) 1px, transparent 1px),
     var(--paper-deep);
   background-size: 56px 56px, 56px 56px, auto;
 }
@@ -1898,7 +1899,7 @@ img {
   min-height: 42px;
   align-items: center;
   padding: 0 16px;
-  border: 1px solid rgba(10, 15, 13, 0.18);
+  border: 1px solid rgba(15, 16, 20, 0.18);
   border-radius: 999px;
   background: rgba(255, 254, 250, 0.5);
   cursor: pointer;
@@ -1919,10 +1920,10 @@ img {
   max-width: 1160px;
   margin: 0 auto;
   padding: clamp(38px, 7vw, 94px);
-  border: 1px solid rgba(10, 15, 13, 0.13);
+  border: 1px solid rgba(15, 16, 20, 0.13);
   border-radius: 22px;
   background: var(--white);
-  box-shadow: 0 28px 90px rgba(10, 15, 13, 0.09);
+  box-shadow: 0 28px 90px rgba(15, 16, 20, 0.09);
 }
 
 .resume-header {
@@ -1983,7 +1984,7 @@ img {
   align-items: baseline;
   gap: 7px;
   padding: 7px 12px;
-  border: 1px solid rgba(10, 15, 13, 0.16);
+  border: 1px solid rgba(15, 16, 20, 0.16);
   border-radius: 999px;
   color: #4c5b54;
   font-size: 0.72rem;
@@ -2011,13 +2012,13 @@ img {
   grid-template-columns: repeat(4, minmax(0, 1fr));
   gap: 0;
   margin: 52px 0 0;
-  border-top: 1px solid rgba(10, 15, 13, 0.14);
-  border-bottom: 1px solid rgba(10, 15, 13, 0.14);
+  border-top: 1px solid rgba(15, 16, 20, 0.14);
+  border-bottom: 1px solid rgba(15, 16, 20, 0.14);
 }
 
 .resume-profile-summary-item {
   padding: 22px 22px 22px 0;
-  border-right: 1px solid rgba(10, 15, 13, 0.14);
+  border-right: 1px solid rgba(15, 16, 20, 0.14);
 }
 
 .resume-profile-summary-item + .resume-profile-summary-item {
@@ -2041,7 +2042,7 @@ img {
   grid-template-columns: 190px 1fr;
   gap: clamp(30px, 6vw, 86px);
   padding: 68px 0;
-  border-bottom: 1px solid rgba(10, 15, 13, 0.14);
+  border-bottom: 1px solid rgba(15, 16, 20, 0.14);
 }
 
 .resume-section-heading {
@@ -2075,7 +2076,7 @@ img {
 .resume-career-role {
   position: relative;
   padding: 0 0 42px 34px;
-  border-left: 1px solid rgba(10, 15, 13, 0.18);
+  border-left: 1px solid rgba(15, 16, 20, 0.18);
 }
 
 .resume-career-role:last-child {
@@ -2091,7 +2092,7 @@ img {
   border: 2px solid var(--white);
   border-radius: 50%;
   background: var(--accent-deep);
-  box-shadow: 0 0 0 1px rgba(10, 15, 13, 0.16);
+  box-shadow: 0 0 0 1px rgba(15, 16, 20, 0.16);
   content: "";
 }
 
@@ -2154,7 +2155,7 @@ img {
 
 .resume-focus-card {
   padding: 24px;
-  border: 1px solid rgba(10, 15, 13, 0.13);
+  border: 1px solid rgba(15, 16, 20, 0.13);
   border-radius: 12px;
   background: var(--paper);
 }
@@ -2182,7 +2183,7 @@ img {
 
 .resume-project {
   padding: 30px 0;
-  border-top: 1px solid rgba(10, 15, 13, 0.14);
+  border-top: 1px solid rgba(15, 16, 20, 0.14);
 }
 
 .resume-project:first-child {
@@ -2212,7 +2213,7 @@ img {
 .resume-product-link,
 .resume-github-link {
   padding-bottom: 3px;
-  border-bottom: 1px solid rgba(10, 15, 13, 0.28);
+  border-bottom: 1px solid rgba(15, 16, 20, 0.28);
   font-size: 0.67rem;
   font-weight: 700;
 }
@@ -2229,7 +2230,7 @@ img {
 .resume-project-capability {
   padding: 6px 9px;
   border-radius: 999px;
-  background: #eceaf4;
+  background: #eeedf3;
   color: var(--accent-deep);
   font-family: var(--mono);
   font-size: 0.56rem;
@@ -2244,7 +2245,7 @@ img {
   grid-template-columns: 150px 1fr;
   gap: 22px;
   padding: 17px 0;
-  border-top: 1px solid rgba(10, 15, 13, 0.12);
+  border-top: 1px solid rgba(15, 16, 20, 0.12);
 }
 
 .resume-technical-item:first-child {
@@ -2279,7 +2280,7 @@ img {
   align-items: baseline;
   gap: 30px;
   padding: 15px 0;
-  border-top: 1px solid rgba(10, 15, 13, 0.12);
+  border-top: 1px solid rgba(15, 16, 20, 0.12);
 }
 
 .resume-product-item:first-child {
@@ -2376,7 +2377,7 @@ img {
   }
 
   .resume-profile-summary-item:nth-child(n + 3) {
-    border-top: 1px solid rgba(10, 15, 13, 0.14);
+    border-top: 1px solid rgba(15, 16, 20, 0.14);
   }
 }
 
@@ -2400,7 +2401,7 @@ img {
     padding: 12px;
     border: 1px solid rgba(255, 255, 255, 0.12);
     border-radius: 14px;
-    background: rgba(10, 15, 13, 0.97);
+    background: rgba(15, 16, 20, 0.97);
     box-shadow: 0 18px 54px rgba(0, 0, 0, 0.3);
   }
 
@@ -2465,7 +2466,7 @@ img {
   .signal-strip > div {
     min-height: 112px;
     padding: 24px 20px;
-    border-bottom: 1px solid rgba(10, 15, 13, 0.18);
+    border-bottom: 1px solid rgba(15, 16, 20, 0.18);
   }
 
   .section {
@@ -2620,7 +2621,7 @@ img {
     padding: 18px 0;
     border-top: 0;
     border-right: 0;
-    border-bottom: 1px solid rgba(10, 15, 13, 0.12);
+    border-bottom: 1px solid rgba(15, 16, 20, 0.12);
   }
 
   .resume-profile-summary-item:last-child {
