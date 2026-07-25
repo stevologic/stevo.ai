@@ -12,6 +12,7 @@ import {
 import { ProtectedEmailButton } from "@/components/ProtectedEmail";
 import { socialHandles } from "@/lib/contact";
 import { credentialHighlights } from "@/lib/credentials";
+import { heroMetrics } from "@/lib/career";
 import {
   engagementModels,
   engagementProcess,
@@ -410,23 +411,14 @@ export function PortfolioExperience({
         </section>
 
         <section className="signal-strip" aria-label="Career highlights">
-          <div>
-            <strong>16</strong>
-            <span>Years of IT experience</span>
-          </div>
-          <div>
-            <strong>11</strong>
-            <span>Years of cybersecurity experience</span>
-          </div>
-          <div>
-            {/* Derived, so daily project discovery cannot leave a stale count. */}
-            <strong>{projects.length}</strong>
-            <span>Live products</span>
-          </div>
-          <div>
-            <strong className="signal-strip-text">Fortune 100</strong>
-            <span>Enterprise experience</span>
-          </div>
+          {heroMetrics.map((metric) => (
+            <div key={metric.label}>
+              <strong className={metric.value.length > 3 ? "signal-strip-text" : undefined}>
+                {metric.value}
+              </strong>
+              <span>{metric.label}</span>
+            </div>
+          ))}
         </section>
 
         <section className="credential-strip" aria-label="Credentials">

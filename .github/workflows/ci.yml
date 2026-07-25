@@ -12,6 +12,11 @@ on:
   pull_request:
     branches:
       - main
+  # Lets another workflow run these checks against a branch it just pushed.
+  # A pull request opened with GITHUB_TOKEN does not trigger workflows, so the
+  # site-critique job dispatches this explicitly and gates its merge on the
+  # result.
+  workflow_dispatch:
 
 concurrency:
   group: ci-${{ github.ref }}

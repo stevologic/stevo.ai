@@ -825,13 +825,29 @@ test("the site critique action is wired to Grok correctly", async () => {
   // the live site on its own.
   assert.match(workflow, /gh pr create/, "changes must arrive as a pull request");
   assert.match(workflow, /--base main/);
-  assert.doesNotMatch(workflow, /gh pr merge/, "must not merge its own changes");
-  assert.doesNotMatch(workflow, /--auto/, "must not enable auto-merge");
   assert.doesNotMatch(
     workflow,
     /git push origin main|git push .* HEAD:main/,
     "must never push straight to main",
   );
+
+  // It may merge, but only on a real CI verdict. A pull request opened with
+  // GITHUB_TOKEN does not trigger workflows, so CI is dispatched against the
+  // branch and the merge is gated on its conclusion -- never on --auto, which
+  // would merge immediately while main has no required checks.
+  assert.match(workflow, /gh workflow run ci\.yml --ref/, "CI must be dispatched");
+  assert.match(
+    workflow,
+    /conclusion" == "success"[\s\S]{0,200}gh pr merge/,
+    "the merge must be gated on a successful CI conclusion",
+  );
+  assert.doesNotMatch(
+    workflow,
+    /gh pr merge[^\n]*--auto/,
+    "--auto would merge with no required checks on main",
+  );
+  const ci = await readFile(new URL(".github/workflows/ci.yml", root), "utf8");
+  assert.match(ci, /workflow_dispatch/, "CI must be dispatchable against a branch");
   // The branch is only pushed once the edited site builds and passes tests.
   const prIndex = workflow.indexOf("gh pr create");
   const testIndex = workflow.indexOf("node --test tests/static-export.test.mjs");
@@ -956,6 +972,60 @@ test("the critique brief carries readable copy, not build artifacts", async () =
   // Stat tiles must keep their labels; a bare "16" tells an advisor nothing.
   assert.match(brief, /16 — Years of IT experience/);
   assert.match(brief, /Fortune 100 — Enterprise experience/);
+});
+
+test("the resume stays in sync with the site's projects", async () => {
+  const html = await exportedPage("resume/index.html");
+  const projects = await publishedProjects();
+  const body = html.slice(html.indexOf("resume-document"));
+
+  // Every project the portfolio shows must also appear on the resume. These
+  // used to be two hand-maintained lists and drifted: Desert Wander Supply Co.
+  // and Spare Cycles were missing, and the resume said "Mouse Clicker" while
+  // the site said "mouseclicker.app".
+  const featured = [
+    ...body.matchAll(/class="resume-project-title">([^<]*)/g),
+  ].map((m) => m[1]);
+  const other = [
+    ...body.matchAll(/class="resume-product-link"[^>]*>([^<]*)/g),
+  ].map((m) => m[1]);
+  const listed = new Set([...featured, ...other]);
+
+  for (const project of projects) {
+    assert.ok(
+      listed.has(project.name),
+      `the resume is missing "${project.name}", which the site publishes`,
+    );
+  }
+  assert.equal(
+    listed.size,
+    projects.length,
+    "the resume lists a project the site does not",
+  );
+
+  // Career figures are quoted on both pages and must come from one source.
+  // Read lib/career.ts as text: it uses the "@/" alias, which only the Next
+  // build resolves, so importing it here would fail.
+  const careerSource = await readFile(new URL("lib/career.ts", root), "utf8");
+  // Built from a plain string, not a template literal: an unrecognised escape
+  // like \s collapses to "s" in a template literal and silently breaks it.
+  const figure = (key) =>
+    careerSource
+      .match(new RegExp(key + ':\\s*"?([^",\\n]+?)"?,'))?.[1]
+      ?.trim();
+  const facts = [
+    figure("yearsInTechnology"),
+    figure("yearsInCybersecurity"),
+    figure("enterpriseScale"),
+  ];
+  assert.ok(facts.every(Boolean), `career.ts is missing a fact: ${facts}`);
+
+  const index = await exportedPage("index.html");
+  for (const [label, page] of [["resume", body], ["home page", index]]) {
+    for (const fact of facts) {
+      assert.ok(page.includes(fact), `${label} does not state "${fact}"`);
+    }
+  }
 });
 
 test("custom domain is configured", async () => {

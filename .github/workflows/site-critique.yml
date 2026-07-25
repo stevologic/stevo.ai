@@ -182,10 +182,49 @@ jobs:
             --head "$branch" \
             --base main
           then
-            {
-              echo "### Pull request opened"
-              gh pr view "$branch" --json url --jq '"[Review the changes](" + .url + ")"'
-            } >> "$GITHUB_STEP_SUMMARY"
+            url=$(gh pr view "$branch" --json url --jq .url)
+            echo "### Pull request opened" >> "$GITHUB_STEP_SUMMARY"
+            echo "$url" >> "$GITHUB_STEP_SUMMARY"
+
+            # A pull request opened with GITHUB_TOKEN does not trigger
+            # workflows, so CI would never run on it and "merge when checks
+            # pass" would mean "merge with no checks". Dispatch CI against the
+            # branch and gate the merge on its real verdict instead.
+            gh workflow run ci.yml --ref "$branch"
+            sleep 15
+            run_id=""
+            for _ in $(seq 1 40); do
+              run_id=$(gh run list --workflow=ci.yml --branch "$branch" \
+                --limit 1 --json databaseId --jq '.[0].databaseId // empty')
+              [[ -n "$run_id" ]] && break
+              sleep 5
+            done
+
+            if [[ -z "$run_id" ]]; then
+              echo "::warning title=Site critique::CI did not start for $branch; leaving the pull request open for review."
+              echo 'CI did not start, so the pull request was left open.' >> "$GITHUB_STEP_SUMMARY"
+              exit 0
+            fi
+
+            conclusion=""
+            for _ in $(seq 1 80); do
+              read -r status conclusion <<<"$(gh run view "$run_id" \
+                --json status,conclusion --jq '.status+" "+(.conclusion//"-")')"
+              [[ "$status" == "completed" ]] && break
+              sleep 15
+            done
+
+            if [[ "$conclusion" == "success" ]]; then
+              gh pr merge "$branch" --squash --delete-branch
+              echo "CI passed, so the pull request was merged and deployed." >> "$GITHUB_STEP_SUMMARY"
+            else
+              echo "::warning title=Site critique::CI concluded \"$conclusion\"; the pull request was left open for review."
+              {
+                echo
+                echo "CI concluded **$conclusion**, so this was *not* merged. Review it:"
+                echo "$url"
+              } >> "$GITHUB_STEP_SUMMARY"
+            fi
           else
             {
               echo "### Branch pushed, pull request not opened"

@@ -4,19 +4,17 @@ import Link from "next/link";
 import { PrintButton } from "../../components/PrintButton";
 import { ProtectedEmailAddress } from "../../components/ProtectedEmail";
 import { credentials } from "@/lib/credentials";
+import {
+  additionalProducts,
+  representativeWork,
+  resumeMetrics,
+} from "@/lib/career";
 
 export const metadata: Metadata = {
   title: "Stephen M Abbott | Cybersecurity & AI",
   description:
     "The employer-anonymized professional resume of Stephen M Abbott, spanning cybersecurity leadership, applied AI, enterprise engineering, and shipped products.",
 };
-
-const careerMetrics = [
-  { value: "16 years", label: "Enterprise systems and security" },
-  { value: "11 years", label: "Cybersecurity" },
-  { value: "Fortune 100", label: "Enterprise experience" },
-  { value: "Up to 26", label: "Engineers led" },
-] as const;
 
 const careerExperience = [
   {
@@ -99,45 +97,6 @@ const focusAreas = [
   },
 ] as const;
 
-const representativeWork = [
-  {
-    title: "security-recipes.ai",
-    category: "Open security infrastructure",
-    description:
-      "An open, self-hostable knowledge layer that connects CVE intelligence to reviewed recipes, playbooks, proof requirements, rollback guidance, and bounded agent context.",
-    capabilities: ["Python", "FastMCP", "CVE intelligence", "Governed action"],
-    liveUrl: "https://security-recipes.ai",
-    sourceUrl: "https://github.com/stevologic/security-recipes.ai",
-  },
-  {
-    title: "Shiba Studio",
-    category: "Local-first agent workspace",
-    description:
-      "A desktop-grade environment for orchestrating agents with code editing, browser control, integrations, scheduling, memory, and auditable workflows.",
-    capabilities: ["TypeScript", "Next.js", "SQLite", "Playwright"],
-    liveUrl: "https://shiba-studio.io",
-    sourceUrl: "https://github.com/stevologic/shiba-studio",
-  },
-  {
-    title: "OSS Dependency Explorer",
-    category: "Software supply-chain research",
-    description:
-      "A dependency intelligence platform spanning eight package ecosystems, with vulnerability triage, OpenSSF data, license review, SBOM exports, APIs, and MCP access.",
-    capabilities: ["Go", "JavaScript", "OSV", "SBOM"],
-    liveUrl: "https://ossde.dev",
-    sourceUrl: "https://github.com/stevologic/oss-deps-explorer",
-  },
-  {
-    title: "Pro Response",
-    category: "Multi-provider AI assistant",
-    description:
-      "An AI writing assistant for Slack that also runs as an HTTP API, command-line tool, and Python library, with support for modern hosted model providers.",
-    capabilities: ["Python", "Slack", "OpenAI", "Anthropic"],
-    liveUrl: "https://stevologic.github.io/pro-response/",
-    sourceUrl: "https://github.com/stevologic/pro-response",
-  },
-] as const;
-
 const technicalBreadth = [
   {
     label: "Languages",
@@ -165,34 +124,6 @@ const technicalBreadth = [
   },
 ] as const;
 
-
-const additionalProducts = [
-  {
-    name: "Tiny Book Buddies AI",
-    url: "https://tinybookbuddies.ai",
-    description: "Multi-provider generative storytelling studio",
-  },
-  {
-    name: "DOGE Commerce Kit",
-    url: "https://commerce.dog",
-    description: "Non-custodial commerce toolkit",
-  },
-  {
-    name: "DOGE MINER",
-    url: "https://doge-miner.io",
-    description: "Full-stack mining software and telemetry dashboard",
-  },
-  {
-    name: "Mouse Clicker",
-    url: "https://mouseclicker.app",
-    description: "Portable Windows automation application",
-  },
-  {
-    name: "Arrowhead Paesano",
-    url: "https://arrowheadpaesano.com",
-    description: "Static channel site with an automated weekly analysis desk",
-  },
-] as const;
 
 /** Commercial platforms operated or owned in enterprise environments. */
 const commercialProducts = [
@@ -246,7 +177,7 @@ export default function ResumePage() {
           </ul>
 
           <dl className="resume-profile-summary">
-            {careerMetrics.map((metric) => (
+            {resumeMetrics.map((metric) => (
               <div className="resume-profile-summary-item" key={metric.label}>
                 <dt className="resume-profile-summary-label">{metric.label}</dt>
                 <dd className="resume-profile-summary-value">{metric.value}</dd>
@@ -353,14 +284,16 @@ export default function ResumePage() {
                     >
                       Live project
                     </a>
-                    <a
-                      className="resume-project-link"
-                      href={project.sourceUrl}
-                      target="_blank"
-                      rel="noreferrer"
-                    >
-                      Source
-                    </a>
+                    {project.sourceUrl && (
+                      <a
+                        className="resume-project-link"
+                        href={project.sourceUrl}
+                        target="_blank"
+                        rel="noreferrer"
+                      >
+                        Source
+                      </a>
+                    )}
                   </div>
                 </header>
                 <p className="resume-project-description">{project.description}</p>
