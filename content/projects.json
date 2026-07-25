@@ -64,7 +64,7 @@
     "category": "AI systems",
     "featured": true,
     "tagline": "Local-first studio to build, govern, and audit production-ready AI agents.",
-    "description": "Unifies agent orchestration, workspace-aware coding, browser control, scheduling, integrations, memory, and auditable local workflows in a desktop-grade app—so organizations automate with AI without surrendering data control.",
+    "description": "Unifies agent orchestration, workspace-aware coding, browser control, scheduling, integrations, memory, and auditable local workflows—so organizations automate with AI without surrendering data control or auditability.",
     "siteUrl": "https://shiba-studio.io",
     "sourceUrl": "https://github.com/stevologic/shiba-studio",
     "metrics": [
@@ -92,8 +92,8 @@
     "name": "Pro Response",
     "category": "AI systems",
     "featured": false,
-    "tagline": "Raise message quality with AI inside Slack and existing team workflows.",
-    "description": "Multi-provider writing assistant that rewrites, translates, summarizes, and reformats messages via Slack, HTTP API, CLI, or Python—clearer communication without pulling teams out of the channels they already use.",
+    "tagline": "Raise message quality with AI inside Slack and the channels teams already use.",
+    "description": "Multi-provider writing assistant that rewrites, translates, summarizes, and reformats messages via Slack, HTTP API, CLI, or Python—clearer enterprise communication without pulling people out of existing workflows.",
     "siteUrl": "https://stevologic.github.io/pro-response/",
     "sourceUrl": "https://github.com/stevologic/pro-response",
     "metrics": [
@@ -121,8 +121,8 @@
     "name": "Spare Cycles",
     "category": "AI systems",
     "featured": false,
-    "tagline": "Pool volunteer model capacity behind an OpenAI-compatible inference proxy.",
-    "description": "Open experiment that routes inference to volunteer nodes running Claude, GPT, Grok, or Ollama, alongside a marketplace of coding projects—MIT-licensed pooled compute for research, not a managed enterprise service.",
+    "tagline": "Route inference across volunteer nodes behind an OpenAI-compatible proxy.",
+    "description": "Open research experiment that pools volunteer capacity running Claude, GPT, Grok, or Ollama, with a marketplace of coding projects—MIT-licensed pooled compute for experimentation, not a managed enterprise service.",
     "siteUrl": "https://sparecycles.io/",
     "sourceUrl": "https://github.com/stevologic/spare-cycles",
     "metrics": [
