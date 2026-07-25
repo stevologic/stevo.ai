@@ -164,7 +164,26 @@ async function buildBrief() {
     );
   }
 
-  return sections.join("\n\n");
+  // The canonical achievement record rides along so the critique can judge
+  // which claims are backed by verified fact and which are asserted bare.
+  let baseline = "";
+  try {
+    baseline = await readFile(
+      path.join(rootDirectory, "content", "achievements.json"),
+      "utf8",
+    );
+  } catch {
+    // The critique still works without it; it just cannot cross-check claims.
+  }
+
+  return [
+    sections.join("\n\n"),
+    baseline
+      ? `=== Verified achievement record (content/achievements.json, human-maintained ground truth; site claims should trace to this) ===\n${baseline}`
+      : "",
+  ]
+    .filter(Boolean)
+    .join("\n\n");
 }
 
 /* ------------------------------------------------------------------ *

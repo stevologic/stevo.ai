@@ -160,6 +160,15 @@ in code rather than trusted to the prompt:
 
 The full critique rides along in the pull request body and a 90-day artifact.
 
+`content/achievements.json` is the automation's ground truth: the canonical
+record of achievements, figures, roles, and credentials, in Stephen's own
+words. Only a human edits it; no workflow ever commits it. The résumé optimizer
+checks dates and titles against it rather than against last week's AI output,
+and any figure it carries stays legal to restate even if an earlier rewrite
+dropped it from the live résumé — without that anchor the weekly rewrites would
+validate against each other and drift. To add a new achievement, certification,
+or figure, add it there first; the next weekly run may then use it.
+
 | Setting | Where | Default |
 | --- | --- | --- |
 | `GROK_API_KEY` | Actions **secret** (required) | — |

@@ -1114,6 +1114,88 @@ test("resume content stays within its two-page budget", async () => {
   assert.ok(parsed.commercialProducts.length >= 3);
 });
 
+test("the achievements file anchors the automation to verified facts", async () => {
+  const { applyResumeEdits } = await import("../scripts/optimize-resume.mjs");
+  const [baseline, resume, workflow] = await Promise.all([
+    readFile(new URL("content/achievements.json", root), "utf8").then(JSON.parse),
+    readFile(new URL("content/resume.json", root), "utf8").then(JSON.parse),
+    readFile(new URL(".github/workflows/site-critique.yml", root), "utf8"),
+  ]);
+
+  // The canonical record is human-owned: the workflow must never commit it.
+  assert.doesNotMatch(
+    workflow,
+    /git add[^\n]*achievements\.json/,
+    "the workflow must never commit the achievements file",
+  );
+
+  // The live resume's employment facts must match the canonical record.
+  assert.equal(resume.careerExperience.length, baseline.career.length);
+  for (const [index, role] of resume.careerExperience.entries()) {
+    assert.equal(role.dates, baseline.career[index].dates);
+    assert.equal(role.title, baseline.career[index].title);
+  }
+
+  // The erosion fix: a canonical figure stays legal even after an earlier
+  // rewrite dropped it from the live resume. 92% is in the baseline; strip it
+  // from the current resume, then restate it -- the edit must be accepted.
+  const stripped = structuredClone(resume);
+  for (const role of stripped.careerExperience) {
+    role.highlights = role.highlights.map((h) => h.replace(/92%/g, "most"));
+  }
+  const role = stripped.careerExperience[1];
+  const restated = applyResumeEdits(
+    stripped,
+    {
+      careerExperience: {
+        [role.dates]: {
+          highlights: role.highlights.map((h, i) =>
+            i === 0
+              ? "Reduced sensitive-data findings in source code by 92% through automation with human review."
+              : h,
+          ),
+        },
+      },
+    },
+    baseline,
+  );
+  assert.match(JSON.stringify(restated), /92%/);
+
+  // A figure in neither the resume nor the baseline stays illegal.
+  assert.throws(() =>
+    applyResumeEdits(
+      stripped,
+      {
+        careerExperience: {
+          [role.dates]: {
+            highlights: role.highlights.map((h, i) =>
+              i === 0 ? "Reduced findings by 44% across the estate." : h,
+            ),
+          },
+        },
+      },
+      baseline,
+    ),
+  );
+
+  // With a baseline, dates and titles are checked against IT, so the model
+  // cannot even collude with a corrupted current resume.
+  const corrupted = structuredClone(resume);
+  corrupted.careerExperience[0].title = "Chief Executive Officer";
+  assert.throws(
+    () => applyResumeEdits(corrupted, {}, baseline),
+    "a title diverging from the canonical record must be rejected",
+  );
+
+  // The figures glossary carries the numbers the site quotes.
+  for (const figure of ["92%", "75%", "99.99%", "26", "Fortune 100"]) {
+    assert.ok(
+      Object.keys(baseline.figures).some((k) => k.includes(figure)),
+      `achievements.json figures glossary is missing ${figure}`,
+    );
+  }
+});
+
 test("custom domain is configured", async () => {
   const cname = await readFile(new URL("public/CNAME", root), "utf8");
   assert.equal(cname.trim(), "stevo.ai");

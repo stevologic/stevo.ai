@@ -31,6 +31,11 @@ const rootDirectory = path.resolve(
   "..",
 );
 const resumePath = path.join(rootDirectory, "content", "resume.json");
+const achievementsPath = path.join(
+  rootDirectory,
+  "content",
+  "achievements.json",
+);
 const notePath = path.join(rootDirectory, "critique", "resume-changes.md");
 
 const apiBaseUrl = process.env.GROK_API_BASE_URL || "https://api.x.ai/v1";
@@ -53,12 +58,24 @@ function assert(condition, message) {
 const numbersIn = (value) =>
   new Set(JSON.stringify(value).match(/\d[\d.,]*%?/g) || []);
 
-/** Validate the model's rewording against the current résumé and apply it. */
-export function applyResumeEdits(current, edits) {
+/**
+ * Validate the model's rewording against the current résumé and apply it.
+ *
+ * `baseline` is content/achievements.json — the human-owned record of what is
+ * actually true. It anchors two things the current résumé alone cannot:
+ * dates and titles are checked against it rather than against last week's AI
+ * output, and its figures stay legal forever, so a number an earlier rewrite
+ * dropped (say, 92%) can always be restated. Without it, the weekly rewrites
+ * validate against each other and the facts erode by telephone.
+ */
+export function applyResumeEdits(current, edits, baseline = null) {
   assert(edits && typeof edits === "object", "edits must be an object");
 
   const next = structuredClone(current);
-  const knownNumbers = numbersIn(current);
+  const knownNumbers = new Set([
+    ...numbersIn(current),
+    ...(baseline ? numbersIn(baseline) : []),
+  ]);
 
   // --- Roles: reword only. -------------------------------------------------
   const roleEdits = edits.careerExperience || {};
@@ -136,15 +153,22 @@ export function applyResumeEdits(current, edits) {
     );
   }
 
-  // --- Roles preserved exactly. --------------------------------------------
+  // --- Roles preserved exactly, against the canonical record. --------------
+  const factual = baseline?.career ?? current.careerExperience;
   assert(
-    next.careerExperience.length === current.careerExperience.length,
+    next.careerExperience.length === factual.length,
     "a role was added or removed",
   );
   for (const [index, role] of next.careerExperience.entries()) {
-    const before = current.careerExperience[index];
-    assert(role.dates === before.dates, `dates changed on "${before.title}"`);
-    assert(role.title === before.title, `title changed for ${before.dates}`);
+    const truth = factual[index];
+    assert(
+      role.dates === truth.dates,
+      `dates for "${truth.title}" diverge from content/achievements.json`,
+    );
+    assert(
+      role.title === truth.title,
+      `title for ${truth.dates} diverges from content/achievements.json`,
+    );
   }
 
   // --- Length budget keeps the print export at two pages. ------------------
@@ -189,7 +213,7 @@ Return ONLY valid JSON, no markdown fence:
 
 Include only what you are actually changing.`;
 
-async function requestEdits(current, correction = "") {
+async function requestEdits(current, baseline, correction = "") {
   const response = await fetch(`${apiBaseUrl}/chat/completions`, {
     method: "POST",
     headers: {
@@ -233,16 +257,19 @@ async function main() {
   }
 
   const current = JSON.parse(await readFile(resumePath, "utf8"));
+  // Required, not optional: without the canonical record the rewrites would
+  // validate against each other and drift.
+  const baseline = JSON.parse(await readFile(achievementsPath, "utf8"));
 
   let next;
   let usage;
   let rationale = "";
   let correction = "";
   for (let attempt = 1; attempt <= 3; attempt += 1) {
-    const result = await requestEdits(current, correction);
+    const result = await requestEdits(current, baseline, correction);
     usage = result.usage;
     try {
-      next = applyResumeEdits(current, result.edits);
+      next = applyResumeEdits(current, result.edits, baseline);
       rationale = result.edits.rationale || "";
       break;
     } catch (error) {
