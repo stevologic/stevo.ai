@@ -116,12 +116,40 @@
     "statusLabel": "v2.0 available"
   },
   {
+    "repo": "stevo.ai",
+    "slug": "stevo-ai",
+    "name": "Stevo.AI",
+    "category": "AI systems",
+    "featured": false,
+    "tagline": "Governed AI operations loop that critiques, revises, and ships updates under CI.",
+    "description": "Live demonstration of agentic content operations: an AI advisor reframes portfolio and résumé copy under code-enforced factual guards, opens a pull request, passes CI, merges, and deploys—control and auditability retained at every step.",
+    "siteUrl": "https://stevo.ai",
+    "sourceUrl": "https://github.com/stevologic/stevo.ai",
+    "metrics": [
+      "AI-operated weekly",
+      "CI-gated auto-merge",
+      "Daily project discovery"
+    ],
+    "tech": [
+      "TypeScript",
+      "Next.js",
+      "GitHub Actions",
+      "Grok"
+    ],
+    "capabilities": [
+      "Autonomous content ops",
+      "Guarded AI rewrites",
+      "Automated deployment"
+    ],
+    "statusLabel": "Live · Self-maintaining"
+  },
+  {
     "repo": "tiny-book-buddies-ai",
     "slug": "tiny-book-buddies-ai",
     "name": "Tiny Book Buddies AI",
     "category": "Product lab",
     "featured": false,
-    "tagline": "Consumer AI experiment: one idea to an illustrated, narrated storybook.",
+    "tagline": "Consumer experiment: idea to illustrated, narrated children's storybook.",
     "description": "Browser-based story studio that writes, illustrates, narrates, and exports children's books with user-selected AI providers—end-to-end in the browser, built as a product-lab experiment rather than an enterprise offering.",
     "siteUrl": "https://tinybookbuddies.ai",
     "sourceUrl": "https://github.com/stevologic/tiny-book-buddies-ai",
@@ -150,7 +178,7 @@
     "name": "Spare Cycles",
     "category": "Product lab",
     "featured": false,
-    "tagline": "Experimental proxy that routes inference across volunteer nodes.",
+    "tagline": "Research experiment routing inference across volunteer nodes.",
     "description": "Open research experiment pooling volunteer capacity on Claude, GPT, Grok, or Ollama behind an OpenAI-compatible API—MIT-licensed study of distributed inference, not a managed enterprise service.",
     "siteUrl": "https://sparecycles.io/",
     "sourceUrl": "https://github.com/stevologic/spare-cycles",
@@ -177,8 +205,8 @@
     "name": "mouseclicker.app",
     "category": "Product lab",
     "featured": false,
-    "tagline": "Lightweight Windows auto-clicker with record/replay and optional AI patterns.",
-    "description": "Portable desktop automation utility with humanized cursor movement, global hotkeys, system-wide record/replay, and optional cloud or local AI pattern generation—no installer; a focused utility experiment.",
+    "tagline": "Portable Windows auto-clicker with record/replay and optional AI patterns.",
+    "description": "Desktop automation utility with humanized cursor movement, global hotkeys, system-wide record/replay, and optional cloud or local AI pattern generation—no installer; a focused utility experiment, not an enterprise platform.",
     "siteUrl": "https://mouseclicker.app",
     "sourceUrl": "https://github.com/stevologic/mouse_clicker",
     "metrics": [
@@ -207,7 +235,7 @@
     "category": "Product lab",
     "featured": false,
     "tagline": "Non-custodial toolkit for accepting Dogecoin in person or online.",
-    "description": "Small-seller commerce utilities: browser wallet tools, point-of-sale checkout, payment QR codes, on-chain verification, a local order ledger, and embeddable components—no processor custody.",
+    "description": "Small-seller commerce utilities: browser wallet tools, point-of-sale checkout, payment QR codes, on-chain verification, a local order ledger, and embeddable components—no processor custody; hobby commerce kit.",
     "siteUrl": "https://commerce.dog",
     "sourceUrl": "https://github.com/stevologic/doge-commerce-kit",
     "metrics": [
@@ -236,7 +264,7 @@
     "category": "Product lab",
     "featured": false,
     "tagline": "Chiefs fan site with an automated weekly game-preview desk.",
-    "description": "Static site for the Arrowhead Paesano YouTube channel: privacy-friendly playback from a checked-in snapshot, plus a sourced weekly preview with matchups, projections, and a ready-to-shoot run-of-show.",
+    "description": "Static fan site for the Arrowhead Paesano YouTube channel: privacy-friendly playback from a checked-in snapshot, plus a sourced weekly preview with matchups, projections, and a ready-to-shoot run-of-show.",
     "siteUrl": "https://arrowheadpaesano.com",
     "sourceUrl": "https://github.com/stevologic/arrowheadpaesanowebsite",
     "metrics": [
@@ -311,33 +339,5 @@
       "Hardware and chain telemetry"
     ],
     "statusLabel": "Live"
-  },
-  {
-    "repo": "stevo.ai",
-    "slug": "stevo-ai",
-    "name": "Stevo.AI",
-    "category": "AI systems",
-    "featured": false,
-    "tagline": "This site: an AI-operated portfolio that maintains itself.",
-    "description": "The site you are reading. A static Next.js portfolio with a weekly agentic operations loop: an AI advisor critiques the copy, reframes the portfolio and résumé under code-enforced factual guards, opens a pull request, gates it on CI, merges, and deploys.",
-    "siteUrl": "https://stevo.ai",
-    "sourceUrl": "https://github.com/stevologic/stevo.ai",
-    "metrics": [
-      "AI-operated weekly",
-      "CI-gated auto-merge",
-      "Daily project discovery"
-    ],
-    "tech": [
-      "TypeScript",
-      "Next.js",
-      "GitHub Actions",
-      "Grok"
-    ],
-    "capabilities": [
-      "Autonomous content ops",
-      "Guarded AI rewrites",
-      "Automated deployment"
-    ],
-    "statusLabel": "Live · Self-maintaining"
   }
 ]
