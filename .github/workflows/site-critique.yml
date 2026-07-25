@@ -172,11 +172,34 @@ jobs:
             echo "</details>"
           } > /tmp/pr-body.md
 
-          gh pr create \
+          # Opening the pull request needs "Allow GitHub Actions to create and
+          # approve pull requests" under Settings > Actions > General. Without
+          # it the branch is still pushed and validated, so fall back to a
+          # one-click compare link rather than failing a run whose work is done.
+          if gh pr create \
             --title "Reframe and reorder the portfolio ($(date -u '+%Y-%m-%d'))" \
             --body-file /tmp/pr-body.md \
             --head "$branch" \
             --base main
+          then
+            {
+              echo "### Pull request opened"
+              gh pr view "$branch" --json url --jq '"[Review the changes](" + .url + ")"'
+            } >> "$GITHUB_STEP_SUMMARY"
+          else
+            {
+              echo "### Branch pushed, pull request not opened"
+              echo
+              echo "The changes are committed and validated on \`$branch\`, but this"
+              echo "repository does not allow GitHub Actions to open pull requests."
+              echo
+              echo "Enable **Settings → Actions → General → Allow GitHub Actions to"
+              echo "create and approve pull requests**, or open it now:"
+              echo
+              echo "${{ github.server_url }}/${{ github.repository }}/compare/main...$branch?expand=1"
+            } >> "$GITHUB_STEP_SUMMARY"
+            echo "::warning title=Site critique::Branch $branch is ready to review, but Actions cannot open pull requests. Enable it under Settings > Actions > General."
+          fi
 
       - name: Upload the critique
         if: steps.preflight.outputs.configured == 'true'
