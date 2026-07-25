@@ -311,5 +311,33 @@
       "Hardware and chain telemetry"
     ],
     "statusLabel": "Live"
+  },
+  {
+    "repo": "stevo.ai",
+    "slug": "stevo-ai",
+    "name": "Stevo.AI",
+    "category": "AI systems",
+    "featured": false,
+    "tagline": "This site: an AI-operated portfolio that maintains itself.",
+    "description": "The site you are reading. A static Next.js portfolio with a weekly agentic operations loop: an AI advisor critiques the copy, reframes the portfolio and résumé under code-enforced factual guards, opens a pull request, gates it on CI, merges, and deploys.",
+    "siteUrl": "https://stevo.ai",
+    "sourceUrl": "https://github.com/stevologic/stevo.ai",
+    "metrics": [
+      "AI-operated weekly",
+      "CI-gated auto-merge",
+      "Daily project discovery"
+    ],
+    "tech": [
+      "TypeScript",
+      "Next.js",
+      "GitHub Actions",
+      "Grok"
+    ],
+    "capabilities": [
+      "Autonomous content ops",
+      "Guarded AI rewrites",
+      "Automated deployment"
+    ],
+    "statusLabel": "Live · Self-maintaining"
   }
 ]

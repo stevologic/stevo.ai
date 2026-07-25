@@ -53,6 +53,6 @@ export const credentials: Credential[] = [
 export const credentialHighlights = [
   "Offensive Security Certified Professional",
   "AWS Certified Cloud Practitioner",
-  "Harvard & Duke leadership programs",
   "BA, ASU - Walter Cronkite School of Journalism",
+  "Harvard & Duke leadership programs",
 ];

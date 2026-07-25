@@ -1,59 +1,10 @@
 {
   "schemaVersion": 2,
-  "generatedAt": "2026-07-25T20:06:31.049Z",
+  "generatedAt": "2026-07-25T22:29:25.017Z",
   "source": "https://api.github.com",
   "apiVersion": "2022-11-28",
   "defaultOwner": "stevologic",
   "repositories": [
-    {
-      "projectKeys": [
-        "shiba-studio"
-      ],
-      "name": "shiba-studio",
-      "fullName": "stevologic/shiba-studio",
-      "description": "Orchestrate agents with Grok — code, browser control, integrations, and scheduling. Powered exclusively by xAI.",
-      "url": "https://github.com/stevologic/shiba-studio",
-      "homepage": "https://shiba-studio.io",
-      "topics": [],
-      "primaryLanguage": "TypeScript",
-      "defaultBranch": "main",
-      "visibility": "public",
-      "archived": false,
-      "disabled": false,
-      "fork": false,
-      "template": false,
-      "stars": 1,
-      "forks": 1,
-      "openIssues": 0,
-      "createdAt": "2026-07-07T18:55:49Z",
-      "updatedAt": "2026-07-24T07:29:10Z",
-      "pushedAt": "2026-07-24T07:28:39Z",
-      "owner": {
-        "login": "stevologic",
-        "url": "https://github.com/stevologic",
-        "avatarUrl": "https://avatars.githubusercontent.com/u/5211665?v=4"
-      },
-      "license": {
-        "key": "agpl-3.0",
-        "name": "GNU Affero General Public License v3.0",
-        "spdxId": "AGPL-3.0",
-        "url": null
-      },
-      "latestRelease": null,
-      "releases": [],
-      "traffic": {
-        "windowDays": 14,
-        "fetchedAt": "2026-07-25T20:06:30.323Z",
-        "views": {
-          "count": 153,
-          "uniques": 10
-        },
-        "clones": {
-          "count": 769,
-          "uniques": 152
-        }
-      }
-    },
     {
       "projectKeys": [
         "security-recipes"
@@ -73,10 +24,10 @@
       "template": false,
       "stars": 1,
       "forks": 0,
-      "openIssues": 2,
+      "openIssues": 3,
       "createdAt": "2026-04-22T00:58:53Z",
-      "updatedAt": "2026-07-25T19:25:53Z",
-      "pushedAt": "2026-07-25T19:49:13Z",
+      "updatedAt": "2026-07-25T22:09:40Z",
+      "pushedAt": "2026-07-25T22:27:54Z",
       "owner": {
         "login": "stevologic",
         "url": "https://github.com/stevologic",
@@ -92,7 +43,7 @@
       "releases": [],
       "traffic": {
         "windowDays": 14,
-        "fetchedAt": "2026-07-25T20:06:30.321Z",
+        "fetchedAt": "2026-07-25T22:29:24.277Z",
         "views": {
           "count": 471,
           "uniques": 12
@@ -148,7 +99,7 @@
       "releases": [],
       "traffic": {
         "windowDays": 14,
-        "fetchedAt": "2026-07-25T20:06:30.324Z",
+        "fetchedAt": "2026-07-25T22:29:24.277Z",
         "views": {
           "count": 55,
           "uniques": 5
@@ -161,13 +112,13 @@
     },
     {
       "projectKeys": [
-        "tiny-book-buddies-ai"
+        "shiba-studio"
       ],
-      "name": "tiny-book-buddies-ai",
-      "fullName": "stevologic/tiny-book-buddies-ai",
-      "description": "Tiny Book Buddies AI — living, illustrated children's storybooks generated with any frontier AI model (GPT, Claude, Gemini, Imagen, Veo, Sora).",
-      "url": "https://github.com/stevologic/tiny-book-buddies-ai",
-      "homepage": "https://tinybookbuddies.ai",
+      "name": "shiba-studio",
+      "fullName": "stevologic/shiba-studio",
+      "description": "Orchestrate agents with Grok — code, browser control, integrations, and scheduling. Powered exclusively by xAI.",
+      "url": "https://github.com/stevologic/shiba-studio",
+      "homepage": "https://shiba-studio.io",
       "topics": [],
       "primaryLanguage": "TypeScript",
       "defaultBranch": "main",
@@ -176,35 +127,35 @@
       "disabled": false,
       "fork": false,
       "template": false,
-      "stars": 2,
+      "stars": 1,
       "forks": 1,
       "openIssues": 0,
-      "createdAt": "2022-12-20T06:34:31Z",
-      "updatedAt": "2026-07-17T21:44:36Z",
-      "pushedAt": "2026-07-17T21:44:32Z",
+      "createdAt": "2026-07-07T18:55:49Z",
+      "updatedAt": "2026-07-24T07:29:10Z",
+      "pushedAt": "2026-07-24T07:28:39Z",
       "owner": {
         "login": "stevologic",
         "url": "https://github.com/stevologic",
         "avatarUrl": "https://avatars.githubusercontent.com/u/5211665?v=4"
       },
       "license": {
-        "key": "other",
-        "name": "Other",
-        "spdxId": "NOASSERTION",
+        "key": "agpl-3.0",
+        "name": "GNU Affero General Public License v3.0",
+        "spdxId": "AGPL-3.0",
         "url": null
       },
       "latestRelease": null,
       "releases": [],
       "traffic": {
         "windowDays": 14,
-        "fetchedAt": "2026-07-25T20:06:30.331Z",
+        "fetchedAt": "2026-07-25T22:29:24.271Z",
         "views": {
-          "count": 43,
-          "uniques": 3
+          "count": 153,
+          "uniques": 10
         },
         "clones": {
-          "count": 461,
-          "uniques": 157
+          "count": 769,
+          "uniques": 152
         }
       }
     },
@@ -279,7 +230,7 @@
       ],
       "traffic": {
         "windowDays": 14,
-        "fetchedAt": "2026-07-25T20:06:30.626Z",
+        "fetchedAt": "2026-07-25T22:29:24.277Z",
         "views": {
           "count": 13,
           "uniques": 2
@@ -287,6 +238,113 @@
         "clones": {
           "count": 125,
           "uniques": 63
+        }
+      }
+    },
+    {
+      "projectKeys": [
+        "tiny-book-buddies-ai"
+      ],
+      "name": "tiny-book-buddies-ai",
+      "fullName": "stevologic/tiny-book-buddies-ai",
+      "description": "Tiny Book Buddies AI — living, illustrated children's storybooks generated with any frontier AI model (GPT, Claude, Gemini, Imagen, Veo, Sora).",
+      "url": "https://github.com/stevologic/tiny-book-buddies-ai",
+      "homepage": "https://tinybookbuddies.ai",
+      "topics": [],
+      "primaryLanguage": "TypeScript",
+      "defaultBranch": "main",
+      "visibility": "public",
+      "archived": false,
+      "disabled": false,
+      "fork": false,
+      "template": false,
+      "stars": 2,
+      "forks": 1,
+      "openIssues": 0,
+      "createdAt": "2022-12-20T06:34:31Z",
+      "updatedAt": "2026-07-17T21:44:36Z",
+      "pushedAt": "2026-07-17T21:44:32Z",
+      "owner": {
+        "login": "stevologic",
+        "url": "https://github.com/stevologic",
+        "avatarUrl": "https://avatars.githubusercontent.com/u/5211665?v=4"
+      },
+      "license": {
+        "key": "other",
+        "name": "Other",
+        "spdxId": "NOASSERTION",
+        "url": null
+      },
+      "latestRelease": null,
+      "releases": [],
+      "traffic": {
+        "windowDays": 14,
+        "fetchedAt": "2026-07-25T22:29:24.496Z",
+        "views": {
+          "count": 43,
+          "uniques": 3
+        },
+        "clones": {
+          "count": 461,
+          "uniques": 157
+        }
+      }
+    },
+    {
+      "projectKeys": [
+        "spare-cycles"
+      ],
+      "name": "spare-cycles",
+      "fullName": "stevologic/spare-cycles",
+      "description": "♻️ Donate your idle AI compute. A marketplace of vibe-coding projects + a pool of donated tokens — OpenAI-compatible proxy in front, volunteer nodes (Claude/GPT/Grok/Ollama) behind. MIT.",
+      "url": "https://github.com/stevologic/spare-cycles",
+      "homepage": "https://sparecycles.io/",
+      "topics": [
+        "ai",
+        "donation",
+        "fastapi",
+        "llm",
+        "marketplace",
+        "ollama",
+        "openai-compatible",
+        "volunteer-computing"
+      ],
+      "primaryLanguage": "Python",
+      "defaultBranch": "main",
+      "visibility": "public",
+      "archived": false,
+      "disabled": false,
+      "fork": false,
+      "template": false,
+      "stars": 1,
+      "forks": 0,
+      "openIssues": 0,
+      "createdAt": "2026-07-23T19:27:10Z",
+      "updatedAt": "2026-07-25T20:44:31Z",
+      "pushedAt": "2026-07-25T20:44:27Z",
+      "owner": {
+        "login": "stevologic",
+        "url": "https://github.com/stevologic",
+        "avatarUrl": "https://avatars.githubusercontent.com/u/5211665?v=4"
+      },
+      "license": {
+        "key": "mit",
+        "name": "MIT License",
+        "spdxId": "MIT",
+        "url": null
+      },
+      "latestRelease": null,
+      "releases": [],
+      "traffic": {
+        "windowDays": 14,
+        "fetchedAt": "2026-07-25T22:29:24.511Z",
+        "views": {
+          "count": 5,
+          "uniques": 1
+        },
+        "clones": {
+          "count": 0,
+          "uniques": 0
         }
       }
     },
@@ -508,7 +566,7 @@
       ],
       "traffic": {
         "windowDays": 14,
-        "fetchedAt": "2026-07-25T20:06:30.640Z",
+        "fetchedAt": "2026-07-25T22:29:24.526Z",
         "views": {
           "count": 30,
           "uniques": 6
@@ -557,7 +615,7 @@
       "releases": [],
       "traffic": {
         "windowDays": 14,
-        "fetchedAt": "2026-07-25T20:06:30.627Z",
+        "fetchedAt": "2026-07-25T22:29:24.753Z",
         "views": {
           "count": 22,
           "uniques": 3
@@ -565,6 +623,55 @@
         "clones": {
           "count": 334,
           "uniques": 145
+        }
+      }
+    },
+    {
+      "projectKeys": [
+        "arrowhead-paesano"
+      ],
+      "name": "arrowheadpaesanowebsite",
+      "fullName": "stevologic/arrowheadpaesanowebsite",
+      "description": "This is the official website for the Arrowhead Paesano Youtube channel.",
+      "url": "https://github.com/stevologic/arrowheadpaesanowebsite",
+      "homepage": "https://arrowheadpaesano.com/",
+      "topics": [],
+      "primaryLanguage": "CSS",
+      "defaultBranch": "main",
+      "visibility": "public",
+      "archived": false,
+      "disabled": false,
+      "fork": false,
+      "template": false,
+      "stars": 1,
+      "forks": 0,
+      "openIssues": 0,
+      "createdAt": "2026-05-22T02:21:10Z",
+      "updatedAt": "2026-07-25T20:10:40Z",
+      "pushedAt": "2026-07-25T20:09:25Z",
+      "owner": {
+        "login": "stevologic",
+        "url": "https://github.com/stevologic",
+        "avatarUrl": "https://avatars.githubusercontent.com/u/5211665?v=4"
+      },
+      "license": {
+        "key": "mit",
+        "name": "MIT License",
+        "spdxId": "MIT",
+        "url": null
+      },
+      "latestRelease": null,
+      "releases": [],
+      "traffic": {
+        "windowDays": 14,
+        "fetchedAt": "2026-07-25T22:29:24.717Z",
+        "views": {
+          "count": 25,
+          "uniques": 2
+        },
+        "clones": {
+          "count": 98,
+          "uniques": 54
         }
       }
     },
@@ -606,7 +713,7 @@
       "releases": [],
       "traffic": {
         "windowDays": 14,
-        "fetchedAt": "2026-07-25T20:06:30.639Z",
+        "fetchedAt": "2026-07-25T22:29:24.775Z",
         "views": {
           "count": 36,
           "uniques": 6
@@ -619,15 +726,15 @@
     },
     {
       "projectKeys": [
-        "arrowhead-paesano"
+        "stevo-ai"
       ],
-      "name": "arrowheadpaesanowebsite",
-      "fullName": "stevologic/arrowheadpaesanowebsite",
-      "description": "This is the official website for the Arrowhead Paesano Youtube channel.",
-      "url": "https://github.com/stevologic/arrowheadpaesanowebsite",
-      "homepage": null,
+      "name": "stevo.ai",
+      "fullName": "stevologic/stevo.ai",
+      "description": "A portfolio of launched products, in depth professional background and catalog of professional services for Stephen M Abbott",
+      "url": "https://github.com/stevologic/stevo.ai",
+      "homepage": "https://stevo.ai",
       "topics": [],
-      "primaryLanguage": "CSS",
+      "primaryLanguage": "JavaScript",
       "defaultBranch": "main",
       "visibility": "public",
       "archived": false,
@@ -637,9 +744,9 @@
       "stars": 1,
       "forks": 0,
       "openIssues": 0,
-      "createdAt": "2026-05-22T02:21:10Z",
-      "updatedAt": "2026-07-25T20:05:42Z",
-      "pushedAt": "2026-07-25T20:05:49Z",
+      "createdAt": "2026-07-23T21:19:54Z",
+      "updatedAt": "2026-07-25T22:21:33Z",
+      "pushedAt": "2026-07-25T22:22:10Z",
       "owner": {
         "login": "stevologic",
         "url": "https://github.com/stevologic",
@@ -655,72 +762,14 @@
       "releases": [],
       "traffic": {
         "windowDays": 14,
-        "fetchedAt": "2026-07-25T20:06:30.885Z",
+        "fetchedAt": "2026-07-25T22:29:24.941Z",
         "views": {
-          "count": 25,
-          "uniques": 2
-        },
-        "clones": {
-          "count": 98,
-          "uniques": 54
-        }
-      }
-    },
-    {
-      "projectKeys": [
-        "spare-cycles"
-      ],
-      "name": "spare-cycles",
-      "fullName": "stevologic/spare-cycles",
-      "description": "♻️ Donate your idle AI compute. A marketplace of vibe-coding projects + a pool of donated tokens — OpenAI-compatible proxy in front, volunteer nodes (Claude/GPT/Grok/Ollama) behind. MIT.",
-      "url": "https://github.com/stevologic/spare-cycles",
-      "homepage": "https://stevologic.github.io/spare-cycles/",
-      "topics": [
-        "ai",
-        "donation",
-        "fastapi",
-        "llm",
-        "marketplace",
-        "ollama",
-        "openai-compatible",
-        "volunteer-computing"
-      ],
-      "primaryLanguage": "Python",
-      "defaultBranch": "main",
-      "visibility": "public",
-      "archived": false,
-      "disabled": false,
-      "fork": false,
-      "template": false,
-      "stars": 0,
-      "forks": 0,
-      "openIssues": 0,
-      "createdAt": "2026-07-23T19:27:10Z",
-      "updatedAt": "2026-07-25T19:59:58Z",
-      "pushedAt": "2026-07-25T20:03:21Z",
-      "owner": {
-        "login": "stevologic",
-        "url": "https://github.com/stevologic",
-        "avatarUrl": "https://avatars.githubusercontent.com/u/5211665?v=4"
-      },
-      "license": {
-        "key": "mit",
-        "name": "MIT License",
-        "spdxId": "MIT",
-        "url": null
-      },
-      "latestRelease": null,
-      "releases": [],
-      "traffic": {
-        "windowDays": 14,
-        "fetchedAt": "2026-07-25T20:06:30.938Z",
-        "views": {
-          "count": 5,
+          "count": 28,
           "uniques": 1
         },
         "clones": {
-          "count": 0,
-          "uniques": 0
+          "count": 302,
+          "uniques": 101
         }
       }
     }

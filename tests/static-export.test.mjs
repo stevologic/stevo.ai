@@ -46,8 +46,8 @@ test("exports the site, install icons, and social assets", async () => {
 test("site contains service-first positioning and social metadata", async () => {
   const html = await exportedPage("index.html");
 
-  assert.match(html, /Secure the business\./i);
-  assert.match(html, /Enable what(?:&apos;|&#x27;|')s next\./i);
+  assert.match(html, /Proven in the enterprise\./i);
+  assert.match(html, /Built in the open\./i);
   assert.match(html, /Security leadership/);
   assert.match(html, /AI enablement &amp; governance/i);
   assert.match(html, /Considering select professional engagements/i);
@@ -512,14 +512,18 @@ test("professional resume is detailed, private, and print-ready", async () => {
 test("resume reflects the current skills, tooling, and credentials", async () => {
   const html = await exportedPage("resume/index.html");
 
-  // Focus areas: four, with governed adoption and agent architecture merged.
-  for (const area of [
-    "Application and supply-chain security",
-    "Agentic cybersecurity enablement",
-    "Governed AI adoption and agent architecture",
-    "AI product engineering",
-  ]) {
-    assert.ok(html.includes(area), `focus areas omit ${area}`);
+  // Focus areas are machine-editable data (the weekly optimizer may retitle
+  // them), so assert against content/resume.json rather than hardcoded titles.
+  // Hardcoding them once made the pre-merge gate reject a legitimate rewrite.
+  const resumeContent = JSON.parse(
+    await readFile(new URL("content/resume.json", root), "utf8"),
+  );
+  assert.equal(resumeContent.focusAreas.length, 4, "four focus areas");
+  for (const area of resumeContent.focusAreas) {
+    assert.ok(
+      html.includes(area.title.replace(/&/g, "&amp;")),
+      `focus areas omit ${area.title}`,
+    );
   }
   assert.equal((html.match(/class="resume-focus-card"/g) || []).length, 4);
 
@@ -975,7 +979,7 @@ test("the critique brief carries readable copy, not build artifacts", async () =
   const brief = await buildBrief();
 
   // Real copy from both pages, so the advisor reviews what a visitor reads.
-  assert.match(brief, /Secure the business/);
+  assert.match(brief, /Proven in the enterprise/);
   assert.match(brief, /Discuss an engagement/);
   assert.match(brief, /Commercial products/);
 

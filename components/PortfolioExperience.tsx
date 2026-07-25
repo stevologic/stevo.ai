@@ -343,8 +343,8 @@ export function PortfolioExperience({
               <span>Services · Profile · Projects</span>
             </p>
             <h1>
-              Secure the business.
-              <span>Enable what&apos;s next.</span>
+              Proven in the enterprise.
+              <span>Built in the open.</span>
             </h1>
             <p className="hero-intro">
               Focused on helping leaders strengthen cybersecurity, govern AI
