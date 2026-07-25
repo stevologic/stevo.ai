@@ -132,6 +132,44 @@ It skips cleanly when no browser is installed; set `CHROME_PATH` to point at a
 specific binary. The layout currently measures ~1650px of content against a
 1950px two-page budget, so there is roughly one third of a page in reserve.
 
+## Site critique
+
+A weekly GitHub Action asks Grok to review the site's copy, verbiage, and
+structure as a business advisor who buys and sells vCISO, cybersecurity, and AI
+enablement work. It is advisory only — it never edits the site. Output goes to
+the run summary, a 90-day artifact, and a labelled GitHub issue.
+
+| Setting | Where | Default |
+| --- | --- | --- |
+| `GROK_API_KEY` | Actions **secret** (required) | — |
+| `GROK_MODEL` | Actions **variable** | `grok-4.5` |
+| `GROK_MODEL_AUTO_UPGRADE` | Actions **variable** | `true` |
+| `GROK_REASONING_EFFORT` | Actions **variable** | model default |
+
+Without the key the job logs a warning and exits green, so forks and
+contributors never see a red build for an advisory step.
+
+The model tracks the latest release two ways. xAI treats a bare id like
+`grok-4.5` as an alias for the newest snapshot of that line, and each run also
+lists the models API and moves to a newer model when one ships. Set
+`GROK_MODEL_AUTO_UPGRADE` to `false` to pin `GROK_MODEL` exactly.
+
+Auto-upgrade ranks candidates by the API's `created` timestamp, never by parsing
+the version out of the name. xAI ships both `grok-4.20` and `grok-4.5`, and 4.5
+is the newer of the two despite `20 > 5` — a component-wise version compare
+silently downgrades. Image, video, `non-reasoning`, and `mini`/`fast` variants
+are excluded, and anything unusable falls back to the configured model rather
+than failing the run.
+
+Run it locally against the built export:
+
+```sh
+GROK_API_KEY=... npm run critique
+```
+
+Model ids use a dot: `grok-4.5` is valid, `grok-4-5` returns model-not-found.
+
+
 ## Publishing
 
 The deployment workflow refreshes project data, builds the static export, and

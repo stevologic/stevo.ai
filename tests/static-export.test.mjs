@@ -798,6 +798,97 @@ test("the profile name stays on one line", async () => {
   );
 });
 
+test("the site critique action is wired to Grok correctly", async () => {
+  const [workflow, script, pkg] = await Promise.all([
+    readFile(new URL(".github/workflows/site-critique.yml", root), "utf8"),
+    readFile(new URL("scripts/site-critique.mjs", root), "utf8"),
+    readFile(new URL("package.json", root), "utf8"),
+  ]);
+
+  assert.match(workflow, /secrets\.GROK_API_KEY/, "must read the API key from secrets");
+  assert.match(workflow, /vars\.GROK_MODEL/, "model must come from a repo variable");
+  // The default has to be a real model id. xAI uses a dot: grok-4-5 404s.
+  assert.match(workflow, /'grok-4\.5'/);
+  // Scope to the default assignment: the surrounding comment explains that
+  // grok-4-5 is invalid, so a bare search for it matches the prose.
+  const fallback = script.match(
+    /GROK_MODEL\?\.trim\(\) \|\| "([^"]+)"/,
+  )?.[1];
+  assert.equal(fallback, "grok-4.5", "default model must use the dotted id");
+  assert.match(JSON.parse(pkg).scripts.critique, /site-critique\.mjs/);
+
+  // The key must never be committed, only read from the environment.
+  assert.doesNotMatch(script, /xai-[A-Za-z0-9]{8}/, "no API key literal");
+  assert.match(script, /process\.env\.GROK_API_KEY/);
+
+  // Advisory only: it must not be able to rewrite the site.
+  assert.doesNotMatch(workflow, /contents:\s*write/);
+  assert.doesNotMatch(workflow, /git (push|commit)/);
+});
+
+test("model auto-upgrade ranks by release date, not version number", async () => {
+  const { pickNewestModel } = await import("../scripts/site-critique.mjs");
+  const at = (iso) => Math.floor(new Date(iso).getTime() / 1000);
+
+  // grok-4.20 shipped in March and grok-4.5 in July, so 4.5 is newer despite
+  // 20 > 5. Any component-wise version compare silently upgrades backwards.
+  const catalogue = [
+    { id: "grok-4.20-0309-reasoning", created: at("2026-03-09") },
+    { id: "grok-4.3", created: at("2026-05-01") },
+    { id: "grok-4.5", created: at("2026-07-08") },
+  ];
+  assert.equal(pickNewestModel(catalogue, "grok-4.5"), "grok-4.5");
+
+  // A genuinely newer model is adopted.
+  assert.equal(
+    pickNewestModel(
+      [...catalogue, { id: "grok-5", created: at("2027-01-01") }],
+      "grok-4.5",
+    ),
+    "grok-5",
+  );
+
+  // Non-text and deliberately weaker variants are never selected.
+  for (const id of [
+    "grok-imagine-video",
+    "grok-imagine-image",
+    "grok-4.20-0309-non-reasoning",
+    "grok-build-0.1",
+  ]) {
+    assert.equal(
+      pickNewestModel([{ id, created: at("2030-01-01") }], "grok-4.5"),
+      "grok-4.5",
+      `${id} must not be auto-selected`,
+    );
+  }
+
+  // Discovery is best-effort: anything unusable falls back to the configured
+  // model rather than throwing mid-run.
+  for (const payload of [[], [null], [{ nope: 1 }], [{ id: "grok-9" }]]) {
+    assert.equal(pickNewestModel(payload, "grok-4.5"), "grok-4.5");
+  }
+});
+
+test("the critique brief carries readable copy, not build artifacts", async () => {
+  const { buildBrief } = await import("../scripts/site-critique.mjs");
+  const brief = await buildBrief();
+
+  // Real copy from both pages, so the advisor reviews what a visitor reads.
+  assert.match(brief, /Secure the business/);
+  assert.match(brief, /Discuss an engagement/);
+  assert.match(brief, /Commercial products/);
+
+  // None of the export plumbing.
+  assert.doesNotMatch(brief, /<[a-z]+[\s>]/i, "HTML tags leaked into the brief");
+  assert.doesNotMatch(brief, /__next|self\.__next/, "flight payload leaked");
+  assert.doesNotMatch(brief, /&[a-z]+;|&#x?[0-9a-f]+;/i, "unresolved entities");
+  assert.doesNotMatch(brief, /<!--/, "React comment markers leaked");
+
+  // Stat tiles must keep their labels; a bare "16" tells an advisor nothing.
+  assert.match(brief, /16 — Years of IT experience/);
+  assert.match(brief, /Fortune 100 — Enterprise experience/);
+});
+
 test("custom domain is configured", async () => {
   const cname = await readFile(new URL("public/CNAME", root), "utf8");
   assert.equal(cname.trim(), "stevo.ai");

@@ -41,3 +41,6 @@ next-env.d.ts
 /.wrangler/
 /outputs/
 /work/
+
+# generated advisory output, published as a workflow artifact and issue
+/critique/

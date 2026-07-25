@@ -1,0 +1,123 @@
+name: Site critique
+
+# Asks Grok to review the site's copy, verbiage, and structure as a business
+# advisor who buys and sells vCISO, cybersecurity, and AI enablement work.
+#
+# Advisory only: it never edits the site. Output lands in the run summary, an
+# artifact, and (by default) a GitHub issue to triage.
+#
+# Setup:
+#   secrets.GROK_API_KEY  required. Create at https://console.x.ai
+#   vars.GROK_MODEL       optional, defaults to grok-4.5
+#
+# The model auto-updates. xAI treats a bare name like `grok-4.5` as an alias
+# that tracks the newest snapshot of that line, and the script additionally
+# checks the models API each run and moves to a newer model when one ships.
+# Set vars.GROK_MODEL_AUTO_UPGRADE to "false" to pin to vars.GROK_MODEL exactly.
+
+on:
+  schedule:
+    # 09:12 Monday UTC. An off-minute avoids the top-of-hour scheduling crush.
+    - cron: "12 9 * * 1"
+  workflow_dispatch:
+    inputs:
+      model:
+        description: "Model override, e.g. grok-4.5 (blank uses vars.GROK_MODEL)"
+        required: false
+        type: string
+      auto_upgrade:
+        description: "Move to a newer model when one is available"
+        required: false
+        default: true
+        type: boolean
+      create_issue:
+        description: "Open a GitHub issue with the critique"
+        required: false
+        default: true
+        type: boolean
+
+concurrency:
+  group: site-critique
+  cancel-in-progress: false
+
+permissions:
+  contents: read
+
+jobs:
+  critique:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    permissions:
+      contents: read
+      issues: write
+
+    steps:
+      - name: Check out source
+        uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
+        with:
+          persist-credentials: false
+
+      - name: Set up Node.js
+        uses: actions/setup-node@249970729cb0ef3589644e2896645e5dc5ba9c38 # v6
+        with:
+          node-version: 24
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      # The critique reads the built export, so it reviews what a visitor sees
+      # rather than the source components.
+      - name: Build static site
+        run: npm run build
+
+      - name: Confirm the API key is configured
+        id: preflight
+        env:
+          GROK_API_KEY: ${{ secrets.GROK_API_KEY }}
+        run: |
+          if [[ -z "$GROK_API_KEY" ]]; then
+            echo 'configured=false' >> "$GITHUB_OUTPUT"
+            echo '::warning title=Site critique::GROK_API_KEY is not set, so the critique was skipped. Add it under Settings > Secrets and variables > Actions.'
+          else
+            echo 'configured=true' >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Critique the site
+        id: critique
+        if: steps.preflight.outputs.configured == 'true'
+        env:
+          GROK_API_KEY: ${{ secrets.GROK_API_KEY }}
+          # Precedence: manual override, then the repository variable, then the
+          # script's own default.
+          GROK_MODEL: ${{ inputs.model || vars.GROK_MODEL || 'grok-4.5' }}
+          GROK_MODEL_AUTO_UPGRADE: ${{ (github.event_name == 'workflow_dispatch' && inputs.auto_upgrade == false) && 'false' || vars.GROK_MODEL_AUTO_UPGRADE || 'true' }}
+          GROK_REASONING_EFFORT: ${{ vars.GROK_REASONING_EFFORT }}
+        run: npm run critique
+
+      - name: Upload the critique
+        if: steps.preflight.outputs.configured == 'true'
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        with:
+          name: site-critique
+          path: critique/site-critique.md
+          retention-days: 90
+          if-no-files-found: error
+
+      - name: Open an issue with the critique
+        if: >-
+          steps.preflight.outputs.configured == 'true' &&
+          (github.event_name != 'workflow_dispatch' || inputs.create_issue)
+        env:
+          GH_TOKEN: ${{ github.token }}
+          MODEL: ${{ steps.critique.outputs.model }}
+        run: |
+          set -euo pipefail
+          title="Site critique — $(date -u '+%Y-%m-%d') (${MODEL:-grok})"
+          gh label create site-critique \
+            --description 'Advisory review of the site copy and structure' \
+            --color 0E8A16 --force >/dev/null 2>&1 || true
+          gh issue create \
+            --title "$title" \
+            --body-file critique/site-critique.md \
+            --label site-critique
