@@ -196,6 +196,8 @@ Hard rules:
 - "featured" should be true only for the strongest enterprise-relevant proof. Three at most.
 - Do not change a project's name unless the current one is genuinely unclear.
 - Only include a project in "projects" if you are actually changing it.
+- "category" must be exactly one of: "Security", "AI systems", "Product lab".
+  These are the site's filter buttons. Any other value is rejected.
 
 Return ONLY valid JSON, no markdown fence, in exactly this shape:
 {
@@ -206,7 +208,7 @@ Return ONLY valid JSON, no markdown fence, in exactly this shape:
   }
 }`;
 
-async function requestEdits(model, current, discovered) {
+async function requestEdits(model, current, discovered, correction = "") {
   const body = {
     model,
     messages: [
@@ -221,7 +223,7 @@ async function requestEdits(model, current, discovered) {
           discovered,
           null,
           2,
-        )}\n\nReorganise the portfolio.`,
+        )}\n\nReorganise the portfolio.${correction ? `\n\n${correction}` : ""}`,
       },
     ],
     max_tokens: maxTokens,
@@ -264,12 +266,31 @@ async function main() {
     await readFile(discoveredPath, "utf8").catch(() => '{"projects":[]}'),
   ).projects;
 
-  const { edits, usage } = await requestEdits(
-    configuredModel,
-    current,
-    discovered,
-  );
-  const next = applyEdits(current, discovered, edits);
+  // The model occasionally proposes an edit the validator refuses -- an
+  // invented category, a dropped project. Feed the exact rejection back and let
+  // it correct itself rather than failing a run that is otherwise fine.
+  let next;
+  let usage;
+  let correction = "";
+  for (let attempt = 1; attempt <= 3; attempt += 1) {
+    const result = await requestEdits(
+      configuredModel,
+      current,
+      discovered,
+      correction,
+    );
+    usage = result.usage;
+    try {
+      next = applyEdits(current, discovered, result.edits);
+      break;
+    } catch (error) {
+      if (attempt === 3) throw error;
+      log(`Attempt ${attempt} rejected: ${error.message}`);
+      correction =
+        `Your previous response was rejected for this reason: ${error.message}\n` +
+        "Correct exactly that and return the entire JSON document again.";
+    }
+  }
 
   const before = JSON.stringify(current);
   const after = JSON.stringify(next);
