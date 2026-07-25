@@ -17,10 +17,10 @@ export interface ServiceTrack {
 
 export const serviceTracks: ServiceTrack[] = [
   {
-    id: "vciso",
+    id: "lead",
     number: "01",
-    label: "vCISO",
-    title: "vCISO & security leadership",
+    label: "Lead",
+    title: "Security leadership",
     description:
       "Embed experienced security leadership where the business needs it most: setting direction, creating an operating cadence, and turning risk into decisions executives and technical teams can act on.",
     outcomes: [
@@ -120,7 +120,7 @@ export const engagementModels: EngagementModel[] = [
   {
     title: "Fractional leadership",
     description:
-      "Ongoing vCISO direction, operating cadence, and executive security decision support.",
+      "Ongoing security leadership, operating cadence, and executive decision support.",
     deliverables: [
       "Security strategy and roadmap",
       "Executive and board-ready risk reporting",

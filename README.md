@@ -135,7 +135,7 @@ specific binary. The layout currently measures ~1650px of content against a
 ## Site critique
 
 A weekly GitHub Action asks Grok to review the site's copy, verbiage, and
-structure as a business advisor who buys and sells vCISO, cybersecurity, and AI
+structure as a business advisor who buys and sells cybersecurity and AI
 enablement work, then applies the portfolio half of that advice and **opens a
 pull request** with the diff.
 

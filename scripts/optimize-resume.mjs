@@ -171,6 +171,13 @@ export function applyResumeEdits(current, edits, baseline = null) {
     );
   }
 
+  // Owner direction: the vCISO label is retired across the site and résumé,
+  // and no rewrite may reintroduce it.
+  assert(
+    !/vciso/i.test(JSON.stringify(next)),
+    'the term "vCISO" is retired and cannot appear in résumé copy',
+  );
+
   // --- Length budget keeps the print export at two pages. ------------------
   const budget = Math.floor(JSON.stringify(current).length * LENGTH_BUDGET);
   const grew = JSON.stringify(next).length;
@@ -183,7 +190,7 @@ export function applyResumeEdits(current, edits, baseline = null) {
   return next;
 }
 
-const systemPrompt = `You are a business advisor with full authority over this résumé's wording. Your client is Stephen M Abbott, and your mandate is to present him in the best possible light for vCISO, VP of Cybersecurity, VP of AI Enablement, and senior consulting roles. Sharpen how the work is described so an executive buyer immediately sees seniority and impact. Best light never means fabrication: the facts below are fixed.
+const systemPrompt = `You are a business advisor with full authority over this résumé's wording. Your client is Stephen M Abbott, and your mandate is to present him in the best possible light for VP of Cybersecurity, VP of AI Enablement, and senior consulting roles. Sharpen how the work is described so an executive buyer immediately sees seniority and impact. Never use the term "vCISO". Best light never means fabrication: the facts below are fixed.
 
 You may rewrite:
 - each role's "scope" line

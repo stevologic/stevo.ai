@@ -48,7 +48,7 @@ test("site contains service-first positioning and social metadata", async () => 
 
   assert.match(html, /Secure the business\./i);
   assert.match(html, /Enable what(?:&apos;|&#x27;|')s next\./i);
-  assert.match(html, /vCISO &amp; security leadership/i);
+  assert.match(html, /Security leadership/);
   assert.match(html, /AI enablement &amp; governance/i);
   assert.match(html, /Considering select professional engagements/i);
   assert.match(html, /Shiba Studio/);
@@ -103,8 +103,11 @@ test("hero career strip summarizes professional experience", async () => {
 
   assert.ok(careerStrip);
   assert.match(careerStrip, /Career highlights/);
-  assert.match(careerStrip, />16<\/strong><span>Years of IT experience/);
-  assert.match(careerStrip, />11<\/strong><span>Years of cybersecurity experience/);
+  assert.match(careerStrip, />16<\/strong><span>Years of Enterprise IT Experience/);
+  assert.match(
+    careerStrip,
+    />11<\/strong><span>Years of Enterprise Cybersecurity Experience/,
+  );
   // Derived from the project data, so discovery cannot leave it stale.
   const projects = await publishedProjects();
   assert.match(
@@ -214,7 +217,7 @@ test("site manifest uses installable Stevo.AI icons", async () => {
 
   assert.equal(manifest.short_name, "Stevo.AI");
   assert.match(manifest.name, /Cybersecurity & AI Enablement/);
-  assert.match(manifest.description, /vCISO/);
+  assert.match(manifest.description, /Cybersecurity consulting/);
   assert.equal(manifest.display, "standalone");
   assert.equal(manifest.theme_color, "#0f1014");
   assert.deepEqual(
@@ -303,7 +306,7 @@ test("social handles are published on the site and in structured data", async ()
   }
 });
 
-test("the site never claims a CEO title", async () => {
+test("the site never claims a retired title", async () => {
   const [html, resumeHtml] = await Promise.all([
     exportedPage("index.html"),
     exportedPage("resume/index.html"),
@@ -312,12 +315,18 @@ test("the site never claims a CEO title", async () => {
   assert.doesNotMatch(html, /\bCEO\b/);
   assert.doesNotMatch(resumeHtml, /\bCEO\b/);
 
-  // The manifest ships to installed apps, so it needs the same guard.
+  // Owner direction: the site advertises services, profile, and projects.
+  // The vCISO label is retired everywhere a visitor or crawler can see.
+  assert.doesNotMatch(html, /vciso/i);
+  assert.doesNotMatch(resumeHtml, /vciso/i);
+
+  // The manifest ships to installed apps, so it needs the same guards.
   const manifest = await readFile(
     new URL("../out/site.webmanifest", import.meta.url),
     "utf8",
   );
   assert.doesNotMatch(manifest, /\bCEO\b/);
+  assert.doesNotMatch(manifest, /vciso/i);
 });
 
 test("icons are the generated brand mark, not photo-derived art", async () => {
@@ -887,6 +896,13 @@ test("the portfolio optimizer cannot lose or fabricate project data", async () =
     ["invents a project", { order: [...slugs, "made-up-platform"] }],
     ["duplicates a project", { order: [...slugs, slugs[0]] }],
     [
+      "reintroduces the retired vCISO label",
+      {
+        order: slugs,
+        projects: { [slugs[0]]: { tagline: "Fractional vCISO in a box." } },
+      },
+    ],
+    [
       "rewrites a live URL",
       { order: slugs, projects: { [slugs[0]]: { siteUrl: "https://elsewhere.example" } } },
     ],
@@ -970,7 +986,7 @@ test("the critique brief carries readable copy, not build artifacts", async () =
   assert.doesNotMatch(brief, /<!--/, "React comment markers leaked");
 
   // Stat tiles must keep their labels; a bare "16" tells an advisor nothing.
-  assert.match(brief, /16 — Years of IT experience/);
+  assert.match(brief, /16 — Years of Enterprise IT Experience/);
   assert.match(brief, /Fortune 100 — Enterprise experience/);
 });
 
@@ -1067,6 +1083,16 @@ test("the resume optimizer cannot rewrite employment history", async () => {
     ["edits the tool inventory", { technicalBreadth: { Security: { value: "Splunk" } } }],
     ["edits commercial products", { commercialProducts: { "Application security": { value: "Veracode" } } }],
     ["invents a focus area", { focusAreas: { "Quantum readiness": { description: "Post-quantum work." } } }],
+    [
+      "reintroduces the retired vCISO label",
+      {
+        focusAreas: {
+          "AI product engineering": {
+            description: "vCISO-grade product engineering discipline.",
+          },
+        },
+      },
+    ],
     [
       "pads the resume past the page budget",
       {

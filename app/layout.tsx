@@ -5,20 +5,20 @@ import { serviceTracks } from "@/lib/services";
 import "./globals.css";
 
 const siteUrl = "https://stevo.ai";
-const socialTitle = "Stevo.AI — vCISO, Cybersecurity & AI Enablement";
+const socialTitle = "Stevo.AI — Cybersecurity & AI Enablement";
 const socialDescription =
-  "Principal-led cybersecurity and AI enablement consulting: vCISO services, AI governance, secure agent delivery, application security, and software supply-chain assurance.";
+  "Principal-led cybersecurity and AI enablement consulting: security program leadership, AI governance, secure agent delivery, application security, and software supply-chain assurance.";
 const socialImageAlt =
-  "Stevo.AI: security leadership, AI enablement, vCISO services, cybersecurity consulting, and professional engagements led by Stephen M Abbott.";
+  "Stevo.AI: the services, profile, and shipped projects of Stephen M Abbott — security leadership, AI enablement, and cybersecurity consulting.";
 
 export const metadata: Metadata = {
   metadataBase: new URL(siteUrl),
   title: {
-    default: "Stevo.AI — vCISO, Cybersecurity & AI Enablement",
+    default: "Stevo.AI — Cybersecurity & AI Enablement",
     template: "%s · stevo.ai",
   },
   description:
-    "Principal-led cybersecurity and AI enablement consulting, including vCISO services, AI governance, secure delivery, application security, and supply-chain assurance.",
+    "Principal-led cybersecurity and AI enablement consulting: security program leadership, AI governance, secure delivery, application security, and supply-chain assurance.",
   applicationName: "stevo.ai",
   category: "technology",
   authors: [{ name: "Stephen M Abbott", url: siteUrl }],
@@ -51,8 +51,6 @@ export const metadata: Metadata = {
     "apple-mobile-web-app-capable": "yes",
   },
   keywords: [
-    "vCISO",
-    "virtual CISO",
     "cybersecurity consultant",
     "AI enablement consultant",
     "fractional security leadership",
@@ -121,7 +119,7 @@ const structuredData = {
       sameAs: socialProfileUrls,
       areaServed: "Worldwide",
       knowsAbout: [
-        "vCISO services",
+        "Security program leadership",
         "Cybersecurity leadership",
         "AI enablement",
         "AI governance",

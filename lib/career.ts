@@ -14,10 +14,13 @@ export const career = {
 
 /** Metric tiles for the home page hero strip. */
 export const heroMetrics = [
-  { value: String(career.yearsInTechnology), label: "Years of IT experience" },
+  {
+    value: String(career.yearsInTechnology),
+    label: "Years of Enterprise IT Experience",
+  },
   {
     value: String(career.yearsInCybersecurity),
-    label: "Years of cybersecurity experience",
+    label: "Years of Enterprise Cybersecurity Experience",
   },
   // Derived, so daily project discovery cannot leave the count stale.
   { value: String(projects.length), label: "Live products" },

@@ -340,7 +340,7 @@ export function PortfolioExperience({
           <div className="hero-copy" data-reveal>
             <p className="eyebrow">
               <span>Stevo.AI</span>
-              <span>vCISO · Cybersecurity · AI enablement</span>
+              <span>Services · Profile · Projects</span>
             </p>
             <h1>
               Secure the business.
@@ -349,7 +349,7 @@ export function PortfolioExperience({
             <p className="hero-intro">
               Focused on helping leaders strengthen cybersecurity, govern AI
               adoption, and turn high-consequence technology decisions into
-              executable programs and working systems—through vCISO leadership,
+              executable programs and working systems—through security leadership,
               targeted advisory, and hands-on delivery.
             </p>
             <div className="hero-actions">
@@ -670,7 +670,7 @@ export function PortfolioExperience({
           <span>Stevo.AI</span>
         </div>
         <p>
-          vCISO · Cybersecurity consulting · AI enablement
+          Cybersecurity consulting · AI enablement · Shipped products
           <a className="footer-security-link" href="/.well-known/security.txt">
             Security disclosure policy
           </a>

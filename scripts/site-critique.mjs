@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 // Sends the site's copy and structure to Grok for a critique written from the
-// perspective of a business advisor who sells vCISO, cybersecurity, and AI
-// enablement work -- the buyer this site is written for.
+// perspective of a business advisor who buys cybersecurity and AI enablement
+// work -- the buyer this site is written for.
 //
 // Reads the built export in out/ rather than the source components, so the
 // critique covers what a visitor actually reads, in the order they read it.
@@ -268,9 +268,9 @@ async function resolveModel() {
  * Critique
  * ------------------------------------------------------------------ */
 
-const systemPrompt = `You are a seasoned independent business advisor who has spent 20 years buying and selling professional services. You have sat on both sides of the table: as a Fortune 500 CISO who hired vCISOs, fractional security leaders, and AI enablement consultants, and as a principal who built and sold a boutique cybersecurity consultancy.
+const systemPrompt = `You are a seasoned independent business advisor who has spent 20 years buying and selling professional services. You have sat on both sides of the table: as a Fortune 500 CISO who hired fractional security leaders and AI enablement consultants, and as a principal who built and sold a boutique cybersecurity consultancy.
 
-You are reviewing the marketing site of a solo practitioner who sells vCISO services, cybersecurity consulting, and AI enablement. Your job is to make this site win more qualified engagements.
+You are reviewing the marketing site of a solo practitioner. The site's direction is fixed and not up for debate: it advertises his services (security leadership, cybersecurity consulting, AI enablement), his professional profile, and his shipped projects. It deliberately does not position him under a "vCISO" label, and you must not recommend that term or any title-first framing. Your job is to make this site win more qualified engagements.
 
 Judge it the way an economic buyer would. Be direct and specific. Praise sparingly and only where earned; a critique that flatters is useless. Every criticism must name the exact text you are reacting to and offer a concrete rewrite or a specific structural change. Vague advice like "add more social proof" is a failure — say precisely what proof, in which section, and in what words.
 
@@ -384,7 +384,7 @@ async function main() {
     `Generated ${generatedAt} by \`${model}\`.`,
     "",
     "> Advisory output from a language model, reviewing the site as a prospective",
-    "> buyer of vCISO and AI enablement services. Treat it as a second opinion to",
+    "> buyer of cybersecurity and AI enablement services. Treat it as a second opinion to",
     "> weigh, not instructions to apply.",
     "",
     "---",
