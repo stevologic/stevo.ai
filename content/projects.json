@@ -87,6 +87,34 @@
     "statusLabel": "Live · Active development"
   },
   {
+    "repo": "stevo.ai",
+    "slug": "stevo-ai",
+    "name": "Stevo.AI",
+    "category": "AI systems",
+    "featured": false,
+    "tagline": "Governed AI operations that critique, revise, and ship only under CI controls.",
+    "description": "Live demonstration of agentic content operations with control retained at every step: an AI advisor reframes copy under code-enforced factual guards, opens a pull request, passes CI, merges, and deploys—useful proof for leaders evaluating auditable AI enablement.",
+    "siteUrl": "https://stevo.ai",
+    "sourceUrl": "https://github.com/stevologic/stevo.ai",
+    "metrics": [
+      "AI-operated weekly",
+      "CI-gated auto-merge",
+      "Daily project discovery"
+    ],
+    "tech": [
+      "TypeScript",
+      "Next.js",
+      "GitHub Actions",
+      "Grok"
+    ],
+    "capabilities": [
+      "Autonomous content ops",
+      "Guarded AI rewrites",
+      "Automated deployment"
+    ],
+    "statusLabel": "Live · Self-maintaining"
+  },
+  {
     "repo": "pro-response",
     "slug": "pro-response",
     "name": "Pro Response",
@@ -116,32 +144,31 @@
     "statusLabel": "v2.0 available"
   },
   {
-    "repo": "stevo.ai",
-    "slug": "stevo-ai",
-    "name": "Stevo.AI",
-    "category": "AI systems",
+    "repo": "spare-cycles",
+    "slug": "spare-cycles",
+    "name": "Spare Cycles",
+    "category": "Product lab",
     "featured": false,
-    "tagline": "Governed AI operations loop that critiques, revises, and ships updates under CI.",
-    "description": "Live demonstration of agentic content operations: an AI advisor reframes portfolio and résumé copy under code-enforced factual guards, opens a pull request, passes CI, merges, and deploys—control and auditability retained at every step.",
-    "siteUrl": "https://stevo.ai",
-    "sourceUrl": "https://github.com/stevologic/stevo.ai",
+    "tagline": "Open research experiment routing inference across volunteer nodes.",
+    "description": "MIT-licensed research on pooled volunteer capacity (Claude, GPT, Grok, or Ollama) behind an OpenAI-compatible API—a distributed inference study, not a managed enterprise service.",
+    "siteUrl": "https://sparecycles.io/",
+    "sourceUrl": "https://github.com/stevologic/spare-cycles",
     "metrics": [
-      "AI-operated weekly",
-      "CI-gated auto-merge",
-      "Daily project discovery"
+      "MIT licensed"
     ],
     "tech": [
-      "TypeScript",
-      "Next.js",
-      "GitHub Actions",
-      "Grok"
+      "Python",
+      "JavaScript",
+      "CSS",
+      "Shell",
+      "HTML"
     ],
     "capabilities": [
-      "Autonomous content ops",
-      "Guarded AI rewrites",
-      "Automated deployment"
+      "Ai",
+      "Donation",
+      "Fastapi"
     ],
-    "statusLabel": "Live · Self-maintaining"
+    "statusLabel": "Live"
   },
   {
     "repo": "tiny-book-buddies-ai",
@@ -149,8 +176,8 @@
     "name": "Tiny Book Buddies AI",
     "category": "Product lab",
     "featured": false,
-    "tagline": "Consumer experiment: idea to illustrated, narrated children's storybook.",
-    "description": "Browser-based story studio that writes, illustrates, narrates, and exports children's books with user-selected AI providers—end-to-end in the browser, built as a product-lab experiment rather than an enterprise offering.",
+    "tagline": "Consumer lab: idea to illustrated, narrated children's storybook in-browser.",
+    "description": "Browser-based story studio that writes, illustrates, narrates, and exports children's books with user-selected AI providers—end-to-end in the browser, framed as a product-lab experiment rather than an enterprise offering.",
     "siteUrl": "https://tinybookbuddies.ai",
     "sourceUrl": "https://github.com/stevologic/tiny-book-buddies-ai",
     "metrics": [
@@ -169,33 +196,6 @@
       "Story and illustration generation",
       "Narration with word highlighting",
       "In-browser video export"
-    ],
-    "statusLabel": "Live"
-  },
-  {
-    "repo": "spare-cycles",
-    "slug": "spare-cycles",
-    "name": "Spare Cycles",
-    "category": "Product lab",
-    "featured": false,
-    "tagline": "Research experiment routing inference across volunteer nodes.",
-    "description": "Open research experiment pooling volunteer capacity on Claude, GPT, Grok, or Ollama behind an OpenAI-compatible API—MIT-licensed study of distributed inference, not a managed enterprise service.",
-    "siteUrl": "https://sparecycles.io/",
-    "sourceUrl": "https://github.com/stevologic/spare-cycles",
-    "metrics": [
-      "MIT licensed"
-    ],
-    "tech": [
-      "Python",
-      "JavaScript",
-      "CSS",
-      "Shell",
-      "HTML"
-    ],
-    "capabilities": [
-      "Ai",
-      "Donation",
-      "Fastapi"
     ],
     "statusLabel": "Live"
   },
