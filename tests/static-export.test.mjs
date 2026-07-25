@@ -821,9 +821,78 @@ test("the site critique action is wired to Grok correctly", async () => {
   assert.doesNotMatch(script, /xai-[A-Za-z0-9]{8}/, "no API key literal");
   assert.match(script, /process\.env\.GROK_API_KEY/);
 
-  // Advisory only: it must not be able to rewrite the site.
-  assert.doesNotMatch(workflow, /contents:\s*write/);
-  assert.doesNotMatch(workflow, /git (push|commit)/);
+  // It proposes changes on a branch; a person merges. It must never publish to
+  // the live site on its own.
+  assert.match(workflow, /gh pr create/, "changes must arrive as a pull request");
+  assert.match(workflow, /--base main/);
+  assert.doesNotMatch(workflow, /gh pr merge/, "must not merge its own changes");
+  assert.doesNotMatch(workflow, /--auto/, "must not enable auto-merge");
+  assert.doesNotMatch(
+    workflow,
+    /git push origin main|git push .* HEAD:main/,
+    "must never push straight to main",
+  );
+  // The branch is only pushed once the edited site builds and passes tests.
+  const prIndex = workflow.indexOf("gh pr create");
+  const testIndex = workflow.indexOf("node --test tests/static-export.test.mjs");
+  assert.ok(testIndex > 0 && testIndex < prIndex, "tests must run before the PR");
+});
+
+test("the portfolio optimizer cannot lose or fabricate project data", async () => {
+  const { applyEdits } = await import("../scripts/optimize-portfolio.mjs");
+  const current = JSON.parse(
+    await readFile(new URL("content/projects.json", root), "utf8"),
+  );
+  const discovered = JSON.parse(
+    await readFile(new URL("data/discovered.generated.json", root), "utf8"),
+  ).projects;
+  const slugs = current.map((project) => project.slug);
+
+  // Reordering and reframing is the point, and must work.
+  const reordered = applyEdits(current, discovered, {
+    order: [...slugs].reverse(),
+    projects: { [slugs[1]]: { featured: true, category: "Security" } },
+  });
+  assert.equal(reordered.length, current.length, "no project may be lost");
+  assert.deepEqual(
+    [...reordered.map((p) => p.slug)].sort(),
+    [...slugs].sort(),
+    "the same set of projects must survive",
+  );
+  for (const project of reordered) {
+    const before = current.find((c) => c.slug === project.slug);
+    assert.equal(project.siteUrl, before.siteUrl, "siteUrl is immutable");
+    assert.equal(project.sourceUrl, before.sourceUrl, "sourceUrl is immutable");
+  }
+
+  // Each of these must be refused rather than written to the portfolio.
+  const forbidden = [
+    ["removes a project", { order: slugs.slice(0, -1) }],
+    ["invents a project", { order: [...slugs, "made-up-platform"] }],
+    ["duplicates a project", { order: [...slugs, slugs[0]] }],
+    [
+      "rewrites a live URL",
+      { order: slugs, projects: { [slugs[0]]: { siteUrl: "https://elsewhere.example" } } },
+    ],
+    [
+      "invents a metric",
+      { order: slugs, projects: { [slugs[0]]: { metrics: ["Used by 9100 banks"] } } },
+    ],
+    [
+      "uses an unknown category",
+      { order: slugs, projects: { [slugs[0]]: { category: "Enterprise" } } },
+    ],
+    [
+      "writes an unknown field",
+      { order: slugs, projects: { [slugs[0]]: { rank: 1 } } },
+    ],
+  ];
+  for (const [label, edits] of forbidden) {
+    assert.throws(
+      () => applyEdits(current, discovered, edits),
+      `the optimizer accepted an edit that ${label}`,
+    );
+  }
 });
 
 test("model auto-upgrade ranks by release date, not version number", async () => {

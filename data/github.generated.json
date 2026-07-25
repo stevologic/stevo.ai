@@ -1,6 +1,6 @@
 {
   "schemaVersion": 2,
-  "generatedAt": "2026-07-24T06:25:45.392Z",
+  "generatedAt": "2026-07-25T20:06:31.049Z",
   "source": "https://api.github.com",
   "apiVersion": "2022-11-28",
   "defaultOwner": "stevologic",
@@ -26,8 +26,8 @@
       "forks": 1,
       "openIssues": 0,
       "createdAt": "2026-07-07T18:55:49Z",
-      "updatedAt": "2026-07-23T21:39:48Z",
-      "pushedAt": "2026-07-24T01:24:43Z",
+      "updatedAt": "2026-07-24T07:29:10Z",
+      "pushedAt": "2026-07-24T07:28:39Z",
       "owner": {
         "login": "stevologic",
         "url": "https://github.com/stevologic",
@@ -43,14 +43,14 @@
       "releases": [],
       "traffic": {
         "windowDays": 14,
-        "fetchedAt": "2026-07-24T06:25:43.998Z",
+        "fetchedAt": "2026-07-25T20:06:30.323Z",
         "views": {
-          "count": 145,
-          "uniques": 11
+          "count": 153,
+          "uniques": 10
         },
         "clones": {
-          "count": 817,
-          "uniques": 147
+          "count": 769,
+          "uniques": 152
         }
       }
     },
@@ -73,10 +73,10 @@
       "template": false,
       "stars": 1,
       "forks": 0,
-      "openIssues": 0,
+      "openIssues": 2,
       "createdAt": "2026-04-22T00:58:53Z",
-      "updatedAt": "2026-07-24T00:05:56Z",
-      "pushedAt": "2026-07-24T00:05:53Z",
+      "updatedAt": "2026-07-25T19:25:53Z",
+      "pushedAt": "2026-07-25T19:49:13Z",
       "owner": {
         "login": "stevologic",
         "url": "https://github.com/stevologic",
@@ -92,14 +92,14 @@
       "releases": [],
       "traffic": {
         "windowDays": 14,
-        "fetchedAt": "2026-07-24T06:25:44.018Z",
+        "fetchedAt": "2026-07-25T20:06:30.321Z",
         "views": {
-          "count": 469,
+          "count": 471,
           "uniques": 12
         },
         "clones": {
-          "count": 3781,
-          "uniques": 1539
+          "count": 3770,
+          "uniques": 1541
         }
       }
     },
@@ -148,14 +148,14 @@
       "releases": [],
       "traffic": {
         "windowDays": 14,
-        "fetchedAt": "2026-07-24T06:25:44.031Z",
+        "fetchedAt": "2026-07-25T20:06:30.324Z",
         "views": {
-          "count": 56,
-          "uniques": 6
+          "count": 55,
+          "uniques": 5
         },
         "clones": {
-          "count": 212,
-          "uniques": 62
+          "count": 152,
+          "uniques": 51
         }
       }
     },
@@ -197,13 +197,13 @@
       "releases": [],
       "traffic": {
         "windowDays": 14,
-        "fetchedAt": "2026-07-24T06:25:44.026Z",
+        "fetchedAt": "2026-07-25T20:06:30.331Z",
         "views": {
           "count": 43,
           "uniques": 3
         },
         "clones": {
-          "count": 460,
+          "count": 461,
           "uniques": 157
         }
       }
@@ -238,12 +238,12 @@
       "disabled": false,
       "fork": false,
       "template": false,
-      "stars": 0,
+      "stars": 1,
       "forks": 0,
       "openIssues": 0,
       "createdAt": "2022-12-18T06:46:13Z",
-      "updatedAt": "2026-07-17T21:38:42Z",
-      "pushedAt": "2026-07-17T21:38:16Z",
+      "updatedAt": "2026-07-24T06:34:25Z",
+      "pushedAt": "2026-07-24T06:42:34Z",
       "owner": {
         "login": "stevologic",
         "url": "https://github.com/stevologic",
@@ -279,14 +279,14 @@
       ],
       "traffic": {
         "windowDays": 14,
-        "fetchedAt": "2026-07-24T06:25:44.615Z",
+        "fetchedAt": "2026-07-25T20:06:30.626Z",
         "views": {
-          "count": 11,
+          "count": 13,
           "uniques": 2
         },
         "clones": {
-          "count": 103,
-          "uniques": 54
+          "count": 125,
+          "uniques": 63
         }
       }
     },
@@ -508,14 +508,14 @@
       ],
       "traffic": {
         "windowDays": 14,
-        "fetchedAt": "2026-07-24T06:25:44.654Z",
+        "fetchedAt": "2026-07-25T20:06:30.640Z",
         "views": {
           "count": 30,
           "uniques": 6
         },
         "clones": {
-          "count": 142,
-          "uniques": 73
+          "count": 144,
+          "uniques": 75
         }
       }
     },
@@ -557,14 +557,14 @@
       "releases": [],
       "traffic": {
         "windowDays": 14,
-        "fetchedAt": "2026-07-24T06:25:44.649Z",
+        "fetchedAt": "2026-07-25T20:06:30.627Z",
         "views": {
           "count": 22,
           "uniques": 3
         },
         "clones": {
-          "count": 333,
-          "uniques": 144
+          "count": 334,
+          "uniques": 145
         }
       }
     },
@@ -589,8 +589,8 @@
       "forks": 0,
       "openIssues": 0,
       "createdAt": "2026-07-11T06:50:33Z",
-      "updatedAt": "2026-07-12T08:34:10Z",
-      "pushedAt": "2026-07-12T08:34:05Z",
+      "updatedAt": "2026-07-24T06:38:54Z",
+      "pushedAt": "2026-07-24T06:38:59Z",
       "owner": {
         "login": "stevologic",
         "url": "https://github.com/stevologic",
@@ -606,14 +606,14 @@
       "releases": [],
       "traffic": {
         "windowDays": 14,
-        "fetchedAt": "2026-07-24T06:25:45.236Z",
+        "fetchedAt": "2026-07-25T20:06:30.639Z",
         "views": {
-          "count": 35,
+          "count": 36,
           "uniques": 6
         },
         "clones": {
-          "count": 76,
-          "uniques": 54
+          "count": 81,
+          "uniques": 57
         }
       }
     },
@@ -638,8 +638,8 @@
       "forks": 0,
       "openIssues": 0,
       "createdAt": "2026-05-22T02:21:10Z",
-      "updatedAt": "2026-07-24T05:23:27Z",
-      "pushedAt": "2026-07-24T05:23:28Z",
+      "updatedAt": "2026-07-25T20:05:42Z",
+      "pushedAt": "2026-07-25T20:05:49Z",
       "owner": {
         "login": "stevologic",
         "url": "https://github.com/stevologic",
@@ -655,14 +655,72 @@
       "releases": [],
       "traffic": {
         "windowDays": 14,
-        "fetchedAt": "2026-07-24T06:25:45.210Z",
+        "fetchedAt": "2026-07-25T20:06:30.885Z",
         "views": {
           "count": 25,
           "uniques": 2
         },
         "clones": {
-          "count": 47,
-          "uniques": 31
+          "count": 98,
+          "uniques": 54
+        }
+      }
+    },
+    {
+      "projectKeys": [
+        "spare-cycles"
+      ],
+      "name": "spare-cycles",
+      "fullName": "stevologic/spare-cycles",
+      "description": "♻️ Donate your idle AI compute. A marketplace of vibe-coding projects + a pool of donated tokens — OpenAI-compatible proxy in front, volunteer nodes (Claude/GPT/Grok/Ollama) behind. MIT.",
+      "url": "https://github.com/stevologic/spare-cycles",
+      "homepage": "https://stevologic.github.io/spare-cycles/",
+      "topics": [
+        "ai",
+        "donation",
+        "fastapi",
+        "llm",
+        "marketplace",
+        "ollama",
+        "openai-compatible",
+        "volunteer-computing"
+      ],
+      "primaryLanguage": "Python",
+      "defaultBranch": "main",
+      "visibility": "public",
+      "archived": false,
+      "disabled": false,
+      "fork": false,
+      "template": false,
+      "stars": 0,
+      "forks": 0,
+      "openIssues": 0,
+      "createdAt": "2026-07-23T19:27:10Z",
+      "updatedAt": "2026-07-25T19:59:58Z",
+      "pushedAt": "2026-07-25T20:03:21Z",
+      "owner": {
+        "login": "stevologic",
+        "url": "https://github.com/stevologic",
+        "avatarUrl": "https://avatars.githubusercontent.com/u/5211665?v=4"
+      },
+      "license": {
+        "key": "mit",
+        "name": "MIT License",
+        "spdxId": "MIT",
+        "url": null
+      },
+      "latestRelease": null,
+      "releases": [],
+      "traffic": {
+        "windowDays": 14,
+        "fetchedAt": "2026-07-25T20:06:30.938Z",
+        "views": {
+          "count": 5,
+          "uniques": 1
+        },
+        "clones": {
+          "count": 0,
+          "uniques": 0
         }
       }
     }

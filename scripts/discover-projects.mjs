@@ -107,9 +107,27 @@ function inferCategory(repository, config) {
 }
 
 function sentence(text) {
-  const trimmed = (text || "").trim().replace(/\s+/g, " ");
+  const trimmed = (text || "")
+    .trim()
+    // GitHub descriptions often open with an emoji, which reads as noise on a
+    // professional portfolio card.
+    .replace(/^[\p{Extended_Pictographic}\p{Emoji_Presentation}️‍\s]+/u, "")
+    .replace(/\s+/g, " ");
   if (!trimmed) return "";
   return /[.!?]$/.test(trimmed) ? trimmed : `${trimmed}.`;
+}
+
+/**
+ * A short lead line for the card. The GitHub description doubles as the card's
+ * description, so reusing it verbatim would print the same sentence twice.
+ */
+function tagline(description, name) {
+  if (!description) return `${name} — live project.`;
+  const first = description.split(/(?<=[.!?])\s+/)[0] || description;
+  if (first.length <= 120 && first !== description) return first;
+  if (description.length <= 120) return description;
+  const clipped = description.slice(0, 117);
+  return `${clipped.slice(0, clipped.lastIndexOf(" "))}…`;
 }
 
 function buildCard(repository, config, languages) {
@@ -141,7 +159,7 @@ function buildCard(repository, config, languages) {
     featured: false,
     // Generated copy is intentionally plain. Adding the repository to
     // projects.json replaces all of this with real editorial copy.
-    tagline: description || `${name} — live project.`,
+    tagline: tagline(description, name),
     description:
       description ||
       `${name} is a public project by the repository owner. Full details are available in the source repository.`,

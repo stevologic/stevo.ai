@@ -136,8 +136,29 @@ specific binary. The layout currently measures ~1650px of content against a
 
 A weekly GitHub Action asks Grok to review the site's copy, verbiage, and
 structure as a business advisor who buys and sells vCISO, cybersecurity, and AI
-enablement work. It is advisory only — it never edits the site. Output goes to
-the run summary, a 90-day artifact, and a labelled GitHub issue.
+enablement work, then applies the portfolio half of that advice and **opens a
+pull request** with the diff.
+
+It proposes; a person merges. The critique disagrees with itself between runs on
+judgement calls, and this site sells security services where a wrong claim is a
+professional liability, so nothing reaches stevo.ai unreviewed. Lint, typecheck,
+build, and the full test suite all run against the edited site before the pull
+request opens.
+
+`scripts/optimize-portfolio.mjs` may change framing, wording, category, and
+display order in `content/projects.json`. Four things it cannot do are enforced
+in code rather than trusted to the prompt:
+
+- **remove a project** — the new order must be an exact permutation of the
+  existing slugs, so lower-relevance work moves down, never out
+- **invent a project** — anything added must already have been found on GitHub
+  by discovery
+- **change a live or source URL** — `repo`, `slug`, `siteUrl`, and `sourceUrl`
+  are immutable
+- **invent a number** — any figure in new copy must already appear in that
+  project's own data, so it cannot fabricate scale on a security site
+
+The full critique rides along in the pull request body and a 90-day artifact.
 
 | Setting | Where | Default |
 | --- | --- | --- |
@@ -145,6 +166,9 @@ the run summary, a 90-day artifact, and a labelled GitHub issue.
 | `GROK_MODEL` | Actions **variable** | `grok-4.5` |
 | `GROK_MODEL_AUTO_UPGRADE` | Actions **variable** | `true` |
 | `GROK_REASONING_EFFORT` | Actions **variable** | model default |
+
+The workflow needs `contents: write` and `pull-requests: write` to push its
+branch and open the pull request. It never pushes to `main` and never merges.
 
 Without the key the job logs a warning and exits green, so forks and
 contributors never see a red build for an advisory step.

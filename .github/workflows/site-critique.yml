@@ -1,19 +1,23 @@
 name: Site critique
 
-# Asks Grok to review the site's copy, verbiage, and structure as a business
-# advisor who buys and sells vCISO, cybersecurity, and AI enablement work.
+# Reviews the site as a business advisor who buys vCISO, cybersecurity, and AI
+# enablement work, then applies the portfolio half of that advice as real edits
+# and opens a pull request with the diff.
 #
-# Advisory only: it never edits the site. Output lands in the run summary, an
-# artifact, and (by default) a GitHub issue to triage.
+# It proposes changes, it does not publish them. The critique disagrees with
+# itself between runs on judgement calls, and this site sells security services
+# where a wrong claim is a professional liability, so a person merges. Nothing
+# reaches stevo.ai until you do.
+#
+# What it may change: framing, wording, category and display order in
+# content/projects.json. What it can never do, enforced in code rather than by
+# the prompt (see scripts/optimize-portfolio.mjs): remove a project, invent a
+# project, alter a live site or source URL, or state a number that is not
+# already in that project's own data.
 #
 # Setup:
 #   secrets.GROK_API_KEY  required. Create at https://console.x.ai
 #   vars.GROK_MODEL       optional, defaults to grok-4.5
-#
-# The model auto-updates. xAI treats a bare name like `grok-4.5` as an alias
-# that tracks the newest snapshot of that line, and the script additionally
-# checks the models API each run and moves to a newer model when one ships.
-# Set vars.GROK_MODEL_AUTO_UPGRADE to "false" to pin to vars.GROK_MODEL exactly.
 
 on:
   schedule:
@@ -25,13 +29,8 @@ on:
         description: "Model override, e.g. grok-4.5 (blank uses vars.GROK_MODEL)"
         required: false
         type: string
-      auto_upgrade:
-        description: "Move to a newer model when one is available"
-        required: false
-        default: true
-        type: boolean
-      create_issue:
-        description: "Open a GitHub issue with the critique"
+      apply_changes:
+        description: "Apply the portfolio changes and open a pull request"
         required: false
         default: true
         type: boolean
@@ -46,16 +45,14 @@ permissions:
 jobs:
   critique:
     runs-on: ubuntu-latest
-    timeout-minutes: 20
+    timeout-minutes: 25
     permissions:
-      contents: read
-      issues: write
+      contents: write
+      pull-requests: write
 
     steps:
       - name: Check out source
         uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
-        with:
-          persist-credentials: false
 
       - name: Set up Node.js
         uses: actions/setup-node@249970729cb0ef3589644e2896645e5dc5ba9c38 # v6
@@ -66,8 +63,14 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
-      # The critique reads the built export, so it reviews what a visitor sees
-      # rather than the source components.
+      # Refresh discovery first, so a repository made public since the last run
+      # can be promoted into the portfolio in the same pass.
+      - name: Discover newly published projects
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+        run: npm run discover
+
+      # The critique reads the built export, so it reviews what a visitor sees.
       - name: Build static site
         run: npm run build
 
@@ -88,36 +91,89 @@ jobs:
         if: steps.preflight.outputs.configured == 'true'
         env:
           GROK_API_KEY: ${{ secrets.GROK_API_KEY }}
-          # Precedence: manual override, then the repository variable, then the
-          # script's own default.
           GROK_MODEL: ${{ inputs.model || vars.GROK_MODEL || 'grok-4.5' }}
-          GROK_MODEL_AUTO_UPGRADE: ${{ (github.event_name == 'workflow_dispatch' && inputs.auto_upgrade == false) && 'false' || vars.GROK_MODEL_AUTO_UPGRADE || 'true' }}
+          GROK_MODEL_AUTO_UPGRADE: ${{ vars.GROK_MODEL_AUTO_UPGRADE || 'true' }}
           GROK_REASONING_EFFORT: ${{ vars.GROK_REASONING_EFFORT }}
         run: npm run critique
+
+      - name: Reframe and reorder the portfolio
+        id: optimize
+        if: >-
+          steps.preflight.outputs.configured == 'true' &&
+          (github.event_name != 'workflow_dispatch' || inputs.apply_changes)
+        env:
+          GROK_API_KEY: ${{ secrets.GROK_API_KEY }}
+          GROK_MODEL: ${{ steps.critique.outputs.model || inputs.model || vars.GROK_MODEL || 'grok-4.5' }}
+        run: npm run optimize:portfolio
+
+      # A pull request is only worth opening if the site still builds and every
+      # test passes, so validation runs before the branch is pushed.
+      - name: Rebuild and test the edited site
+        if: steps.optimize.outcome == 'success'
+        run: |
+          npm run lint
+          npm run typecheck
+          npm run build
+          node --test tests/static-export.test.mjs
+
+      - name: Open a pull request with the changes
+        if: steps.optimize.outcome == 'success'
+        env:
+          GH_TOKEN: ${{ github.token }}
+          MODEL: ${{ steps.critique.outputs.model }}
+        run: |
+          set -euo pipefail
+
+          if git diff --quiet -- content/projects.json; then
+            echo '### No portfolio changes proposed' >> "$GITHUB_STEP_SUMMARY"
+            echo 'The advisor left the portfolio ordering and framing as it is.' >> "$GITHUB_STEP_SUMMARY"
+            exit 0
+          fi
+
+          branch="site-critique/$(date -u '+%Y-%m-%d-%H%M')"
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git checkout -b "$branch"
+          git add content/projects.json
+          git commit -m "Reframe and reorder the portfolio
+
+          Applied by the site critique workflow using ${MODEL:-grok}. Framing,
+          category and display order only: no project was removed, no URL
+          changed, and every figure was already present in the project's data.
+
+          Review the reasoning and the full critique in the pull request body."
+          git push origin "$branch"
+
+          {
+            echo "Applied by \`${MODEL:-grok}\` from the weekly site critique."
+            echo
+            echo "Framing, category and display order only. The workflow cannot remove a"
+            echo "project, invent one, change a live or source URL, or state a figure that"
+            echo "is not already in that project's own data — those are enforced in"
+            echo '`scripts/optimize-portfolio.mjs`, not left to the prompt.'
+            echo
+            echo "Lint, typecheck, build and the full test suite passed before this opened."
+            echo
+            cat critique/portfolio-changes.md 2>/dev/null || true
+            echo
+            echo "<details><summary>Full advisor critique</summary>"
+            echo
+            sed '1,9d' critique/site-critique.md 2>/dev/null || true
+            echo
+            echo "</details>"
+          } > /tmp/pr-body.md
+
+          gh pr create \
+            --title "Reframe and reorder the portfolio ($(date -u '+%Y-%m-%d'))" \
+            --body-file /tmp/pr-body.md \
+            --head "$branch" \
+            --base main
 
       - name: Upload the critique
         if: steps.preflight.outputs.configured == 'true'
         uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
         with:
           name: site-critique
-          path: critique/site-critique.md
+          path: critique/
           retention-days: 90
-          if-no-files-found: error
-
-      - name: Open an issue with the critique
-        if: >-
-          steps.preflight.outputs.configured == 'true' &&
-          (github.event_name != 'workflow_dispatch' || inputs.create_issue)
-        env:
-          GH_TOKEN: ${{ github.token }}
-          MODEL: ${{ steps.critique.outputs.model }}
-        run: |
-          set -euo pipefail
-          title="Site critique — $(date -u '+%Y-%m-%d') (${MODEL:-grok})"
-          gh label create site-critique \
-            --description 'Advisory review of the site copy and structure' \
-            --color 0E8A16 --force >/dev/null 2>&1 || true
-          gh issue create \
-            --title "$title" \
-            --body-file critique/site-critique.md \
-            --label site-critique
+          if-no-files-found: warn
