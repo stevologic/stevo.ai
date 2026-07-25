@@ -17,7 +17,7 @@
 //
 // Usage: npm run optimize:portfolio     (needs GROK_API_KEY)
 
-import { readFile, writeFile } from "node:fs/promises";
+import { mkdir, readFile, writeFile } from "node:fs/promises";
 import path from "node:path";
 import process from "node:process";
 import { fileURLToPath, pathToFileURL } from "node:url";
@@ -271,6 +271,7 @@ async function main() {
   // it correct itself rather than failing a run that is otherwise fine.
   let next;
   let usage;
+  let rationale = "";
   let correction = "";
   for (let attempt = 1; attempt <= 3; attempt += 1) {
     const result = await requestEdits(
@@ -282,6 +283,7 @@ async function main() {
     usage = result.usage;
     try {
       next = applyEdits(current, discovered, result.edits);
+      rationale = result.edits.rationale || "";
       break;
     } catch (error) {
       if (attempt === 3) throw error;
@@ -312,12 +314,16 @@ async function main() {
   if (reordered.length) log(`Reordered: ${reordered.join(", ")}`);
   if (usage) log(`Tokens: ${usage.prompt_tokens} in, ${usage.completion_tokens} out.`);
 
+  // The rationale rides in the pull request body, so it must actually land.
+  // This previously used a bare .catch() and silently wrote nothing when the
+  // directory did not exist yet.
+  await mkdir(path.dirname(rationalePath), { recursive: true });
   await writeFile(
     rationalePath,
     [
       "## Portfolio changes",
       "",
-      edits.rationale || "(no rationale given)",
+      rationale || "(no rationale given)",
       "",
       "### Order",
       "",
@@ -325,7 +331,7 @@ async function main() {
       "",
     ].join("\n"),
     "utf8",
-  ).catch(() => {});
+  );
 }
 
 const invokedDirectly =
