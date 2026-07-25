@@ -200,8 +200,13 @@ jobs:
             sleep 15
             run_id=""
             for _ in $(seq 1 40); do
+              # Filter to workflow_dispatch. Opening the pull request also
+              # queues a pull_request run, which lands a second later and sits
+              # at action_required awaiting approval, so "the newest run on the
+              # branch" reads that one and never resolves.
               run_id=$(gh run list --workflow=ci.yml --branch "$branch" \
-                --limit 1 --json databaseId --jq '.[0].databaseId // empty')
+                --event workflow_dispatch --limit 1 \
+                --json databaseId --jq '.[0].databaseId // empty')
               [[ -n "$run_id" ]] && break
               sleep 5
             done
