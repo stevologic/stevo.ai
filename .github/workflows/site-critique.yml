@@ -243,7 +243,16 @@ jobs:
 
             if [[ "$conclusion" == "success" ]]; then
               gh pr merge "$branch" --squash --delete-branch
-              echo "CI passed, so the pull request was merged and deployed." >> "$GITHUB_STEP_SUMMARY"
+              # A merge pushed with GITHUB_TOKEN does not trigger the deploy
+              # workflow's push event -- the same restriction that keeps CI
+              # from starting on these pull requests -- so the merged changes
+              # would sit on main until the daily cron. Dispatch it explicitly.
+              if gh workflow run deploy-pages.yml --ref main; then
+                echo "CI passed; merged and the deploy to gh-pages was dispatched." >> "$GITHUB_STEP_SUMMARY"
+              else
+                echo "::warning title=Site critique::Merged, but the deploy could not be dispatched; the daily deploy will pick it up."
+                echo "Merged; the deploy could not be dispatched and will run on the daily schedule." >> "$GITHUB_STEP_SUMMARY"
+              fi
             else
               echo "::warning title=Site critique::CI concluded \"$conclusion\"; the pull request was left open for review."
               {
