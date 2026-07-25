@@ -1,34 +1,5 @@
 [
   {
-    "repo": "shiba-studio",
-    "slug": "shiba-studio",
-    "name": "Shiba Studio",
-    "category": "AI systems",
-    "featured": true,
-    "tagline": "A local-first studio for building and orchestrating Grok-powered agents.",
-    "description": "Shiba Studio unifies agent orchestration, workspace-aware coding, browser control, scheduling, integrations, memory, and auditable local workflows in a desktop-grade web application.",
-    "siteUrl": "https://shiba-studio.io",
-    "sourceUrl": "https://github.com/stevologic/shiba-studio",
-    "metrics": [
-      "40+ built-in tools",
-      "Windows · macOS · Linux",
-      "Zero telemetry"
-    ],
-    "tech": [
-      "TypeScript",
-      "Next.js 16",
-      "Monaco",
-      "SQLite",
-      "Playwright"
-    ],
-    "capabilities": [
-      "Agent orchestration",
-      "Workspace-aware coding",
-      "Automations and integrations"
-    ],
-    "statusLabel": "Live · Active development"
-  },
-  {
     "repo": "security-recipes.ai",
     "slug": "security-recipes",
     "name": "security-recipes.ai",
@@ -87,10 +58,96 @@
     "statusLabel": "Live"
   },
   {
+    "repo": "shiba-studio",
+    "slug": "shiba-studio",
+    "name": "Shiba Studio",
+    "category": "AI systems",
+    "featured": true,
+    "tagline": "Local-first AI agent orchestration for coding, browser control, and auditable workflows.",
+    "description": "Unifies agent orchestration, workspace-aware coding, browser control, scheduling, integrations, and memory into auditable local workflows—built for teams that need AI capability without surrendering data to the cloud.",
+    "siteUrl": "https://shiba-studio.io",
+    "sourceUrl": "https://github.com/stevologic/shiba-studio",
+    "metrics": [
+      "40+ built-in tools",
+      "Windows · macOS · Linux",
+      "Zero telemetry"
+    ],
+    "tech": [
+      "TypeScript",
+      "Next.js 16",
+      "Monaco",
+      "SQLite",
+      "Playwright"
+    ],
+    "capabilities": [
+      "Agent orchestration",
+      "Workspace-aware coding",
+      "Automations and integrations"
+    ],
+    "statusLabel": "Live · Active development"
+  },
+  {
+    "repo": "pro-response",
+    "slug": "pro-response",
+    "name": "Pro Response",
+    "category": "AI systems",
+    "featured": false,
+    "tagline": "AI message refinement for Slack, API, and CLI before your team hits send.",
+    "description": "Multi-provider writing assistant that rewrites, translates, summarizes, and reformats messages for Slack, HTTP API, CLI, or Python library—keeping internal communication clear and consistent.",
+    "siteUrl": "https://stevologic.github.io/pro-response/",
+    "sourceUrl": "https://github.com/stevologic/pro-response",
+    "metrics": [
+      "14 writing modes",
+      "Slack · API · CLI",
+      "Python 3.9+"
+    ],
+    "tech": [
+      "Python",
+      "Slack Bolt",
+      "OpenAI Responses API",
+      "Anthropic",
+      "Docker"
+    ],
+    "capabilities": [
+      "Slack message refinement",
+      "Multi-provider model routing",
+      "Slack, API, and CLI delivery"
+    ],
+    "statusLabel": "v2.0 available"
+  },
+  {
+    "repo": "spare-cycles",
+    "slug": "spare-cycles",
+    "name": "Spare Cycles",
+    "category": "AI systems",
+    "featured": false,
+    "tagline": "Pool idle model capacity behind an OpenAI-compatible proxy.",
+    "description": "A volunteered-capacity layer for AI inference: an OpenAI-compatible proxy in front, community nodes running Claude, GPT, Grok, or Ollama behind. Built to explore distributed model access without standing up dedicated infrastructure.",
+    "siteUrl": "https://sparecycles.io/",
+    "sourceUrl": "https://github.com/stevologic/spare-cycles",
+    "metrics": [
+      "MIT licensed",
+      "OpenAI-compatible proxy"
+    ],
+    "tech": [
+      "Python",
+      "JavaScript",
+      "CSS",
+      "Shell",
+      "HTML"
+    ],
+    "capabilities": [
+      "Ai",
+      "Donation",
+      "Fastapi"
+    ],
+    "statusLabel": "Live"
+  },
+  {
     "repo": "tiny-book-buddies-ai",
     "slug": "tiny-book-buddies-ai",
     "name": "Tiny Book Buddies AI",
-    "category": "AI systems",
+    "category": "Product lab",
     "featured": false,
     "tagline": "Turn one bedtime idea into an illustrated, narrated storybook.",
     "description": "A browser-based story studio that writes, illustrates, narrates, and exports children's books using the AI providers and models selected by the user.",
@@ -114,35 +171,6 @@
       "In-browser video export"
     ],
     "statusLabel": "Live"
-  },
-  {
-    "repo": "pro-response",
-    "slug": "pro-response",
-    "name": "Pro Response",
-    "category": "AI systems",
-    "featured": false,
-    "tagline": "Refine team messages with AI before they are sent.",
-    "description": "A multi-provider writing assistant that rewrites, translates, summarizes, and reformats messages through Slack, an HTTP API, a command-line tool, or a Python library.",
-    "siteUrl": "https://stevologic.github.io/pro-response/",
-    "sourceUrl": "https://github.com/stevologic/pro-response",
-    "metrics": [
-      "14 writing modes",
-      "Slack · API · CLI",
-      "Python 3.9+"
-    ],
-    "tech": [
-      "Python",
-      "Slack Bolt",
-      "OpenAI Responses API",
-      "Anthropic",
-      "Docker"
-    ],
-    "capabilities": [
-      "Slack message refinement",
-      "Multi-provider model routing",
-      "Slack, API, and CLI delivery"
-    ],
-    "statusLabel": "v2.0 available"
   },
   {
     "repo": "mouse_clicker",
