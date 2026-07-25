@@ -6,7 +6,7 @@ export default function NotFound() {
       <p>404 / Signal lost</p>
       <h1>This route doesn&apos;t exist.</h1>
       <Link className="button button-primary" href="/">
-        Return to stevo.ai
+        Return to the site
       </Link>
     </main>
   );

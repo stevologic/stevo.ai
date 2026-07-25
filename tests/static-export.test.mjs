@@ -136,7 +136,7 @@ test("credentials are named rather than counted", async () => {
     "Offensive Security Certified Professional",
     "AWS Certified Cloud Practitioner",
     "Harvard &amp; Duke leadership programs",
-    "BA, ASU - Walter Cronkite School of Journalism",
+    "BA, Arizona State University",
   ]) {
     assert.ok(strip.includes(credential), `credential strip omits ${credential}`);
   }
@@ -215,8 +215,8 @@ test("site manifest uses installable Stevo.AI icons", async () => {
     await readFile(new URL("../out/site.webmanifest", import.meta.url), "utf8"),
   );
 
-  assert.equal(manifest.short_name, "Stevo.AI");
-  assert.match(manifest.name, /Cybersecurity & AI Enablement/);
+  assert.equal(manifest.short_name, "Abbott");
+  assert.match(manifest.name, /Stephen M Abbott/);
   assert.match(manifest.description, /Cybersecurity consulting/);
   assert.equal(manifest.display, "standalone");
   assert.equal(manifest.theme_color, "#0f1014");

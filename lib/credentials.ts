@@ -18,7 +18,7 @@ export const credentials: Credential[] = [
   {
     label: "Education",
     value: "BA, Walter Cronkite School of Journalism, Arizona State University",
-    short: "BA, ASU - Walter Cronkite School of Journalism",
+    short: "BA, Arizona State University",
   },
   {
     label: "Certifications",
@@ -53,6 +53,6 @@ export const credentials: Credential[] = [
 export const credentialHighlights = [
   "Offensive Security Certified Professional",
   "AWS Certified Cloud Practitioner",
-  "BA, ASU - Walter Cronkite School of Journalism",
+  "BA, Arizona State University",
   "Harvard & Duke leadership programs",
 ];

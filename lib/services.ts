@@ -1,6 +1,5 @@
 export interface ServiceTrack {
   id: string;
-  number: string;
   label: string;
   title: string;
   description: string;
@@ -18,7 +17,6 @@ export interface ServiceTrack {
 export const serviceTracks: ServiceTrack[] = [
   {
     id: "lead",
-    number: "01",
     label: "Lead",
     title: "Security leadership",
     description:
@@ -42,7 +40,6 @@ export const serviceTracks: ServiceTrack[] = [
   },
   {
     id: "enable",
-    number: "02",
     label: "Enable",
     title: "AI enablement & governance",
     description:
@@ -65,7 +62,6 @@ export const serviceTracks: ServiceTrack[] = [
   },
   {
     id: "deliver",
-    number: "03",
     label: "Deliver",
     title: "Secure AI & agent delivery",
     description:
@@ -87,7 +83,6 @@ export const serviceTracks: ServiceTrack[] = [
   },
   {
     id: "assure",
-    number: "04",
     label: "Assure",
     title: "Application & supply-chain assurance",
     description:
@@ -151,25 +146,21 @@ export const engagementModels: EngagementModel[] = [
 
 export const engagementProcess = [
   {
-    step: "01",
     title: "Baseline",
     description:
       "Establish what is actually true today: controls in place, real exposure, who owns what, and which decisions are already waiting on an answer.",
   },
   {
-    step: "02",
     title: "Prioritize",
     description:
       "Rank the work by risk reduced per unit of effort, and agree explicitly on what will not be done this quarter.",
   },
   {
-    step: "03",
     title: "Operate",
     description:
       "Run the cadence: remediation, measurement, and the executive conversations that keep a security program moving between reviews.",
   },
   {
-    step: "04",
     title: "Transfer",
     description:
       "Leave documented decisions, working systems, and an internal owner who can carry the program forward without the consultant.",

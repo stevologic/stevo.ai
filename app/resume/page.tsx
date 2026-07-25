@@ -28,7 +28,7 @@ export default function ResumePage() {
     <main className="resume-page">
       <nav className="resume-toolbar" aria-label="Professional profile actions">
         <Link className="resume-back-link" href="/">
-          Back to Stevo.AI
+          Back to the site
         </Link>
         <PrintButton />
       </nav>

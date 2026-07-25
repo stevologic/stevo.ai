@@ -293,11 +293,11 @@ export function PortfolioExperience({
       <div className="pointer-light" aria-hidden="true" />
 
       <header className="site-header">
-        <a className="brand" href="#top" aria-label="stevo.ai home">
+        <a className="brand" href="#top" aria-label="Stephen M Abbott — home">
           <span className="brand-mark" aria-hidden="true">
             S
           </span>
-          <span>stevo.ai</span>
+          <span>Stephen M Abbott</span>
         </a>
         <nav className={mobileOpen ? "nav-links nav-links-open" : "nav-links"}>
           <a href="#services" onClick={() => setMobileOpen(false)}>
@@ -339,7 +339,7 @@ export function PortfolioExperience({
           </div>
           <div className="hero-copy" data-reveal>
             <p className="eyebrow">
-              <span>Stevo.AI</span>
+              <span>Stephen M Abbott</span>
               <span>Services · Profile · Projects</span>
             </p>
             <h1>
@@ -452,7 +452,6 @@ export function PortfolioExperience({
                   key={service.id}
                   onClick={() => setActiveService(service.id)}
                 >
-                  <span>{service.number}</span>
                   {service.label}
                 </button>
               ))}
@@ -504,9 +503,8 @@ export function PortfolioExperience({
             id="engagements"
             aria-label="Professional engagement models"
           >
-            {engagementModels.map((model, index) => (
+            {engagementModels.map((model) => (
               <article key={model.title} data-reveal>
-                <span>0{index + 1}</span>
                 <h3>{model.title}</h3>
                 <p>{model.description}</p>
                 <ul
@@ -531,8 +529,7 @@ export function PortfolioExperience({
             </div>
             <ol>
               {engagementProcess.map((phase) => (
-                <li key={phase.step}>
-                  <span className="engagement-step">{phase.step}</span>
+                <li key={phase.title}>
                   <h4>{phase.title}</h4>
                   <p>{phase.description}</p>
                 </li>
@@ -556,7 +553,7 @@ export function PortfolioExperience({
         <section className="work-section section" id="work">
           <div className="section-heading" data-reveal>
             <p className="section-number">Portfolio</p>
-            <h2>Independent products. Verifiable capability.</h2>
+            <h2>Built by hand. Running in public.</h2>
             <p>
               Products and open-source systems built by Stephen M
               Abbott—evidence of the technical depth behind every professional
@@ -636,7 +633,7 @@ export function PortfolioExperience({
           <p className="section-number">Professional engagements</p>
           <h2>Let&apos;s start with a conversation.</h2>
           <p>
-            Bring Stevo.AI the consequential problem: a security program that
+            Bring Stephen the consequential problem: a security program that
             needs leadership, an AI initiative that needs guardrails and
             traction, or a system that must become both useful and defensible.
           </p>
@@ -667,7 +664,7 @@ export function PortfolioExperience({
           <span className="brand-mark" aria-hidden="true">
             S
           </span>
-          <span>Stevo.AI</span>
+          <span>Stephen M Abbott</span>
         </div>
         <p>
           Cybersecurity consulting · AI enablement · Shipped products
@@ -676,9 +673,9 @@ export function PortfolioExperience({
           </a>
         </p>
         <span className="site-footer-legal">
-          Led by Stephen M Abbott · © {new Date().getFullYear()}
+          © {new Date().getFullYear()} Stephen M Abbott
         </span>
-        <SocialHandles label="Stevo.AI social profiles" />
+        <SocialHandles label="Social profiles" />
       </footer>
     </div>
   );

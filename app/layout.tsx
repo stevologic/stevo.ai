@@ -5,16 +5,16 @@ import { serviceTracks } from "@/lib/services";
 import "./globals.css";
 
 const siteUrl = "https://stevo.ai";
-const socialTitle = "Stevo.AI — Cybersecurity & AI Enablement";
+const socialTitle = "Stephen M Abbott — Cybersecurity & AI Enablement";
 const socialDescription =
   "Principal-led cybersecurity and AI enablement consulting: security program leadership, AI governance, secure agent delivery, application security, and software supply-chain assurance.";
 const socialImageAlt =
-  "Stevo.AI: the services, profile, and shipped projects of Stephen M Abbott — security leadership, AI enablement, and cybersecurity consulting.";
+  "Stephen M Abbott: services, profile, and shipped projects — security leadership, AI enablement, and cybersecurity consulting.";
 
 export const metadata: Metadata = {
   metadataBase: new URL(siteUrl),
   title: {
-    default: "Stevo.AI — Cybersecurity & AI Enablement",
+    default: "Stephen M Abbott — Cybersecurity & AI Enablement",
     template: "%s · stevo.ai",
   },
   description:
@@ -42,7 +42,7 @@ export const metadata: Metadata = {
   appleWebApp: {
     capable: true,
     statusBarStyle: "black-translucent",
-    title: "Stevo.AI",
+    title: "Abbott",
   },
   formatDetection: {
     telephone: false,
@@ -110,7 +110,7 @@ const structuredData = {
     {
       "@type": "Organization",
       "@id": `${siteUrl}/#organization`,
-      name: "Stevo.AI",
+      name: "Stephen M Abbott",
       url: siteUrl,
       logo: `${siteUrl}/icon-512.png`,
       description: socialDescription,
