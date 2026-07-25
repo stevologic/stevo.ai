@@ -3,13 +3,13 @@
     {
       "dates": "2024-2026",
       "title": "Director, Cybersecurity",
-      "scope": "Enterprise CTEM · Risk quantification · Developer-owned security",
+      "scope": "Enterprise CTEM · Quantified risk · Developer-owned security",
       "highlights": [
-        "Directed enterprise CTEM and remediation through an 11-person team.",
+        "Led enterprise CTEM and remediation through an 11-person team.",
         "Instituted risk-based prioritization, quantification, and governed AI-assisted remediation with executive security leadership.",
-        "Set enterprise risk-appetite measures and Key Risk Indicators for board and executive reporting.",
-        "Cut open-source dependencies in source code by more than 75% and raised developer ownership via engagement and preventative controls.",
-        "Developed security leaders who advanced into senior and director-level roles."
+        "Defined enterprise risk-appetite measures and KRIs for board and executive reporting.",
+        "Cut open-source dependencies in source code by more than 75% and raised developer ownership through engagement and preventative controls.",
+        "Grew security leaders who advanced into senior and director-level roles."
       ]
     },
     {
@@ -17,11 +17,11 @@
       "title": "Director, Security Data & Risk Intelligence",
       "scope": "Security data platforms · Supply-chain risk intelligence · Sensitive-data protection",
       "highlights": [
-        "Directed an engineering organization of up to 26 delivering sensitive-data detection, software-composition intelligence, and repository enrichment platforms.",
-        "Cut sensitive-data findings in source code by 92%, tripled detection coverage, and raised fidelity via automation with human review.",
-        "Owned application risk assessments, business-impact analysis, disaster-recovery requirements, and resilience planning for critical platforms.",
+        "Led an engineering organization of up to 26 delivering sensitive-data detection, software-composition intelligence, and repository enrichment platforms.",
+        "Cut sensitive-data findings in source code by 92%, tripled detection coverage, and raised fidelity through automation with human review.",
+        "Owned application risk assessments, business-impact analysis, DR requirements, and resilience planning for critical platforms.",
         "Built risk-intelligence platforms and analytics that drove prioritization, governance, and executive decisions.",
-        "Hardened infrastructure-as-code pipelines and encryption controls with cloud and identity teams; advanced engineers into senior technical roles."
+        "Hardened IaC pipelines and encryption controls with cloud and identity teams; advanced engineers into senior technical roles."
       ]
     },
     {
@@ -29,8 +29,8 @@
       "title": "Senior Cybersecurity Engineer, Application Security",
       "scope": "Enterprise AppSec · SDLC integration · Measurable risk reduction",
       "highlights": [
-        "Owned the enterprise application-security tooling portfolio across static, dynamic, mobile, and software-composition analysis.",
-        "Set testing strategy, drove adoption and SDLC integration, and measured effectiveness.",
+        "Owned the enterprise AppSec tooling portfolio across static, dynamic, mobile, and software-composition analysis.",
+        "Set testing strategy, drove SDLC adoption and integration, and measured effectiveness.",
         "Embedded scalable application-risk reduction into engineering workflows."
       ]
     },
@@ -42,7 +42,7 @@
         "Built SIEM, full-packet-capture, and centralized logging platforms that powered enterprise threat detection and security operations.",
         "Expanded network visibility and threat-detection coverage through encrypted-traffic inspection.",
         "Deployed globally distributed, highly available security infrastructure across enterprise data centers.",
-        "Delivered incident-response detections from logs, network telemetry, IDS/IPS events, and endpoint signals."
+        "Delivered incident-response detections from logs, network telemetry, IDS/IPS, and endpoint signals."
       ]
     },
     {
@@ -52,7 +52,7 @@
       "highlights": [
         "Operated backend services for business-critical transaction systems in a highly regulated environment.",
         "Sustained 99.99% availability through performance monitoring and automated CI/CD deployments.",
-        "Delivered disaster-recovery and business-resilience programs for high-stakes systems—foundation for later security leadership."
+        "Delivered DR and business-resilience programs for high-stakes systems—foundation for later security leadership."
       ]
     }
   ],
