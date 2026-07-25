@@ -40,12 +40,29 @@ export const resumeMetrics = [
  * renders. Adding a project to the site — by hand or through daily discovery —
  * puts it on the résumé too, and a rename can never leave the two disagreeing.
  */
+/**
+ * Portfolio copy is rewritten weekly by the critique workflow, so anything it
+ * feeds into the résumé has to be bounded here. Without these caps a longer
+ * project description silently pushes the printed résumé onto a third page,
+ * which is exactly what happened once.
+ */
+function clamp(text: string, limit: number) {
+  const value = text.trim();
+  if (value.length <= limit) return value;
+  const cut = value.slice(0, limit - 1);
+  return `${cut.slice(0, cut.lastIndexOf(" "))}…`;
+}
+
+/** At most this many projects lead the résumé, however many are featured. */
+const REPRESENTATIVE_LIMIT = 3;
+
 export const representativeWork = projects
   .filter((project) => project.featured)
+  .slice(0, REPRESENTATIVE_LIMIT)
   .map((project) => ({
     title: project.name,
-    category: project.tagline,
-    description: project.description,
+    category: clamp(project.tagline, 70),
+    description: clamp(project.description, 190),
     capabilities: project.tech.slice(0, 4),
     liveUrl: project.siteUrl,
     sourceUrl: project.sourceUrl,
@@ -56,5 +73,5 @@ export const additionalProducts = projects
   .map((project) => ({
     name: project.name,
     url: project.siteUrl,
-    description: project.tagline,
+    description: clamp(project.tagline, 64),
   }));

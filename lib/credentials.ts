@@ -24,7 +24,7 @@ export const credentials: Credential[] = [
     label: "Certifications",
     value:
       "Offensive Security Certified Professional (OSCP) · AWS Certified Cloud Practitioner",
-    short: "OSCP",
+    short: "Offensive Security Certified Professional",
     certifications: [
       {
         name: "Offensive Security Certified Professional (OSCP)",
@@ -51,7 +51,7 @@ export const credentials: Credential[] = [
 
 /** Named credentials for the homepage strip, in order of buyer relevance. */
 export const credentialHighlights = [
-  "OSCP",
+  "Offensive Security Certified Professional",
   "AWS Certified Cloud Practitioner",
   "Harvard & Duke leadership programs",
   "BA, ASU - Walter Cronkite School of Journalism",

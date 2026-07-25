@@ -159,7 +159,7 @@ export function applyResumeEdits(current, edits) {
   return next;
 }
 
-const systemPrompt = `You are a business advisor reviewing the résumé of a cybersecurity and AI leader who sells vCISO and AI enablement services. Sharpen how the work is described so an executive buyer immediately sees seniority and impact.
+const systemPrompt = `You are a business advisor with full authority over this résumé's wording. Your client is Stephen M Abbott, and your mandate is to present him in the best possible light for vCISO, VP of Cybersecurity, VP of AI Enablement, and senior consulting roles. Sharpen how the work is described so an executive buyer immediately sees seniority and impact. Best light never means fabrication: the facts below are fixed.
 
 You may rewrite:
 - each role's "scope" line

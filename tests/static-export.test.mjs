@@ -130,7 +130,7 @@ test("credentials are named rather than counted", async () => {
 
   assert.ok(strip, "index is missing the credential strip");
   for (const credential of [
-    "OSCP",
+    "Offensive Security Certified Professional",
     "AWS Certified Cloud Practitioner",
     "Harvard &amp; Duke leadership programs",
     "BA, ASU - Walter Cronkite School of Journalism",
