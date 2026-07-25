@@ -3,13 +3,13 @@
     {
       "dates": "2024-2026",
       "title": "Director, Cybersecurity",
-      "scope": "Exposure management · Remediation operations · Developer security",
+      "scope": "Enterprise exposure management · Remediation operations · Developer security",
       "highlights": [
-        "Led an 11-person team responsible for remediation operations and Continuous Threat Exposure Management at enterprise scale.",
-        "Introduced risk-based prioritization, risk quantification, and governed AI-assisted remediation in partnership with executive security leadership.",
-        "Contributed to enterprise risk-appetite measures and Key Risk Indicators used in recurring board and executive reporting.",
-        "Built developer-engagement and preventative-control programs that improved ownership and reduced open-source dependencies in source code by more than 75%.",
-        "Developed security leaders, with team members advancing into senior and director-level positions."
+        "Led an 11-person team delivering Continuous Threat Exposure Management and remediation operations at enterprise scale.",
+        "Established risk-based prioritization, risk quantification, and governed AI-assisted remediation with executive security leadership.",
+        "Shaped enterprise risk-appetite measures and Key Risk Indicators for board and executive reporting.",
+        "Built developer-engagement and preventative-control programs that raised ownership and cut open-source dependencies in source code by more than 75%.",
+        "Developed security leaders who advanced into senior and director-level roles."
       ]
     },
     {
@@ -18,10 +18,10 @@
       "scope": "Security data platforms · Supply-chain intelligence · Sensitive-data protection",
       "highlights": [
         "Led an engineering organization of up to 26 people delivering platforms for sensitive-data detection, software-composition intelligence, and repository enrichment.",
-        "Reduced sensitive-data findings in source code by 92%, tripled detection coverage, and improved fidelity through automation with human review.",
+        "Cut sensitive-data findings in source code by 92%, tripled detection coverage, and raised fidelity through automation with human review.",
         "Owned application risk assessments, business-impact analysis, disaster-recovery requirements, and resilience planning for critical platforms.",
-        "Built risk-intelligence platforms and analytics that strengthened prioritization, governance, and executive decision-making.",
-        "Partnered across cloud and identity teams to secure infrastructure-as-code pipelines, apply encryption controls, and grow engineers into senior technical roles."
+        "Built risk-intelligence platforms and analytics that drove prioritization, governance, and executive decision-making.",
+        "Secured infrastructure-as-code pipelines and encryption controls with cloud and identity teams while advancing engineers into senior technical roles."
       ]
     },
     {
@@ -29,9 +29,9 @@
       "title": "Senior Cybersecurity Engineer, Application Security",
       "scope": "SAST · DAST · Mobile testing · Software composition analysis",
       "highlights": [
-        "Managed an enterprise application-security tooling portfolio spanning static, dynamic, mobile, and software-composition analysis.",
-        "Led testing strategy, adoption, process integration, and effectiveness measurement throughout the software-development lifecycle.",
-        "Embedded scalable application-risk reduction practices directly into engineering workflows."
+        "Owned the enterprise application-security tooling portfolio spanning static, dynamic, mobile, and software-composition analysis.",
+        "Drove testing strategy, adoption, SDLC integration, and effectiveness measurement.",
+        "Embedded scalable application-risk reduction directly into engineering workflows."
       ]
     },
     {
@@ -39,10 +39,10 @@
       "title": "Senior Security Engineer, Detection & Infrastructure",
       "scope": "SIEM · Network visibility · Centralized telemetry",
       "highlights": [
-        "Engineered SIEM, full-packet-capture, and centralized logging platforms supporting enterprise threat detection and security operations.",
-        "Enabled encrypted-traffic inspection to improve network visibility and threat-detection coverage.",
+        "Built SIEM, full-packet-capture, and centralized logging platforms that powered enterprise threat detection and security operations.",
+        "Enabled encrypted-traffic inspection that expanded network visibility and threat-detection coverage.",
         "Deployed globally distributed, highly available security infrastructure across enterprise data centers.",
-        "Developed incident-response detections from logs, network telemetry, IDS/IPS events, and endpoint-security signals."
+        "Built incident-response detections from logs, network telemetry, IDS/IPS events, and endpoint-security signals."
       ]
     },
     {
@@ -50,28 +50,28 @@
       "title": "Senior Infrastructure Engineer, Resilient Transaction Platforms",
       "scope": "Backend services · Operational resilience · Automated delivery",
       "highlights": [
-        "Supported backend services for business-critical transaction systems in a highly regulated environment.",
-        "Maintained performance monitoring for 99.99% availability and helped automate application deployments through CI/CD.",
-        "Supported disaster-recovery and business-resilience programs for high-stakes systems, building the operational foundation for later security leadership."
+        "Operated backend services for business-critical transaction systems in a highly regulated environment.",
+        "Maintained performance monitoring for 99.99% availability and automated application deployments through CI/CD.",
+        "Delivered disaster-recovery and business-resilience programs for high-stakes systems, forming the operational foundation for later security leadership."
       ]
     }
   ],
   "focusAreas": [
     {
       "title": "Application and supply-chain security",
-      "description": "Connecting vulnerability intelligence, dependency analysis, license review, SBOMs, and secure remediation workflows."
+      "description": "Uniting vulnerability intelligence, dependency analysis, license review, SBOMs, and secure remediation into governed workflows."
     },
     {
       "title": "Agentic cybersecurity enablement",
-      "description": "Putting agents to work on security operations: triage, remediation, and evidence collection that stay bounded, reviewable, and accountable to a human owner."
+      "description": "Deploying agents on triage, remediation, and evidence collection—bounded, reviewable, and accountable to a human owner."
     },
     {
       "title": "Governed AI adoption and agent architecture",
-      "description": "Designing AI workflows around bounded context, human approval, evidence, and rollback, then building the agent systems that deliver them with tool orchestration, MCP, memory, scheduling, and local-first operation."
+      "description": "AI workflows built on bounded context, human approval, evidence, and rollback—delivered through agent systems with tool orchestration, MCP, memory, scheduling, and local-first operation."
     },
     {
       "title": "AI product engineering",
-      "description": "Turning emerging model capabilities into polished web, desktop, API, and command-line products that people can use."
+      "description": "Turning emerging model capabilities into polished web, desktop, API, and command-line products."
     }
   ],
   "technicalBreadth": [
