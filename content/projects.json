@@ -1,41 +1,12 @@
 [
   {
-    "repo": "shiba-studio",
-    "slug": "shiba-studio",
-    "name": "Shiba Studio",
-    "category": "AI systems",
-    "featured": true,
-    "tagline": "A local-first studio for building and orchestrating Grok-powered agents.",
-    "description": "Shiba Studio unifies agent orchestration, workspace-aware coding, browser control, scheduling, integrations, memory, and auditable local workflows in a desktop-grade web application.",
-    "siteUrl": "https://shiba-studio.io",
-    "sourceUrl": "https://github.com/stevologic/shiba-studio",
-    "metrics": [
-      "40+ built-in tools",
-      "Windows · macOS · Linux",
-      "Zero telemetry"
-    ],
-    "tech": [
-      "TypeScript",
-      "Next.js 16",
-      "Monaco",
-      "SQLite",
-      "Playwright"
-    ],
-    "capabilities": [
-      "Agent orchestration",
-      "Workspace-aware coding",
-      "Automations and integrations"
-    ],
-    "statusLabel": "Live · Active development"
-  },
-  {
     "repo": "security-recipes.ai",
     "slug": "security-recipes",
     "name": "security-recipes.ai",
     "category": "Security",
     "featured": true,
-    "tagline": "From vulnerability intelligence to verified action.",
-    "description": "An open, self-hostable knowledge layer that connects source-backed CVE research to bounded remediation recipes, required evidence, rollback guidance, and human-reviewed outcomes.",
+    "tagline": "From vulnerability intelligence to verified, evidence-backed remediation.",
+    "description": "An open, self-hostable knowledge layer that connects source-backed CVE research to bounded remediation recipes, required evidence, rollback guidance, and human-reviewed outcomes—built for teams that need traceable action, not another alert stream.",
     "siteUrl": "https://security-recipes.ai",
     "sourceUrl": "https://github.com/stevologic/security-recipes.ai",
     "metrics": [
@@ -63,8 +34,8 @@
     "name": "OSS Dependency Explorer",
     "category": "Security",
     "featured": true,
-    "tagline": "See what your software depends on—and where the risk lives.",
-    "description": "A software-supply-chain research tool that maps package dependencies across eight ecosystems and combines them with vulnerability, repository health, license, and SBOM analysis.",
+    "tagline": "Map dependencies across ecosystems and see where supply-chain risk lives.",
+    "description": "A software-supply-chain research tool that maps package dependencies across eight ecosystems and combines vulnerability, repository health, license, and SBOM analysis—helping security and engineering leaders triage risk before it reaches production.",
     "siteUrl": "https://ossde.dev",
     "sourceUrl": "https://github.com/stevologic/oss-deps-explorer",
     "metrics": [
@@ -87,33 +58,33 @@
     "statusLabel": "Live"
   },
   {
-    "repo": "tiny-book-buddies-ai",
-    "slug": "tiny-book-buddies-ai",
-    "name": "Tiny Book Buddies AI",
+    "repo": "shiba-studio",
+    "slug": "shiba-studio",
+    "name": "Shiba Studio",
     "category": "AI systems",
-    "featured": false,
-    "tagline": "Turn one bedtime idea into an illustrated, narrated storybook.",
-    "description": "A browser-based story studio that writes, illustrates, narrates, and exports children's books using the AI providers and models selected by the user.",
-    "siteUrl": "https://tinybookbuddies.ai",
-    "sourceUrl": "https://github.com/stevologic/tiny-book-buddies-ai",
+    "featured": true,
+    "tagline": "Local-first studio for building and governing production-ready AI agents.",
+    "description": "Unifies agent orchestration, workspace-aware coding, browser control, scheduling, integrations, memory, and auditable local workflows in a desktop-grade application—so organizations can automate with AI without surrendering data control.",
+    "siteUrl": "https://shiba-studio.io",
+    "sourceUrl": "https://github.com/stevologic/shiba-studio",
     "metrics": [
-      "4 AI providers",
-      "Browser-only",
-      "MP4 export"
+      "40+ built-in tools",
+      "Windows · macOS · Linux",
+      "Zero telemetry"
     ],
     "tech": [
-      "React",
       "TypeScript",
-      "Vite",
-      "Canvas",
-      "MediaRecorder"
+      "Next.js 16",
+      "Monaco",
+      "SQLite",
+      "Playwright"
     ],
     "capabilities": [
-      "Story and illustration generation",
-      "Narration with word highlighting",
-      "In-browser video export"
+      "Agent orchestration",
+      "Workspace-aware coding",
+      "Automations and integrations"
     ],
-    "statusLabel": "Live"
+    "statusLabel": "Live · Active development"
   },
   {
     "repo": "pro-response",
@@ -121,8 +92,8 @@
     "name": "Pro Response",
     "category": "AI systems",
     "featured": false,
-    "tagline": "Refine team messages with AI before they are sent.",
-    "description": "A multi-provider writing assistant that rewrites, translates, summarizes, and reformats messages through Slack, an HTTP API, a command-line tool, or a Python library.",
+    "tagline": "Refine team messages with AI before they are sent across Slack or API.",
+    "description": "A multi-provider writing assistant that rewrites, translates, summarizes, and reformats messages through Slack, an HTTP API, a CLI, or a Python library—raising communication quality inside the channels teams already use.",
     "siteUrl": "https://stevologic.github.io/pro-response/",
     "sourceUrl": "https://github.com/stevologic/pro-response",
     "metrics": [
@@ -143,6 +114,62 @@
       "Slack, API, and CLI delivery"
     ],
     "statusLabel": "v2.0 available"
+  },
+  {
+    "repo": "spare-cycles",
+    "slug": "spare-cycles",
+    "name": "Spare Cycles",
+    "category": "AI systems",
+    "featured": false,
+    "tagline": "Share idle model capacity through an OpenAI-compatible inference proxy.",
+    "description": "Routes requests through an OpenAI-compatible proxy to volunteer nodes running Claude, GPT, Grok, or Ollama, alongside a marketplace of coding projects—an open experiment in pooled inference and donated AI compute under an MIT license.",
+    "siteUrl": "https://sparecycles.io/",
+    "sourceUrl": "https://github.com/stevologic/spare-cycles",
+    "metrics": [
+      "MIT licensed"
+    ],
+    "tech": [
+      "Python",
+      "JavaScript",
+      "CSS",
+      "Shell",
+      "HTML"
+    ],
+    "capabilities": [
+      "Ai",
+      "Donation",
+      "Fastapi"
+    ],
+    "statusLabel": "Live"
+  },
+  {
+    "repo": "tiny-book-buddies-ai",
+    "slug": "tiny-book-buddies-ai",
+    "name": "Tiny Book Buddies AI",
+    "category": "Product lab",
+    "featured": false,
+    "tagline": "Turn one bedtime idea into an illustrated, narrated children's storybook.",
+    "description": "A browser-based story studio that writes, illustrates, narrates, and exports children's books using the AI providers and models the user selects—end to end in the browser.",
+    "siteUrl": "https://tinybookbuddies.ai",
+    "sourceUrl": "https://github.com/stevologic/tiny-book-buddies-ai",
+    "metrics": [
+      "4 AI providers",
+      "Browser-only",
+      "MP4 export"
+    ],
+    "tech": [
+      "React",
+      "TypeScript",
+      "Vite",
+      "Canvas",
+      "MediaRecorder"
+    ],
+    "capabilities": [
+      "Story and illustration generation",
+      "Narration with word highlighting",
+      "In-browser video export"
+    ],
+    "statusLabel": "Live"
   },
   {
     "repo": "mouse_clicker",
