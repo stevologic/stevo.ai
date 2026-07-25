@@ -9,6 +9,12 @@ import {
   representativeWork,
   resumeMetrics,
 } from "@/lib/career";
+import {
+  careerExperience,
+  commercialProducts,
+  focusAreas,
+  technicalBreadth,
+} from "@/lib/resume-content";
 
 export const metadata: Metadata = {
   title: "Stephen M Abbott | Cybersecurity & AI",
@@ -16,136 +22,6 @@ export const metadata: Metadata = {
     "The employer-anonymized professional resume of Stephen M Abbott, spanning cybersecurity leadership, applied AI, enterprise engineering, and shipped products.",
 };
 
-const careerExperience = [
-  {
-    dates: "2024-2026",
-    title: "Director, Cybersecurity",
-    scope: "Exposure management · Remediation operations · Developer security",
-    highlights: [
-      "Led an 11-person team responsible for remediation operations and Continuous Threat Exposure Management at enterprise scale.",
-      "Introduced risk-based prioritization, risk quantification, and governed AI-assisted remediation in partnership with executive security leadership.",
-      "Contributed to enterprise risk-appetite measures and Key Risk Indicators used in recurring board and executive reporting.",
-      "Built developer-engagement and preventative-control programs that improved ownership and reduced open-source dependencies in source code by more than 75%.",
-      "Developed security leaders, with team members advancing into senior and director-level positions.",
-    ],
-  },
-  {
-    dates: "2021-2024",
-    title: "Director, Security Data & Risk Intelligence",
-    scope: "Security data platforms · Supply-chain intelligence · Sensitive-data protection",
-    highlights: [
-      "Led an engineering organization of up to 26 people delivering platforms for sensitive-data detection, software-composition intelligence, and repository enrichment.",
-      "Reduced sensitive-data findings in source code by 92%, tripled detection coverage, and improved fidelity through automation with human review.",
-      "Owned application risk assessments, business-impact analysis, disaster-recovery requirements, and resilience planning for critical platforms.",
-      "Built risk-intelligence platforms and analytics that strengthened prioritization, governance, and executive decision-making.",
-      "Partnered across cloud and identity teams to secure infrastructure-as-code pipelines, apply encryption controls, and grow engineers into senior technical roles.",
-    ],
-  },
-  {
-    dates: "2019-2021",
-    title: "Senior Cybersecurity Engineer, Application Security",
-    scope: "SAST · DAST · Mobile testing · Software composition analysis",
-    highlights: [
-      "Managed an enterprise application-security tooling portfolio spanning static, dynamic, mobile, and software-composition analysis.",
-      "Led testing strategy, adoption, process integration, and effectiveness measurement throughout the software-development lifecycle.",
-      "Embedded scalable application-risk reduction practices directly into engineering workflows.",
-    ],
-  },
-  {
-    dates: "2014-2019",
-    title: "Senior Security Engineer, Detection & Infrastructure",
-    scope: "SIEM · Network visibility · Centralized telemetry",
-    highlights: [
-      "Engineered SIEM, full-packet-capture, and centralized logging platforms supporting enterprise threat detection and security operations.",
-      "Enabled encrypted-traffic inspection to improve network visibility and threat-detection coverage.",
-      "Deployed globally distributed, highly available security infrastructure across enterprise data centers.",
-      "Developed incident-response detections from logs, network telemetry, IDS/IPS events, and endpoint-security signals.",
-    ],
-  },
-  {
-    dates: "2010-2014",
-    title: "Senior Infrastructure Engineer, Resilient Transaction Platforms",
-    scope: "Backend services · Operational resilience · Automated delivery",
-    highlights: [
-      "Supported backend services for business-critical transaction systems in a highly regulated environment.",
-      "Maintained performance monitoring for 99.99% availability and helped automate application deployments through CI/CD.",
-      "Supported disaster-recovery and business-resilience programs for high-stakes systems, building the operational foundation for later security leadership.",
-    ],
-  },
-] as const;
-
-const focusAreas = [
-  {
-    title: "Application and supply-chain security",
-    description:
-      "Connecting vulnerability intelligence, dependency analysis, license review, SBOMs, and secure remediation workflows.",
-  },
-  {
-    title: "Agentic cybersecurity enablement",
-    description:
-      "Putting agents to work on security operations: triage, remediation, and evidence collection that stay bounded, reviewable, and accountable to a human owner.",
-  },
-  {
-    title: "Governed AI adoption and agent architecture",
-    description:
-      "Designing AI workflows around bounded context, human approval, evidence, and rollback, then building the agent systems that deliver them with tool orchestration, MCP, memory, scheduling, and local-first operation.",
-  },
-  {
-    title: "AI product engineering",
-    description:
-      "Turning emerging model capabilities into polished web, desktop, API, and command-line products that people can use.",
-  },
-] as const;
-
-const technicalBreadth = [
-  {
-    label: "Languages",
-    value: "TypeScript, Python, JavaScript, Go, and C#",
-  },
-  {
-    label: "AI and agents",
-    value:
-      "OpenAI, Anthropic, Google, xAI, Ollama, MCP, tool orchestration, and local model workflows",
-  },
-  {
-    label: "Security",
-    value:
-      "SAST, SCA, DAST, secret-detection engineering, container and image scanning, secure CI/CD pipeline orchestration, CVE and CISA KEV intelligence, OSV, OpenSSF Scorecard, dependency analysis, SBOMs, and evidence-driven remediation",
-  },
-  {
-    label: "Product platforms",
-    value:
-      "Next.js, React, Django, FastMCP, Docker, GitHub Actions, Playwright, SQLite, Redis, WinForms, and OpenCL",
-  },
-  {
-    label: "Frameworks",
-    value:
-      "NIST CSF 2.0, ISO/IEC 27001, SOC 2, CIS Controls v8, FAIR, NIST AI RMF, ISO/IEC 42001, OWASP ASVS, and NIST SSDF",
-  },
-] as const;
-
-
-/** Commercial platforms operated or owned in enterprise environments. */
-const commercialProducts = [
-  {
-    label: "Application security",
-    value:
-      "PortSwigger Burp Suite, DefectDojo, Sonatype Nexus, JFrog Artifactory, and GitHub Advanced Security",
-  },
-  {
-    label: "Delivery and source",
-    value:
-      "GitHub Enterprise, GitHub Actions, Dependabot, Jenkins, ArgoCD, and Kubernetes",
-  },
-  {
-    label: "Exposure and operations",
-    value: "Zafran CTEM, NetWitness, and ServiceNow",
-  },
-  {
-    label: "Workflow and enablement",
-    value: "Jira, Confluence, and ChatGPT Enterprise",
-  },
-] as const;
 
 export default function ResumePage() {
   return (

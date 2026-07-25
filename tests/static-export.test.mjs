@@ -1028,6 +1028,92 @@ test("the resume stays in sync with the site's projects", async () => {
   }
 });
 
+test("the resume optimizer cannot rewrite employment history", async () => {
+  const { applyResumeEdits } = await import("../scripts/optimize-resume.mjs");
+  const current = JSON.parse(
+    await readFile(new URL("content/resume.json", root), "utf8"),
+  );
+  const role = current.careerExperience[0];
+
+  // Rewording, same number of achievements, is the point and must work.
+  const reworded = applyResumeEdits(current, {
+    careerExperience: {
+      [role.dates]: { highlights: role.highlights.map((h) => h.slice(0, -1)) },
+    },
+  });
+  const after = reworded.careerExperience[0];
+  assert.equal(after.dates, role.dates, "dates are facts");
+  assert.equal(after.title, role.title, "titles are facts");
+  assert.equal(after.highlights.length, role.highlights.length);
+
+  const forbidden = [
+    ["drops an achievement", { careerExperience: { [role.dates]: { highlights: role.highlights.slice(1) } } }],
+    ["adds an achievement", { careerExperience: { [role.dates]: { highlights: [...role.highlights, "Another win."] } } }],
+    ["changes a job title", { careerExperience: { [role.dates]: { title: "CISO" } } }],
+    ["changes employment dates", { careerExperience: { [role.dates]: { dates: "2018-2026" } } }],
+    ["invents a role", { careerExperience: { "2001-2004": { scope: "Earlier work" } } }],
+    [
+      "invents a figure",
+      {
+        careerExperience: {
+          [role.dates]: {
+            highlights: role.highlights.map((h, i) =>
+              i ? h : "Cut mean time to remediate by 47% across the estate.",
+            ),
+          },
+        },
+      },
+    ],
+    ["edits the tool inventory", { technicalBreadth: { Security: { value: "Splunk" } } }],
+    ["edits commercial products", { commercialProducts: { "Application security": { value: "Veracode" } } }],
+    ["invents a focus area", { focusAreas: { "Quantum readiness": { description: "Post-quantum work." } } }],
+    [
+      "pads the resume past the page budget",
+      {
+        careerExperience: {
+          [role.dates]: {
+            highlights: role.highlights.map(
+              (h) => h + " " + "Further supporting detail. ".repeat(20),
+            ),
+          },
+        },
+      },
+    ],
+  ];
+  for (const [label, edits] of forbidden) {
+    assert.throws(
+      () => applyResumeEdits(current, edits),
+      `the resume optimizer accepted an edit that ${label}`,
+    );
+  }
+});
+
+test("resume content stays within its two-page budget", async () => {
+  const resume = await readFile(new URL("content/resume.json", root), "utf8");
+  const parsed = JSON.parse(resume);
+
+  // The printed resume is tuned to exactly two Letter pages, but verify:pdf
+  // cannot run on the CI runner: the serif stack it measures does not exist
+  // there, so the fallback font would report a different count. This
+  // font-independent ceiling is what actually guards the page count in CI.
+  const length = JSON.stringify(parsed).length;
+  assert.ok(
+    length <= 6000,
+    `resume prose is ${length} characters, over the 6000 budget that keeps it to two pages`,
+  );
+
+  // Structure the optimizer relies on.
+  assert.equal(parsed.careerExperience.length, 5, "five roles");
+  for (const role of parsed.careerExperience) {
+    assert.match(role.dates, /^\d{4}-\d{4}$/);
+    assert.ok(role.title?.trim() && role.scope?.trim());
+    assert.ok(role.highlights.length >= 3);
+  }
+  assert.ok(parsed.focusAreas.length >= 3);
+  assert.ok(parsed.technicalBreadth.length >= 4);
+  assert.ok(parsed.commercialProducts.length >= 3);
+});
+
 test("custom domain is configured", async () => {
   const cname = await readFile(new URL("public/CNAME", root), "utf8");
   assert.equal(cname.trim(), "stevo.ai");

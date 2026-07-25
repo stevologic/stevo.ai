@@ -15,6 +15,7 @@
     "icons:projects": "node scripts/fetch-project-icons.mjs",
     "critique": "node scripts/site-critique.mjs",
     "optimize:portfolio": "node scripts/optimize-portfolio.mjs",
+    "optimize:resume": "node scripts/optimize-resume.mjs",
     "test": "npm run build && node --test tests/static-export.test.mjs && npm run verify:pdf",
     "lint": "eslint . --ignore-pattern out --ignore-pattern .next",
     "typecheck": "tsc --noEmit"
