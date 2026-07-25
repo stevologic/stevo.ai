@@ -49,6 +49,8 @@ jobs:
     permissions:
       contents: write
       pull-requests: write
+      # Needed to dispatch ci.yml against the branch it just pushed.
+      actions: write
 
     steps:
       - name: Check out source
@@ -190,7 +192,11 @@ jobs:
             # workflows, so CI would never run on it and "merge when checks
             # pass" would mean "merge with no checks". Dispatch CI against the
             # branch and gate the merge on its real verdict instead.
-            gh workflow run ci.yml --ref "$branch"
+            if ! gh workflow run ci.yml --ref "$branch"; then
+              echo "::warning title=Site critique::Could not start CI for $branch; pull request left open at $url."
+              echo "CI could not be started, so $url was left open." >> "$GITHUB_STEP_SUMMARY"
+              exit 0
+            fi
             sleep 15
             run_id=""
             for _ in $(seq 1 40); do
