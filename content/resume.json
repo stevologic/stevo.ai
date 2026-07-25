@@ -3,12 +3,12 @@
     {
       "dates": "2024-2026",
       "title": "Director, Cybersecurity",
-      "scope": "Enterprise CTEM · Remediation operations · Developer security",
+      "scope": "Enterprise CTEM · Risk-based remediation · Developer security",
       "highlights": [
-        "Directed enterprise Continuous Threat Exposure Management and remediation operations through an 11-person team.",
-        "Established risk-based prioritization, quantification, and governed AI-assisted remediation with executive security leadership.",
+        "Directed enterprise CTEM and remediation operations through an 11-person team.",
+        "Instituted risk-based prioritization, quantification, and governed AI-assisted remediation with executive security leadership.",
         "Defined enterprise risk-appetite measures and Key Risk Indicators for board and executive reporting.",
-        "Raised developer ownership and cut open-source dependencies in source code by more than 75% through engagement and preventative controls.",
+        "Raised developer ownership and cut open-source dependencies in source code by more than 75% via engagement and preventative controls.",
         "Developed security leaders who advanced into senior and director-level roles."
       ]
     },
@@ -63,15 +63,15 @@
     },
     {
       "title": "Agentic cybersecurity enablement",
-      "description": "Agents for triage, remediation, and evidence collection—bounded, reviewable, and accountable to a human owner."
+      "description": "Bounded agents for triage, remediation, and evidence—reviewable and accountable to a human owner."
     },
     {
       "title": "Governed AI adoption and agent architecture",
-      "description": "Bounded-context AI workflows with human approval, evidence, and rollback—via agents with tool orchestration, MCP, memory, scheduling, and local-first operation."
+      "description": "Bounded-context AI with human approval, evidence, and rollback—tool orchestration, MCP, memory, scheduling, local-first."
     },
     {
       "title": "AI product engineering",
-      "description": "Turning emerging model capabilities into polished web, desktop, API, and CLI products."
+      "description": "Shipping emerging model capabilities as polished web, desktop, API, and CLI products."
     }
   ],
   "technicalBreadth": [
