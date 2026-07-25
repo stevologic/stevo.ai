@@ -3,75 +3,75 @@
     {
       "dates": "2024-2026",
       "title": "Director, Cybersecurity",
-      "scope": "Enterprise CTEM · Risk-based remediation · Developer security",
+      "scope": "Enterprise CTEM · Risk quantification · Developer-owned security",
       "highlights": [
-        "Directed enterprise CTEM and remediation operations through an 11-person team.",
+        "Directed enterprise CTEM and remediation through an 11-person team.",
         "Instituted risk-based prioritization, quantification, and governed AI-assisted remediation with executive security leadership.",
-        "Defined enterprise risk-appetite measures and Key Risk Indicators for board and executive reporting.",
-        "Raised developer ownership and cut open-source dependencies in source code by more than 75% via engagement and preventative controls.",
+        "Set enterprise risk-appetite measures and Key Risk Indicators for board and executive reporting.",
+        "Cut open-source dependencies in source code by more than 75% and raised developer ownership via engagement and preventative controls.",
         "Developed security leaders who advanced into senior and director-level roles."
       ]
     },
     {
       "dates": "2021-2024",
       "title": "Director, Security Data & Risk Intelligence",
-      "scope": "Security data platforms · Supply-chain intelligence · Sensitive-data protection",
+      "scope": "Security data platforms · Supply-chain risk intelligence · Sensitive-data protection",
       "highlights": [
         "Directed an engineering organization of up to 26 delivering sensitive-data detection, software-composition intelligence, and repository enrichment platforms.",
         "Cut sensitive-data findings in source code by 92%, tripled detection coverage, and raised fidelity via automation with human review.",
         "Owned application risk assessments, business-impact analysis, disaster-recovery requirements, and resilience planning for critical platforms.",
         "Built risk-intelligence platforms and analytics that drove prioritization, governance, and executive decisions.",
-        "Hardened infrastructure-as-code pipelines and encryption controls with cloud and identity teams while advancing engineers into senior technical roles."
+        "Hardened infrastructure-as-code pipelines and encryption controls with cloud and identity teams; advanced engineers into senior technical roles."
       ]
     },
     {
       "dates": "2019-2021",
       "title": "Senior Cybersecurity Engineer, Application Security",
-      "scope": "Enterprise AppSec portfolio · SDLC integration · Risk reduction",
+      "scope": "Enterprise AppSec · SDLC integration · Measurable risk reduction",
       "highlights": [
         "Owned the enterprise application-security tooling portfolio across static, dynamic, mobile, and software-composition analysis.",
-        "Drove testing strategy, adoption, SDLC integration, and effectiveness measurement.",
+        "Set testing strategy, drove adoption and SDLC integration, and measured effectiveness.",
         "Embedded scalable application-risk reduction into engineering workflows."
       ]
     },
     {
       "dates": "2014-2019",
       "title": "Senior Security Engineer, Detection & Infrastructure",
-      "scope": "SIEM · Network visibility · Enterprise telemetry",
+      "scope": "SIEM · Network visibility · Enterprise detection telemetry",
       "highlights": [
         "Built SIEM, full-packet-capture, and centralized logging platforms that powered enterprise threat detection and security operations.",
         "Expanded network visibility and threat-detection coverage through encrypted-traffic inspection.",
         "Deployed globally distributed, highly available security infrastructure across enterprise data centers.",
-        "Built incident-response detections from logs, network telemetry, IDS/IPS events, and endpoint signals."
+        "Delivered incident-response detections from logs, network telemetry, IDS/IPS events, and endpoint signals."
       ]
     },
     {
       "dates": "2010-2014",
       "title": "Senior Infrastructure Engineer, Resilient Transaction Platforms",
-      "scope": "Backend services · Operational resilience · Automated delivery",
+      "scope": "Critical backend services · Operational resilience · Automated delivery",
       "highlights": [
         "Operated backend services for business-critical transaction systems in a highly regulated environment.",
         "Sustained 99.99% availability through performance monitoring and automated CI/CD deployments.",
-        "Delivered disaster-recovery and business-resilience programs for high-stakes systems—the operational foundation for later security leadership."
+        "Delivered disaster-recovery and business-resilience programs for high-stakes systems—foundation for later security leadership."
       ]
     }
   ],
   "focusAreas": [
     {
       "title": "Application and supply-chain security",
-      "description": "Governed workflows uniting vulnerability intelligence, dependency analysis, license review, SBOMs, and secure remediation."
+      "description": "Governed programs uniting vulnerability intelligence, dependency analysis, license review, SBOMs, and accountable remediation."
     },
     {
       "title": "Agentic cybersecurity enablement",
-      "description": "Bounded agents for triage, remediation, and evidence—reviewable and accountable to a human owner."
+      "description": "Human-accountable agents for triage, remediation, and evidence—bounded, reviewable, and owned."
     },
     {
       "title": "Governed AI adoption and agent architecture",
-      "description": "Bounded-context AI with human approval, evidence, and rollback—tool orchestration, MCP, memory, scheduling, local-first."
+      "description": "Bounded-context AI with human approval, evidence, and rollback—orchestration, MCP, memory, scheduling, local-first."
     },
     {
       "title": "AI product engineering",
-      "description": "Shipping emerging model capabilities as polished web, desktop, API, and CLI products."
+      "description": "Shipped emerging model capabilities as production web, desktop, API, and CLI products."
     }
   ],
   "technicalBreadth": [

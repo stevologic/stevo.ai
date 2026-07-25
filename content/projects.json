@@ -92,8 +92,8 @@
     "name": "Pro Response",
     "category": "AI systems",
     "featured": false,
-    "tagline": "Raise message quality with AI inside Slack and the channels teams already use.",
-    "description": "Multi-provider writing assistant that rewrites, translates, summarizes, and reformats messages via Slack, HTTP API, CLI, or Python—clearer enterprise communication without pulling people out of existing workflows.",
+    "tagline": "Raise enterprise message quality with AI inside Slack and existing channels.",
+    "description": "Multi-provider writing assistant that rewrites, translates, summarizes, and reformats messages via Slack, HTTP API, CLI, or Python—clearer communication without pulling teams out of the tools they already use.",
     "siteUrl": "https://stevologic.github.io/pro-response/",
     "sourceUrl": "https://github.com/stevologic/pro-response",
     "metrics": [
@@ -116,40 +116,13 @@
     "statusLabel": "v2.0 available"
   },
   {
-    "repo": "spare-cycles",
-    "slug": "spare-cycles",
-    "name": "Spare Cycles",
-    "category": "AI systems",
-    "featured": false,
-    "tagline": "Route inference across volunteer nodes behind an OpenAI-compatible proxy.",
-    "description": "Open research experiment that pools volunteer capacity running Claude, GPT, Grok, or Ollama, with a marketplace of coding projects—MIT-licensed pooled compute for experimentation, not a managed enterprise service.",
-    "siteUrl": "https://sparecycles.io/",
-    "sourceUrl": "https://github.com/stevologic/spare-cycles",
-    "metrics": [
-      "MIT licensed"
-    ],
-    "tech": [
-      "Python",
-      "JavaScript",
-      "CSS",
-      "Shell",
-      "HTML"
-    ],
-    "capabilities": [
-      "Ai",
-      "Donation",
-      "Fastapi"
-    ],
-    "statusLabel": "Live"
-  },
-  {
     "repo": "tiny-book-buddies-ai",
     "slug": "tiny-book-buddies-ai",
     "name": "Tiny Book Buddies AI",
     "category": "Product lab",
     "featured": false,
-    "tagline": "Turn one bedtime idea into an illustrated, narrated children's storybook.",
-    "description": "Browser-based story studio that writes, illustrates, narrates, and exports children's books with user-selected AI providers—end-to-end in the browser, built as a consumer product experiment.",
+    "tagline": "Consumer AI experiment: one idea to an illustrated, narrated storybook.",
+    "description": "Browser-based story studio that writes, illustrates, narrates, and exports children's books with user-selected AI providers—end-to-end in the browser, built as a product-lab experiment rather than an enterprise offering.",
     "siteUrl": "https://tinybookbuddies.ai",
     "sourceUrl": "https://github.com/stevologic/tiny-book-buddies-ai",
     "metrics": [
@@ -172,13 +145,40 @@
     "statusLabel": "Live"
   },
   {
+    "repo": "spare-cycles",
+    "slug": "spare-cycles",
+    "name": "Spare Cycles",
+    "category": "Product lab",
+    "featured": false,
+    "tagline": "Experimental proxy that routes inference across volunteer nodes.",
+    "description": "Open research experiment pooling volunteer capacity on Claude, GPT, Grok, or Ollama behind an OpenAI-compatible API—MIT-licensed study of distributed inference, not a managed enterprise service.",
+    "siteUrl": "https://sparecycles.io/",
+    "sourceUrl": "https://github.com/stevologic/spare-cycles",
+    "metrics": [
+      "MIT licensed"
+    ],
+    "tech": [
+      "Python",
+      "JavaScript",
+      "CSS",
+      "Shell",
+      "HTML"
+    ],
+    "capabilities": [
+      "Ai",
+      "Donation",
+      "Fastapi"
+    ],
+    "statusLabel": "Live"
+  },
+  {
     "repo": "mouse_clicker",
     "slug": "mouseclicker",
     "name": "mouseclicker.app",
     "category": "Product lab",
     "featured": false,
-    "tagline": "Portable Windows auto-clicker with record/replay and optional AI patterns.",
-    "description": "Lightweight Windows automation utility with humanized cursor movement, global hotkeys, system-wide record/replay, and optional cloud or local AI pattern generation—no installer required.",
+    "tagline": "Lightweight Windows auto-clicker with record/replay and optional AI patterns.",
+    "description": "Portable desktop automation utility with humanized cursor movement, global hotkeys, system-wide record/replay, and optional cloud or local AI pattern generation—no installer; a focused utility experiment.",
     "siteUrl": "https://mouseclicker.app",
     "sourceUrl": "https://github.com/stevologic/mouse_clicker",
     "metrics": [
@@ -207,7 +207,7 @@
     "category": "Product lab",
     "featured": false,
     "tagline": "Non-custodial toolkit for accepting Dogecoin in person or online.",
-    "description": "Commerce utilities for small sellers: browser wallet tools, point-of-sale checkout, payment QR codes, on-chain verification, a local order ledger, and embeddable site components—no processor custody.",
+    "description": "Small-seller commerce utilities: browser wallet tools, point-of-sale checkout, payment QR codes, on-chain verification, a local order ledger, and embeddable components—no processor custody.",
     "siteUrl": "https://commerce.dog",
     "sourceUrl": "https://github.com/stevologic/doge-commerce-kit",
     "metrics": [
@@ -235,8 +235,8 @@
     "name": "Arrowhead Paesano",
     "category": "Product lab",
     "featured": false,
-    "tagline": "Static fan site with an automated weekly game-preview desk.",
-    "description": "Site for the Arrowhead Paesano YouTube channel: privacy-friendly playback from a checked-in snapshot, plus a sourced weekly Chiefs preview with matchups, projections, and a ready-to-shoot run-of-show.",
+    "tagline": "Chiefs fan site with an automated weekly game-preview desk.",
+    "description": "Static site for the Arrowhead Paesano YouTube channel: privacy-friendly playback from a checked-in snapshot, plus a sourced weekly preview with matchups, projections, and a ready-to-shoot run-of-show.",
     "siteUrl": "https://arrowheadpaesano.com",
     "sourceUrl": "https://github.com/stevologic/arrowheadpaesanowebsite",
     "metrics": [
@@ -263,7 +263,7 @@
     "name": "Desert Wander Supply Co.",
     "category": "Product lab",
     "featured": false,
-    "tagline": "Southwest outdoor gear storefront for desert travel and everyday carry.",
+    "tagline": "Southwest outdoor gear storefront for desert travel and EDC.",
     "description": "Hosted storefront for desert exploration gear spanning apparel, outdoor accessories, and pet gear, with a merchandised catalog, checkout, and customer email capture.",
     "siteUrl": "https://desertwandersupplyco.com",
     "metrics": [
@@ -289,7 +289,7 @@
     "name": "DOGE MINER",
     "category": "Product lab",
     "featured": false,
-    "tagline": "Scrypt pool mining with a live dashboard and hardware telemetry.",
+    "tagline": "Hobby Scrypt pool miner with live dashboard and hardware telemetry.",
     "description": "Full-stack Dogecoin pool miner for CPU and OpenCL GPUs, with live pool responses, share statistics, hardware telemetry, and on-chain wallet data—transparent hobby mining, not enterprise infrastructure.",
     "siteUrl": "https://doge-miner.io",
     "sourceUrl": "https://github.com/stevologic/doge-miner",
