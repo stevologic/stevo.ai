@@ -106,6 +106,15 @@ jobs:
           GROK_MODEL: ${{ steps.critique.outputs.model || inputs.model || vars.GROK_MODEL || 'grok-4.5' }}
         run: npm run optimize:portfolio
 
+      # Promoting a discovered project into content/projects.json means the
+      # generated discovery file must drop it, or the same project exists in
+      # both places. Re-running discovery reconciles that.
+      - name: Reconcile discovery after promotion
+        if: steps.optimize.outcome == 'success'
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+        run: npm run discover
+
       # A pull request is only worth opening if the site still builds and every
       # test passes, so validation runs before the branch is pushed.
       - name: Rebuild and test the edited site
@@ -124,7 +133,7 @@ jobs:
         run: |
           set -euo pipefail
 
-          if git diff --quiet -- content/projects.json; then
+          if git diff --quiet -- content/projects.json data/discovered.generated.json; then
             echo '### No portfolio changes proposed' >> "$GITHUB_STEP_SUMMARY"
             echo 'The advisor left the portfolio ordering and framing as it is.' >> "$GITHUB_STEP_SUMMARY"
             exit 0
@@ -134,7 +143,7 @@ jobs:
           git config user.name 'github-actions[bot]'
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
           git checkout -b "$branch"
-          git add content/projects.json
+          git add content/projects.json data/discovered.generated.json
           git commit -m "Reframe and reorder the portfolio
 
           Applied by the site critique workflow using ${MODEL:-grok}. Framing,
