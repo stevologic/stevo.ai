@@ -3,25 +3,25 @@
     {
       "dates": "2024-2026",
       "title": "Director, Cybersecurity",
-      "scope": "Enterprise CTEM · Board risk quantification · Developer-owned security",
+      "scope": "Board risk quantification · Enterprise CTEM · Developer-owned security",
       "highlights": [
         "Directed enterprise CTEM and remediation through an 11-person team.",
-        "Instituted risk-based prioritization, quantification, and governed AI-assisted remediation with executive leadership.",
-        "Defined enterprise risk-appetite measures and KRIs for board and executive reporting.",
-        "Cut open-source dependencies more than 75% and raised developer ownership through engagement and preventative controls.",
+        "Instituted risk prioritization, quantification, and governed AI-assisted remediation with executive leadership.",
+        "Defined risk-appetite measures and KRIs for board and executive reporting.",
+        "Cut open-source dependencies more than 75%; raised developer ownership via engagement and preventative controls.",
         "Developed security leaders who advanced to senior and director roles."
       ]
     },
     {
       "dates": "2021-2024",
       "title": "Director, Security Data & Risk Intelligence",
-      "scope": "Security data platforms · Supply-chain intelligence · Sensitive-data protection",
+      "scope": "Sensitive-data protection · Supply-chain intelligence · Security data platforms",
       "highlights": [
         "Led up to 26 engineers delivering sensitive-data detection, software-composition intelligence, and repository enrichment platforms.",
         "Cut sensitive-data findings by 92%, tripled detection coverage, and raised fidelity via automation with human review.",
         "Owned application risk assessments, BIA, DR requirements, and resilience planning for critical platforms.",
         "Built risk-intelligence platforms and analytics that drove prioritization, governance, and executive decisions.",
-        "Hardened IaC pipelines and encryption controls with cloud and identity teams; advanced engineers to senior roles."
+        "Hardened IaC pipelines and encryption with cloud and identity teams; advanced engineers to senior roles."
       ]
     },
     {
@@ -39,7 +39,7 @@
       "title": "Senior Security Engineer, Detection & Infrastructure",
       "scope": "SIEM · Network visibility · Detection telemetry",
       "highlights": [
-        "Built SIEM, full-packet-capture, and centralized logging platforms powering enterprise threat detection and security operations.",
+        "Built SIEM, full-packet-capture, and centralized logging platforms powering enterprise detection and security operations.",
         "Expanded network visibility and threat-detection coverage through encrypted-traffic inspection.",
         "Deployed globally distributed, highly available security infrastructure across data centers.",
         "Delivered incident-response detections from logs, network telemetry, IDS/IPS, and endpoint signals."
@@ -59,7 +59,7 @@
   "focusAreas": [
     {
       "title": "Application and supply-chain security",
-      "description": "Governed programs spanning vulnerability intelligence, dependency analysis, licenses, SBOMs, and accountable remediation."
+      "description": "Governed vulnerability intelligence, dependency analysis, licenses, SBOMs, and accountable remediation."
     },
     {
       "title": "Agentic cybersecurity enablement",
@@ -67,7 +67,7 @@
     },
     {
       "title": "Governed AI adoption and agent architecture",
-      "description": "Bounded-context AI with human approval, evidence, and rollback—orchestration, MCP, memory, scheduling, local-first."
+      "description": "Bounded-context AI with human approval, evidence, and rollback—orchestration, MCP, memory, local-first."
     },
     {
       "title": "AI product engineering",

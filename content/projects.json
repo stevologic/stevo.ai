@@ -92,7 +92,7 @@
     "name": "Stevo.AI",
     "category": "AI systems",
     "featured": false,
-    "tagline": "Auditable AI operations that critique, revise, and ship only under CI controls.",
+    "tagline": "Governed AI operations that critique, revise, and ship only under CI controls.",
     "description": "Live demonstration of agentic content operations with control retained at every step: an AI advisor reframes copy under code-enforced factual guards, opens a pull request, passes CI, merges, and deploys—proof for leaders evaluating governed AI enablement.",
     "siteUrl": "https://stevo.ai",
     "sourceUrl": "https://github.com/stevologic/stevo.ai",
