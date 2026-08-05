@@ -248,7 +248,7 @@ img {
   display: grid;
   /* Content is bottom-anchored, so this floor is what creates the empty band
      above the eyebrow. Keep it under a full viewport to tighten that gap. */
-  min-height: 88svh;
+  min-height: 84svh;
   grid-template-columns: minmax(0, 1.38fr) minmax(360px, 0.72fr);
   align-items: end;
   gap: clamp(48px, 7vw, 116px);
@@ -2464,7 +2464,7 @@ img {
   .hero {
     min-height: auto;
     gap: 56px;
-    padding: 112px 20px 58px;
+    padding: 104px 20px 58px;
   }
 
   .hero h1 {

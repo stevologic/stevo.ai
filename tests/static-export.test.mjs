@@ -118,6 +118,31 @@ test("hero career strip summarizes professional experience", async () => {
   assert.doesNotMatch(careerStrip, /CVE records indexed|Package ecosystems/);
 });
 
+test("portrait imagery is swapped between the hero and CEO profile", async () => {
+  const [html, component, styles] = await Promise.all([
+    exportedPage("index.html"),
+    readFile(
+      new URL("../components/PortfolioExperience.tsx", import.meta.url),
+      "utf8",
+    ),
+    readFile(new URL("../app/globals.css", import.meta.url), "utf8"),
+  ]);
+
+  const fieldNotesIndex = component.indexOf(
+    'src="/stephen-abbott-field-notes.webp"',
+  );
+  const formalPortraitIndex = component.indexOf(
+    'src="/stephen-abbott-profile.png"',
+  );
+
+  assert.ok(fieldNotesIndex >= 0);
+  assert.ok(formalPortraitIndex > fieldNotesIndex);
+  assert.match(html, /Stephen Abbott outdoors above a mountain lake/);
+  assert.match(html, /Portrait of Stephen M Abbott/);
+  assert.match(styles, /min-height: 84svh/);
+  assert.match(styles, /padding: 104px 20px 58px/);
+});
+
 test("leadership scale is described in executive terms, not a headcount", async () => {
   const html = await exportedPage("index.html");
 

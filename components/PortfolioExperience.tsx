@@ -376,10 +376,10 @@ export function PortfolioExperience({
             <div className="identity-card">
               <div className="profile-frame">
                 <Image
-                  src="/stephen-abbott-profile.png"
-                  alt="Portrait of Stephen M Abbott"
-                  width={311}
-                  height={296}
+                  src="/stephen-abbott-field-notes.webp"
+                  alt="Stephen Abbott outdoors above a mountain lake"
+                  width={1717}
+                  height={1288}
                   sizes="(max-width: 760px) calc(100vw - 72px), (max-width: 1050px) 45vw, 420px"
                   priority
                 />
@@ -590,10 +590,10 @@ export function PortfolioExperience({
         <section className="profile-section section" id="profile">
           <div className="profile-photo-wrap" data-reveal>
             <Image
-              src="/stephen-abbott-field-notes.webp"
-              alt="Stephen Abbott outdoors above a mountain lake"
-              width={1717}
-              height={1288}
+              src="/stephen-abbott-profile.png"
+              alt="Portrait of Stephen M Abbott"
+              width={311}
+              height={296}
               loading="lazy"
             />
             <span className="photo-caption">Advisor · Engineer · Builder</span>
