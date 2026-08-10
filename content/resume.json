@@ -6,10 +6,10 @@
       "scope": "Board risk quantification · Enterprise CTEM · Developer-owned security",
       "highlights": [
         "Directed enterprise CTEM and remediation through an 11-person team.",
-        "Instituted risk prioritization, quantification, and governed AI-assisted remediation with executive leadership.",
-        "Defined risk-appetite measures and KRIs for board and executive reporting.",
-        "Cut open-source dependencies more than 75%; raised developer ownership via engagement and preventative controls.",
-        "Developed security leaders who advanced to senior and director roles."
+        "Established risk prioritization, quantification, and governed AI-assisted remediation with executive leadership.",
+        "Set risk-appetite measures and KRIs for board and executive reporting.",
+        "Cut open-source dependencies more than 75%; drove developer ownership through engagement and preventative controls.",
+        "Grew security leaders who advanced to senior and director roles."
       ]
     },
     {
@@ -18,9 +18,9 @@
       "scope": "Sensitive-data protection · Supply-chain intelligence · Security data platforms",
       "highlights": [
         "Led up to 26 engineers delivering sensitive-data detection, software-composition intelligence, and repository enrichment platforms.",
-        "Cut sensitive-data findings by 92%, tripled detection coverage, and raised fidelity via automation with human review.",
+        "Cut sensitive-data findings by 92%, tripled detection coverage, and raised fidelity through automation with human review.",
         "Owned application risk assessments, BIA, DR requirements, and resilience planning for critical platforms.",
-        "Built risk-intelligence platforms and analytics that drove prioritization, governance, and executive decisions.",
+        "Delivered risk-intelligence platforms and analytics that drove prioritization, governance, and executive decisions.",
         "Hardened IaC pipelines and encryption with cloud and identity teams; advanced engineers to senior roles."
       ]
     },
@@ -30,7 +30,7 @@
       "scope": "Enterprise AppSec · SDLC integration · Quantified risk reduction",
       "highlights": [
         "Owned enterprise AppSec across static, dynamic, mobile, and software-composition analysis.",
-        "Set testing strategy, drove SDLC adoption, and measured program effectiveness.",
+        "Set testing strategy, drove SDLC adoption, and quantified program effectiveness.",
         "Embedded scalable application-risk reduction into engineering workflows."
       ]
     },
@@ -39,7 +39,7 @@
       "title": "Senior Security Engineer, Detection & Infrastructure",
       "scope": "SIEM · Network visibility · Detection telemetry",
       "highlights": [
-        "Built SIEM, full-packet-capture, and centralized logging platforms powering enterprise detection and security operations.",
+        "Built SIEM, full-packet-capture, and centralized logging platforms that powered enterprise detection and security operations.",
         "Expanded network visibility and threat-detection coverage through encrypted-traffic inspection.",
         "Deployed globally distributed, highly available security infrastructure across data centers.",
         "Delivered incident-response detections from logs, network telemetry, IDS/IPS, and endpoint signals."
@@ -52,14 +52,14 @@
       "highlights": [
         "Operated backend services for business-critical transaction systems in a regulated environment.",
         "Sustained 99.99% availability through performance monitoring and automated CI/CD deployments.",
-        "Delivered DR and resilience programs for high-stakes systems—foundation for later security leadership."
+        "Delivered DR and resilience for high-stakes systems—foundation for later security leadership."
       ]
     }
   ],
   "focusAreas": [
     {
       "title": "Application and supply-chain security",
-      "description": "Governed vulnerability intelligence, dependency analysis, licenses, SBOMs, and accountable remediation."
+      "description": "Govern vulnerability intelligence, dependency analysis, licenses, SBOMs, and accountable remediation."
     },
     {
       "title": "Agentic cybersecurity enablement",
@@ -71,7 +71,7 @@
     },
     {
       "title": "AI product engineering",
-      "description": "Shipped emerging model capabilities as production web, desktop, API, and CLI products."
+      "description": "Ship emerging model capabilities as production web, desktop, API, and CLI products."
     }
   ],
   "technicalBreadth": [
