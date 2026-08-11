@@ -193,6 +193,22 @@ test("portrait imagery is swapped between the hero and executive profile", async
   assert.match(styles, /padding: 104px 20px 58px/);
 });
 
+test("the lower portrait is a restrained, static editorial frame", async () => {
+  const styles = await readFile(
+    new URL("../app/globals.css", import.meta.url),
+    "utf8",
+  );
+  const frame = styles.match(/\.profile-photo-wrap\s*{[^}]*}/s)?.[0];
+  const image = styles.match(/\.profile-photo-wrap img\s*{[^}]*}/s)?.[0];
+
+  assert.ok(frame && image, "lower portrait styles are missing");
+  assert.match(frame, /width: min\(100%, 440px\)/);
+  assert.match(frame, /aspect-ratio: 4 \/ 5/);
+  assert.match(frame, /box-shadow:/);
+  assert.doesNotMatch(image, /filter:|transition:|transform:/);
+  assert.doesNotMatch(styles, /\.profile-photo-wrap:hover/);
+});
+
 test("leadership scale is described in executive terms, not a headcount", async () => {
   const html = await exportedPage("index.html");
 
