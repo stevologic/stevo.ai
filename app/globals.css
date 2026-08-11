@@ -393,8 +393,7 @@ img {
 
 .console-header,
 .project-card-topline,
-.project-meta,
-.console-live {
+.project-meta {
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -407,11 +406,6 @@ img {
   font-size: 0.66rem;
   letter-spacing: 0.08em;
   text-transform: uppercase;
-}
-
-.console-live {
-  gap: 7px;
-  color: var(--accent);
 }
 
 .status-dot {

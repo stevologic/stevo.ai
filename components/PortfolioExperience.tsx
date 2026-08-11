@@ -374,9 +374,6 @@ export function PortfolioExperience({
           >
             <div className="console-header">
               <span className="console-kicker">Ways to work together</span>
-              <span className="console-live">
-                <span className="status-dot" aria-hidden="true" /> Open to conversations
-              </span>
             </div>
             <div className="identity-card">
               <div className="profile-frame">
