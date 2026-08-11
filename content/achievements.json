@@ -17,9 +17,12 @@
   "identity": {
     "name": "Stephen M Abbott",
     "targetRoles": [
+      "Chief Information Security Officer (CISO)",
       "VP of Cybersecurity",
       "VP of AI Enablement",
-      "Consultant, AI and Cybersecurity"
+      "Virtual Chief Information Security Officer (vCISO)",
+      "Cybersecurity and IT Consultant for the AI-native enterprise",
+      "Founder and Product Builder"
     ]
   },
   "figures": {
@@ -92,20 +95,20 @@
   ],
   "focusAreas": [
     {
+      "title": "Executive security leadership and governance",
+      "description": "Turning enterprise risk, resilience, program priorities, and board-level measures into an accountable cybersecurity operating model."
+    },
+    {
       "title": "Application and supply-chain security",
       "description": "Connecting vulnerability intelligence, dependency analysis, license review, SBOMs, and secure remediation workflows."
     },
     {
-      "title": "Agentic cybersecurity enablement",
-      "description": "Putting agents to work on security operations: triage, remediation, and evidence collection that stay bounded, reviewable, and accountable to a human owner."
+      "title": "Governed enterprise AI enablement",
+      "description": "Designing AI adoption around business value, bounded context, human approval, evidence, rollback, and accountable operating ownership."
     },
     {
-      "title": "Governed AI adoption and agent architecture",
-      "description": "Designing AI workflows around bounded context, human approval, evidence, and rollback, then building the agent systems that deliver them with tool orchestration, MCP, memory, scheduling, and local-first operation."
-    },
-    {
-      "title": "AI product engineering",
-      "description": "Turning emerging model capabilities into polished web, desktop, API, and command-line products that people can use."
+      "title": "Founder-led AI product engineering",
+      "description": "Turning emerging model capabilities into launched web, desktop, API, and command-line products with clear users, delivery paths, and market positioning."
     }
   ],
   "technicalBreadth": [

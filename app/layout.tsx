@@ -1,24 +1,25 @@
 import type { Metadata, Viewport } from "next";
 import { socialProfileUrls } from "@/lib/contact";
 import { credentials } from "@/lib/credentials";
+import { projects } from "@/lib/project-data";
 import { serviceTracks } from "@/lib/services";
 import "./globals.css";
 
 const siteUrl = "https://stevo.ai";
-const socialTitle = "Stephen M Abbott — Cybersecurity & AI Enablement";
+const socialTitle = "Stephen M Abbott — Cybersecurity & AI Executive";
 const socialDescription =
-  "Principal-led cybersecurity and AI enablement consulting: security program leadership, AI governance, secure agent delivery, application security, and software supply-chain assurance.";
+  "Open to full-time CISO, VP Cybersecurity, and VP AI Enablement opportunities; providing vCISO and AI-native cybersecurity and IT consulting; building founder-led products.";
 const socialImageAlt =
-  "Stephen M Abbott: services, profile, and shipped projects — security leadership, AI enablement, and cybersecurity consulting.";
+  "Stephen M Abbott: cybersecurity and AI executive, vCISO and consultant, and founder.";
 
 export const metadata: Metadata = {
   metadataBase: new URL(siteUrl),
   title: {
-    default: "Stephen M Abbott — Cybersecurity & AI Enablement",
+    default: "Stephen M Abbott — Cybersecurity & AI Executive",
     template: "%s · stevo.ai",
   },
   description:
-    "Principal-led cybersecurity and AI enablement consulting: security program leadership, AI governance, secure delivery, application security, and supply-chain assurance.",
+    "Open to full-time CISO, VP Cybersecurity, and VP AI Enablement opportunities; providing vCISO and AI-native cybersecurity and IT consulting; building founder-led products.",
   applicationName: "stevo.ai",
   category: "technology",
   authors: [{ name: "Stephen M Abbott", url: siteUrl }],
@@ -54,6 +55,14 @@ export const metadata: Metadata = {
     "cybersecurity consultant",
     "AI enablement consultant",
     "full-time security leadership",
+    "Chief Information Security Officer",
+    "CISO",
+    "VP Cybersecurity",
+    "VP AI Enablement",
+    "vCISO services",
+    "cybersecurity and IT consulting",
+    "AI-native enterprise",
+    "technology founder",
     "AI governance",
     "AI security",
     "cybersecurity",
@@ -72,9 +81,9 @@ export const metadata: Metadata = {
     description: socialDescription,
     images: [
       {
-        url: `${siteUrl}/og-services.png`,
-        width: 1731,
-        height: 909,
+        url: `${siteUrl}/og-executive.png`,
+        width: 1734,
+        height: 907,
         type: "image/png",
         alt: socialImageAlt,
       },
@@ -86,10 +95,10 @@ export const metadata: Metadata = {
     description: socialDescription,
     images: [
       {
-        url: `${siteUrl}/og-services.png`,
+        url: `${siteUrl}/og-executive.png`,
         alt: socialImageAlt,
-        width: 1731,
-        height: 909,
+        width: 1734,
+        height: 907,
       },
     ],
   },
@@ -121,6 +130,8 @@ const structuredData = {
       knowsAbout: [
         "Security program leadership",
         "Cybersecurity leadership",
+        "Virtual CISO services",
+        "Cybersecurity and IT consulting",
         "AI enablement",
         "AI governance",
         "Application security",
@@ -147,7 +158,7 @@ const structuredData = {
       name: "Stephen M Abbott",
       url: `${siteUrl}/resume/`,
       image: `${siteUrl}/stephen-abbott-profile.png`,
-      jobTitle: "Cybersecurity and AI advisor",
+      jobTitle: "Cybersecurity Executive and AI Enablement Leader",
       worksFor: { "@id": `${siteUrl}/#organization` },
       sameAs: socialProfileUrls,
       alumniOf: {
@@ -168,10 +179,31 @@ const structuredData = {
       knowsAbout: [
         "Artificial intelligence",
         "Cybersecurity",
+        "Executive cybersecurity leadership",
+        "AI enablement strategy",
+        "AI-native IT operations",
         "AI agents",
         "Software supply chain security",
         "Product engineering",
       ],
+    },
+    {
+      "@type": "ItemList",
+      "@id": `${siteUrl}/#founder-portfolio`,
+      name: "Founder-built companies and products",
+      url: `${siteUrl}/#work`,
+      numberOfItems: projects.length,
+      itemListElement: projects.map((project, index) => ({
+        "@type": "ListItem",
+        position: index + 1,
+        item: {
+          "@type": "CreativeWork",
+          name: project.name,
+          url: project.siteUrl,
+          description: project.tagline,
+          ...(project.sourceUrl ? { sameAs: project.sourceUrl } : {}),
+        },
+      })),
     },
   ],
 };

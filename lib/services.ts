@@ -17,15 +17,15 @@ export interface ServiceTrack {
 export const serviceTracks: ServiceTrack[] = [
   {
     id: "lead",
-    label: "Lead",
-    title: "Security leadership",
+    label: "vCISO",
+    title: "vCISO & security leadership",
     description:
-      "Embed experienced security leadership where the business needs it most: setting direction, creating an operating cadence, and turning risk into decisions executives and technical teams can act on.",
+      "Provide accountable CISO-level leadership: set strategy, establish an operating cadence, translate cyber risk for executives and boards, and align security priorities with the business.",
     outcomes: [
-      "Security strategy, roadmap, and operating cadence",
-      "Executive risk measures and decision support",
-      "Program governance and incident readiness",
-      "Application and developer security leadership",
+      "Cybersecurity strategy, roadmap, and operating cadence",
+      "Board-ready risk measures and executive decision support",
+      "Program governance, resilience, and incident readiness",
+      "Security organization and capability development",
     ],
     standards: [
       "NIST CSF 2.0",
@@ -34,9 +34,9 @@ export const serviceTracks: ServiceTrack[] = [
       "CIS Controls v8",
       "FAIR risk quantification",
     ],
-    mode: "Full-time",
+    mode: "Executive advisory",
     bestFor:
-      "Organizations ready to embed senior security leadership as a full-time operating partner.",
+      "Organizations seeking experienced security leadership through a vCISO or retained advisory relationship.",
   },
   {
     id: "enable",
@@ -56,52 +56,55 @@ export const serviceTracks: ServiceTrack[] = [
       "EU AI Act",
       "OWASP Top 10 for LLM Applications",
     ],
-    mode: "Advisory",
+    mode: "Enterprise adoption",
     bestFor:
-      "Leadership teams moving from AI experimentation to responsible adoption.",
+      "Leadership teams moving from AI experimentation to governed, measurable enterprise adoption.",
   },
   {
     id: "deliver",
-    label: "Deliver",
-    title: "Secure AI & agent delivery",
+    label: "Modernize",
+    title: "AI-native cybersecurity & IT consulting",
     description:
-      "Design and ship useful AI systems—not demos—with scoped context, durable memory, tool orchestration, and security built into the delivery path.",
+      "Modernize how cybersecurity and IT teams decide, automate, and deliver by redesigning workflows around trustworthy AI, durable controls, and measurable service outcomes.",
     outcomes: [
-      "MCP servers and agent toolchains",
-      "Multi-provider AI applications",
-      "Workflow automation and integrations",
+      "AI-native operating model and workflow redesign",
+      "Cybersecurity and IT process automation",
+      "Platform, data, integration, and resilience roadmaps",
+      "Technology rationalization and change enablement",
+    ],
+    standards: [
+      "NIST CSF 2.0",
+      "NIST AI RMF 1.0",
+      "CIS Controls v8",
+      "ITIL 4",
+      "COBIT 2019",
+    ],
+    mode: "AI-native transformation",
+    bestFor:
+      "Cybersecurity and IT organizations that need better decisions, stronger automation, and a practical path from legacy process to AI-native operations.",
+  },
+  {
+    id: "assure",
+    label: "Build",
+    title: "Secure AI & product delivery",
+    description:
+      "Design and ship useful AI systems and secure products with scoped context, durable memory, tool orchestration, application security, and software supply-chain assurance built into delivery.",
+    outcomes: [
+      "MCP servers, agent toolchains, and workflow automation",
       "Production prototypes and secure architecture",
+      "Application and software supply-chain assurance",
+      "Evidence-driven remediation and engineering transfer",
     ],
     standards: [
       "OWASP ASVS",
       "NIST SSDF (SP 800-218)",
       "MITRE ATT&CK",
       "SLSA",
-    ],
-    mode: "Hands-on",
-    bestFor: "Teams that need a working, defensible system—not another slide deck.",
-  },
-  {
-    id: "assure",
-    label: "Assure",
-    title: "Application & supply-chain assurance",
-    description:
-      "Turn dependency, vulnerability, and architecture signals into prioritized engineering action that can be verified, repeated, and explained.",
-    outcomes: [
-      "Dependency and attack-surface analysis",
-      "CVE remediation workflows",
-      "SBOM, license, and open-source risk review",
-      "Evidence-driven security automation",
-    ],
-    standards: [
       "CycloneDX & SPDX SBOM",
-      "CISA KEV",
-      "EPSS",
-      "OpenSSF Scorecard",
-      "OSV",
     ],
-    mode: "Evidence-led",
-    bestFor: "Engineering organizations that want security to accelerate delivery.",
+    mode: "Hands-on delivery",
+    bestFor:
+      "Teams that need a working, defensible system and an internal owner who can carry it forward.",
   },
 ];
 
@@ -113,9 +116,9 @@ export interface EngagementModel {
 
 export const engagementModels: EngagementModel[] = [
   {
-    title: "Full-time leadership",
+    title: "vCISO leadership",
     description:
-      "Embedded security leadership, operating cadence, and executive decision support.",
+      "Ongoing executive security leadership, operating cadence, and board-ready decision support.",
     deliverables: [
       "Security strategy and roadmap",
       "Executive and board-ready risk reporting",
@@ -123,7 +126,7 @@ export const engagementModels: EngagementModel[] = [
     ],
   },
   {
-    title: "Advisory intensive",
+    title: "Cybersecurity & IT advisory",
     description:
       "A bounded strategy, governance, risk, or architecture decision moved to resolution.",
     deliverables: [
@@ -133,7 +136,7 @@ export const engagementModels: EngagementModel[] = [
     ],
   },
   {
-    title: "Delivery sprint",
+    title: "AI enablement sprint",
     description:
       "Hands-on implementation, prototype, or security improvement with evidence and transfer.",
     deliverables: [

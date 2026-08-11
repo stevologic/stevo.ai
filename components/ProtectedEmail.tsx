@@ -19,7 +19,7 @@ function useHydrated() {
  * HTML, so basic scrapers see a call to action instead of a mailbox.
  */
 export function ProtectedEmailButton({
-  label = "Discuss an engagement",
+  label = "Start a conversation",
 }: {
   label?: string;
 }) {

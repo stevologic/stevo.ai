@@ -103,7 +103,7 @@ function inferCategory(repository, config) {
       return category;
     }
   }
-  return config.defaultCategory || "Product lab";
+  return config.defaultCategory || "Products & ventures";
 }
 
 function sentence(text) {

@@ -3,7 +3,7 @@ import discoveredSnapshot from "@/data/discovered.generated.json";
 import projectIcons from "@/data/project-icons.generated.json";
 import generatedSnapshot from "@/data/github.generated.json";
 
-export type ProjectCategory = "Security" | "AI systems" | "Product lab";
+export type ProjectCategory = "Security" | "AI systems" | "Products & ventures";
 
 export interface GitHubTraffic {
   windowDays: number;

@@ -32,7 +32,7 @@ test("exports the site, install icons, and social assets", async () => {
     access(new URL("../out/index.html", import.meta.url)),
     access(new URL("../out/resume/index.html", import.meta.url)),
     access(new URL("../out/CNAME", import.meta.url)),
-    access(new URL("../out/og-services.png", import.meta.url)),
+    access(new URL("../out/og-executive.png", import.meta.url)),
     access(new URL("../out/favicon.ico", import.meta.url)),
     access(new URL("../out/favicon-16x16.png", import.meta.url)),
     access(new URL("../out/favicon-32x32.png", import.meta.url)),
@@ -43,27 +43,34 @@ test("exports the site, install icons, and social assets", async () => {
   ]);
 });
 
-test("site contains service-first positioning and social metadata", async () => {
+test("site presents executive, advisory, and founder paths with social metadata", async () => {
   const [html, resumeHtml] = await Promise.all([
     exportedPage("index.html"),
     exportedPage("resume/index.html"),
   ]);
   const retiredEmploymentQualifier = ["frac", "tional"].join("");
 
-  assert.match(html, /Proven in the enterprise\./i);
-  assert.match(html, /Built in the open\./i);
-  assert.match(html, /Security leadership/);
+  assert.match(html, /Secure the enterprise\./i);
+  assert.match(html, /Enable what comes next\./i);
+  assert.match(html, /CISO \/ VP Cybersecurity/);
+  assert.match(html, /VP AI Enablement/);
+  assert.match(html, /vCISO \/ Cybersecurity &amp; IT/);
+  assert.match(html, /Founder ventures/);
+  assert.match(html, /Full-time leadership/);
+  assert.match(html, /Executive advisory/);
+  assert.match(html, /vCISO &amp; security leadership/);
   assert.match(html, /AI enablement &amp; governance/i);
-  assert.match(html, /Considering select professional engagements/i);
+  assert.match(html, /Available for select vCISO and consulting engagements/i);
   assert.match(html, /Shiba Studio/);
   assert.match(html, /security-recipes\.ai/);
   assert.match(html, /Stephen M Abbott/);
-  assert.match(html, /https:\/\/stevo\.ai\/og-services\.png/);
+  assert.match(html, /https:\/\/stevo\.ai\/og-executive\.png/);
   assert.match(html, /summary_large_image/);
   assert.match(html, /twitter:image/);
   assert.match(html, /twitter:image:alt/);
   assert.match(html, /og:image:width/);
-  assert.match(html, /Principal-led cybersecurity and AI enablement consulting/);
+  assert.match(html, /Open to full-time CISO, VP Cybersecurity, and VP AI Enablement opportunities/);
+  assert.match(html, /rel="canonical" href="https:\/\/stevo\.ai\/?"/);
   assert.match(html, /rel="apple-touch-icon"/);
   assert.match(html, /href="\/apple-touch-icon\.png"/);
   assert.match(html, /rel="manifest"/);
@@ -75,7 +82,7 @@ test("site contains service-first positioning and social metadata", async () => 
   assert.doesNotMatch(resumeHtml, new RegExp(retiredEmploymentQualifier, "i"));
 });
 
-test("professional services precede delivery proof and portfolio", async () => {
+test("advisory services lead into executive proof and founder portfolio", async () => {
   const html = await exportedPage("index.html");
   const servicesIndex = html.indexOf(
     '<section class="services-section section" id="services">',
@@ -88,17 +95,17 @@ test("professional services precede delivery proof and portfolio", async () => {
   );
 
   assert.ok(servicesIndex > 0);
-  assert.ok(workIndex > servicesIndex);
-  assert.ok(profileIndex > workIndex);
+  assert.ok(profileIndex > servicesIndex);
+  assert.ok(workIndex > profileIndex);
   // Sections are labelled, not numbered.
-  assert.match(html, /class="section-number">Professional services</);
-  assert.match(html, /class="section-number">Portfolio</);
-  assert.match(html, /class="section-number">Profile</);
-  assert.match(html, /class="section-number">Professional engagements</);
+  assert.match(html, /class="section-number">Advisory services</);
+  assert.match(html, /class="section-number">Executive profile</);
+  assert.match(html, /class="section-number">Founder portfolio</);
+  assert.match(html, /class="section-number">Leadership · Advisory · Venture opportunities</);
   assert.doesNotMatch(html, /class="section-number">0\d \//);
-  assert.match(html, /Full-time leadership/);
-  assert.match(html, /Advisory intensive/);
-  assert.match(html, /Delivery sprint/);
+  assert.match(html, /vCISO leadership/);
+  assert.match(html, /Cybersecurity &amp; IT advisory/);
+  assert.match(html, /AI enablement sprint/);
 });
 
 test("hero career strip summarizes professional experience", async () => {
@@ -124,7 +131,7 @@ test("hero career strip summarizes professional experience", async () => {
   assert.doesNotMatch(careerStrip, /CVE records indexed|Package ecosystems/);
 });
 
-test("portrait imagery is swapped between the hero and CEO profile", async () => {
+test("portrait imagery is swapped between the hero and executive profile", async () => {
   const [html, component, styles] = await Promise.all([
     exportedPage("index.html"),
     readFile(
@@ -152,7 +159,7 @@ test("portrait imagery is swapped between the hero and CEO profile", async () =>
 test("leadership scale is described in executive terms, not a headcount", async () => {
   const html = await exportedPage("index.html");
 
-  assert.match(html, /leadership\s+of multi-team engineering organizations/);
+  assert.match(html, /multi-team leadership/);
   assert.doesNotMatch(html, /teams of up to \d+/i);
 });
 
@@ -194,8 +201,9 @@ test("service tracks name the frameworks they are measured against", async () =>
     "EU AI Act",
     "OWASP ASVS",
     "NIST SSDF (SP 800-218)",
-    "CISA KEV",
-    "OpenSSF Scorecard",
+    "ITIL 4",
+    "COBIT 2019",
+    "CycloneDX &amp; SPDX SBOM",
   ]) {
     assert.ok(html.includes(standard), `index never names ${standard}`);
   }
@@ -248,7 +256,8 @@ test("site manifest uses installable Stevo.AI icons", async () => {
 
   assert.equal(manifest.short_name, "Abbott");
   assert.match(manifest.name, /Stephen M Abbott/);
-  assert.match(manifest.description, /Cybersecurity consulting/);
+  assert.match(manifest.description, /vCISO/);
+  assert.match(manifest.description, /cybersecurity and IT consulting/);
   assert.equal(manifest.display, "standalone");
   assert.equal(manifest.theme_color, "#0f1014");
   assert.deepEqual(
@@ -287,7 +296,7 @@ test("email contact is revealed interactively instead of exposed to basic scrape
     ),
   ]);
 
-  assert.match(html, /Discuss an engagement/);
+  assert.match(html, /Start a conversation/);
   assert.doesNotMatch(html, /mailto:/i);
   assert.doesNotMatch(html, /[A-Za-z0-9._%+-]+@gmail\.com/i);
   assert.doesNotMatch(resumeHtml, /mailto:/i);
@@ -332,12 +341,22 @@ test("social handles are published on the site and in structured data", async ()
   )?.[1];
   assert.ok(structuredData);
   const graph = JSON.parse(structuredData)["@graph"];
-  for (const node of graph) {
+  const socialNodes = graph.filter((node) =>
+    ["Organization", "Person"].includes(node["@type"]),
+  );
+  assert.equal(socialNodes.length, 2);
+  for (const node of socialNodes) {
     assert.deepEqual(node.sameAs, profiles);
   }
+  const person = graph.find((node) => node["@type"] === "Person");
+  assert.equal(person.jobTitle, "Cybersecurity Executive and AI Enablement Leader");
+  const portfolio = graph.find((node) => node["@type"] === "ItemList");
+  const projects = await publishedProjects();
+  assert.equal(portfolio.numberOfItems, projects.length);
+  assert.equal(portfolio.itemListElement.length, projects.length);
 });
 
-test("the site never claims a retired title", async () => {
+test("executive candidacy, advisory services, and employment history stay distinct", async () => {
   const [html, resumeHtml] = await Promise.all([
     exportedPage("index.html"),
     exportedPage("resume/index.html"),
@@ -345,11 +364,29 @@ test("the site never claims a retired title", async () => {
 
   assert.doesNotMatch(html, /\bCEO\b/);
   assert.doesNotMatch(resumeHtml, /\bCEO\b/);
+  assert.match(html, /CISO/);
+  assert.match(html, /VP of Cybersecurity/);
+  assert.match(html, /VP of AI Enablement/);
+  assert.match(html, /vCISO/);
+  assert.match(html, /Founder portfolio/);
 
-  // Owner direction: the site advertises services, profile, and projects.
-  // The vCISO label is retired everywhere a visitor or crawler can see.
-  assert.doesNotMatch(html, /vciso/i);
-  assert.doesNotMatch(resumeHtml, /vciso/i);
+  const resumeDocument = resumeHtml.match(
+    /<article class="resume-document">([\s\S]*?)<\/article>/,
+  )?.[1];
+  assert.ok(resumeDocument, "exported résumé document is missing");
+  assert.doesNotMatch(
+    resumeDocument,
+    /\bvCISO\b/i,
+    "the recruiter-facing résumé should stay focused on full-time roles",
+  );
+
+  // Target roles and services can be named in the résumé, but the historical
+  // title elements must remain the verified employer-anonymized titles.
+  const careerTitles = [
+    ...resumeHtml.matchAll(/class="resume-career-title">([^<]+)</g),
+  ].map((match) => match[1]);
+  assert.ok(careerTitles.includes("Director, Cybersecurity"));
+  assert.ok(careerTitles.every((title) => !/\b(?:v?CISO|VP)\b/i.test(title)));
 
   // The manifest ships to installed apps, so it needs the same guards.
   const manifest = await readFile(
@@ -357,7 +394,8 @@ test("the site never claims a retired title", async () => {
     "utf8",
   );
   assert.doesNotMatch(manifest, /\bCEO\b/);
-  assert.doesNotMatch(manifest, /vciso/i);
+  assert.match(manifest, /CISO/);
+  assert.match(manifest, /vCISO/);
 });
 
 test("icons are the generated brand mark, not photo-derived art", async () => {
@@ -509,7 +547,10 @@ test("professional resume is detailed, private, and print-ready", async () => {
   assert.match(html, /Professional resume/);
   assert.match(html, /Stephen M Abbott/);
   // The role line stands alone; the resume is the person, not the company.
-  assert.match(html, /class="resume-role">Cybersecurity &amp; AI enablement</);
+  assert.match(
+    html,
+    /class="resume-role">\s*Cybersecurity &amp; AI Executive · CISO · VP Cybersecurity · VP AI Enablement/,
+  );
   assert.match(html, /Professional experience/);
   assert.match(html, /16 years/);
   assert.match(html, /11 years/);
@@ -538,6 +579,19 @@ test("professional resume is detailed, private, and print-ready", async () => {
 
   // Sections are unnumbered.
   assert.doesNotMatch(html, /resume-section-index/);
+});
+
+test("resume publishes route-specific canonical and social metadata", async () => {
+  const html = await exportedPage("resume/index.html");
+
+  assert.match(html, /Executive Résumé \| Stephen M Abbott/);
+  assert.match(html, /https:\/\/stevo\.ai\/resume\//);
+  assert.match(
+    html,
+    /Employer-anonymized executive résumé for full-time CISO, VP Cybersecurity, and VP AI Enablement opportunities/,
+  );
+  assert.match(html, /https:\/\/stevo\.ai\/og-executive\.png/);
+  assert.match(html, /summary_large_image/);
 });
 
 test("resume reflects the current skills, tooling, and credentials", async () => {
@@ -571,8 +625,8 @@ test("resume reflects the current skills, tooling, and credentials", async () =>
   }
   assert.match(html, /GitHub Actions/);
 
-  // Commercial products actually operated.
-  assert.match(html, /Commercial products/);
+  // Enterprise platforms actually operated.
+  assert.match(html, /Enterprise platforms/);
   for (const product of [
     "Sonatype Nexus",
     "PortSwigger Burp Suite",
@@ -677,6 +731,7 @@ test("project discovery publishes newly public repositories safely", async () =>
   }
 
   // Every published project needs a real destination, however it got here.
+  const allowedCategories = ["Security", "AI systems", "Products & ventures"];
   for (const project of await publishedProjects()) {
     assert.match(
       project.siteUrl,
@@ -684,10 +739,31 @@ test("project discovery publishes newly public repositories safely", async () =>
       `${project.slug} has no live site URL`,
     );
     assert.ok(project.name?.trim(), `${project.slug} has no name`);
+    assert.ok(
+      allowedCategories.includes(project.category),
+      `${project.slug} has unknown category ${project.category}`,
+    );
     // Source links are optional, but must be real when present.
     if (project.sourceUrl) {
       assert.match(project.sourceUrl, /^https:\/\/github\.com\//);
     }
+  }
+});
+
+test("every portfolio category has a visible filter", async () => {
+  const html = await exportedPage("index.html");
+  const categories = new Set((await publishedProjects()).map((project) => project.category));
+  const filterMarkup = html.match(
+    /<div class="project-filters"[^>]*>([\s\S]*?)<\/div>/,
+  )?.[1];
+  assert.ok(filterMarkup, "project filter controls are missing");
+
+  for (const category of categories) {
+    const label = category.replace(/&/g, "&amp;");
+    assert.ok(
+      filterMarkup.includes(`>${label}</button>`),
+      `missing filter for ${category}`,
+    );
   }
 });
 
@@ -707,6 +783,10 @@ test("the deploy workflow runs discovery daily, before the metadata sync", async
     discoverAt < syncAt,
     "discovery must run before the sync so new repos are enriched in the same build",
   );
+  const buildAt = workflow.indexOf("npm run build");
+  const testAt = workflow.indexOf("node --test tests/static-export.test.mjs");
+  const publishAt = workflow.indexOf("Publish out to gh-pages");
+  assert.ok(buildAt > syncAt && testAt > buildAt && publishAt > testAt);
 });
 
 test("project cards carry each site's own icon and theme colour", async () => {
@@ -864,6 +944,9 @@ test("the site critique action is wired to Grok correctly", async () => {
   // The key must never be committed, only read from the environment.
   assert.doesNotMatch(script, /xai-[A-Za-z0-9]{8}/, "no API key literal");
   assert.match(script, /process\.env\.GROK_API_KEY/);
+  assert.match(script, /full-time CISO, VP Cybersecurity, and VP AI Enablement/);
+  assert.match(script, /vCISO plus cybersecurity and IT consulting/);
+  assert.match(script, /founder-built companies and products/);
 
   // It proposes changes on a branch; a person merges. It must never publish to
   // the live site on its own.
@@ -932,7 +1015,7 @@ test("the portfolio optimizer cannot lose or fabricate project data", async () =
     ["invents a project", { order: [...slugs, "made-up-platform"] }],
     ["duplicates a project", { order: [...slugs, slugs[0]] }],
     [
-      "reintroduces the retired vCISO label",
+      "recasts a product as the vCISO advisory service",
       {
         order: slugs,
         projects: { [slugs[0]]: { tagline: "Interim vCISO in a box." } },
@@ -1022,9 +1105,9 @@ test("the critique brief carries readable copy, not build artifacts", async () =
   const brief = await buildBrief();
 
   // Real copy from both pages, so the advisor reviews what a visitor reads.
-  assert.match(brief, /Proven in the enterprise/);
-  assert.match(brief, /Discuss an engagement/);
-  assert.match(brief, /Commercial products/);
+  assert.match(brief, /Secure the enterprise/);
+  assert.match(brief, /Start a conversation/);
+  assert.match(brief, /Enterprise platforms/);
 
   // None of the export plumbing.
   assert.doesNotMatch(brief, /<[a-z]+[\s>]/i, "HTML tags leaked into the brief");
@@ -1037,15 +1120,13 @@ test("the critique brief carries readable copy, not build artifacts", async () =
   assert.match(brief, /Fortune 100 — Enterprise experience/);
 });
 
-test("the resume stays in sync with the site's projects", async () => {
+test("the resume curates the site's strongest founder-built projects", async () => {
   const html = await exportedPage("resume/index.html");
   const projects = await publishedProjects();
   const body = html.slice(html.indexOf("resume-document"));
 
-  // Every project the portfolio shows must also appear on the resume. These
-  // used to be two hand-maintained lists and drifted: Desert Wander Supply Co.
-  // and Spare Cycles were missing, and the resume said "Mouse Clicker" while
-  // the site said "mouseclicker.app".
+  // The résumé is derived from the portfolio but intentionally capped so daily
+  // project discovery cannot push the print export onto a third page.
   const featured = [
     ...body.matchAll(/class="resume-project-title">([^<]*)/g),
   ].map((m) => m[1]);
@@ -1054,7 +1135,11 @@ test("the resume stays in sync with the site's projects", async () => {
   ].map((m) => m[1]);
   const listed = new Set([...featured, ...other]);
 
-  for (const project of projects) {
+  const expected = [
+    ...projects.filter((project) => project.featured).slice(0, 3),
+    ...projects.filter((project) => !project.featured).slice(0, 6),
+  ];
+  for (const project of expected) {
     assert.ok(
       listed.has(project.name),
       `the resume is missing "${project.name}", which the site publishes`,
@@ -1062,8 +1147,8 @@ test("the resume stays in sync with the site's projects", async () => {
   }
   assert.equal(
     listed.size,
-    projects.length,
-    "the resume lists a project the site does not",
+    expected.length,
+    "the resume project list exceeded its curated print budget",
   );
 
   // Career figures are quoted on both pages and must come from one source.
@@ -1116,6 +1201,19 @@ test("the resume optimizer cannot rewrite employment history", async () => {
     ["changes employment dates", { careerExperience: { [role.dates]: { dates: "2018-2026" } } }],
     ["invents a role", { careerExperience: { "2001-2004": { scope: "Earlier work" } } }],
     [
+      "recasts employment as a consulting engagement",
+      {
+        careerExperience: {
+          [role.dates]: {
+            highlights: [
+              "Served as a vCISO and consulting advisor to client organizations.",
+              ...role.highlights.slice(1),
+            ],
+          },
+        },
+      },
+    ],
+    [
       "invents a figure",
       {
         careerExperience: {
@@ -1130,16 +1228,6 @@ test("the resume optimizer cannot rewrite employment history", async () => {
     ["edits the tool inventory", { technicalBreadth: { Security: { value: "Splunk" } } }],
     ["edits commercial products", { commercialProducts: { "Application security": { value: "Veracode" } } }],
     ["invents a focus area", { focusAreas: { "Quantum readiness": { description: "Post-quantum work." } } }],
-    [
-      "reintroduces the retired vCISO label",
-      {
-        focusAreas: {
-          "AI product engineering": {
-            description: "vCISO-grade product engineering discipline.",
-          },
-        },
-      },
-    ],
     [
       "pads the resume past the page budget",
       {
@@ -1201,6 +1289,17 @@ test("the achievements file anchors the automation to verified facts", async () 
     /git add[^\n]*achievements\.json/,
     "the workflow must never commit the achievements file",
   );
+
+  for (const path of [
+    "Chief Information Security Officer (CISO)",
+    "VP of Cybersecurity",
+    "VP of AI Enablement",
+    "Virtual Chief Information Security Officer (vCISO)",
+    "Cybersecurity and IT Consultant for the AI-native enterprise",
+    "Founder and Product Builder",
+  ]) {
+    assert.ok(baseline.identity.targetRoles.includes(path), `positioning omits ${path}`);
+  }
 
   // The live resume's employment facts must match the canonical record.
   assert.equal(resume.careerExperience.length, baseline.career.length);

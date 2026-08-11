@@ -16,10 +16,27 @@ import {
   technicalBreadth,
 } from "@/lib/resume-content";
 
+const resumeTitle = "Executive Résumé | Stephen M Abbott";
+const resumeDescription =
+  "Employer-anonymized executive résumé for full-time CISO, VP Cybersecurity, and VP AI Enablement opportunities, backed by enterprise security leadership, governed AI, and founder-built product execution.";
+
 export const metadata: Metadata = {
-  title: "Stephen M Abbott | Cybersecurity & AI",
-  description:
-    "The employer-anonymized professional resume of Stephen M Abbott, spanning cybersecurity leadership, applied AI, enterprise engineering, and shipped products.",
+  title: resumeTitle,
+  description: resumeDescription,
+  alternates: { canonical: "/resume/" },
+  openGraph: {
+    type: "profile",
+    url: "/resume/",
+    title: resumeTitle,
+    description: resumeDescription,
+    images: [{ url: "/og-executive.png", width: 1734, height: 907 }],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: resumeTitle,
+    description: resumeDescription,
+    images: ["/og-executive.png"],
+  },
 };
 
 
@@ -37,13 +54,16 @@ export default function ResumePage() {
         <header className="resume-header">
           <p className="resume-eyebrow">Professional resume</p>
           <h1 className="resume-name">Stephen M Abbott</h1>
-          <p className="resume-role">Cybersecurity &amp; AI enablement</p>
+          <p className="resume-role">
+            Cybersecurity &amp; AI Executive · CISO · VP Cybersecurity · VP AI Enablement
+          </p>
           <p className="resume-introduction">
-            Cybersecurity and engineering leader with 16 years building and
-            scaling security programs in highly regulated enterprise
-            environments. Combines risk governance, exposure management,
-            application and supply-chain security, sensitive-data protection,
-            governed AI-assisted remediation, and hands-on product engineering.
+            Cybersecurity and AI enablement executive with 16 years across
+            enterprise technology and 11 years in cybersecurity at Fortune 100
+            scale. Led organizations of up to 26 engineers and programs spanning
+            board-level risk, CTEM, application and software supply-chain
+            security, sensitive-data protection, governed AI, and resilient
+            systems—combining executive judgment with founder-level delivery.
           </p>
 
           <ul className="resume-contact" aria-label="Contact">
@@ -70,19 +90,16 @@ export default function ResumePage() {
           </div>
           <div className="resume-section-content">
             <p className="resume-profile-copy">
-              Stephen&apos;s career progresses from resilient transaction systems
-              through detection engineering, application security, security
-              data platforms, and enterprise risk leadership. He combines
-              hands-on technical depth with experience scaling teams, advising
-              executives, and turning complex security signals into decisions
-              that leaders and engineers can act on.
+              Stephen brings the operating scope expected of a CISO or VP of
+              Cybersecurity: board-ready risk measures, enterprise security
+              strategy, CTEM, application and supply-chain security, resilience,
+              and leadership of organizations of up to 26 engineers.
             </p>
             <p className="resume-profile-copy">
-              His public work extends that operating model into governed agent
-              systems, open security intelligence, software supply-chain
-              research, and polished end-user products. The consistent pattern
-              is powerful capability bounded by evidence, human review, clear
-              ownership, and useful delivery.
+              For VP of AI Enablement mandates, he pairs governance with working
+              systems: human-accountable agents, secure automation, and launched
+              products. His founder portfolio further demonstrates product
+              strategy, engineering execution, and go-to-market ownership.
             </p>
           </div>
         </section>
@@ -140,7 +157,7 @@ export default function ResumePage() {
         <section className="resume-section" aria-labelledby="resume-work-heading">
           <div className="resume-section-heading">
             <h2 id="resume-work-heading" className="resume-section-title">
-              Representative work
+              Founder-built portfolio
             </h2>
           </div>
           <div className="resume-project-list">
@@ -207,7 +224,7 @@ export default function ResumePage() {
         <section className="resume-section" aria-labelledby="resume-commercial-heading">
           <div className="resume-section-heading">
             <h2 id="resume-commercial-heading" className="resume-section-title">
-              Commercial products
+              Enterprise platforms
             </h2>
           </div>
           <dl className="resume-technical-list">
@@ -239,7 +256,7 @@ export default function ResumePage() {
         <section className="resume-section" aria-labelledby="resume-products-heading">
           <div className="resume-section-heading">
             <h2 id="resume-products-heading" className="resume-section-title">
-              Additional shipped products
+              Additional ventures &amp; products
             </h2>
           </div>
           <ul className="resume-product-list">
@@ -263,7 +280,8 @@ export default function ResumePage() {
 
         <footer className="resume-footer">
           <p className="resume-availability">
-            Employer names intentionally omitted · Additional detail available on request
+            Employer names intentionally omitted · Open to full-time CISO, VP
+            Cybersecurity, and VP AI Enablement opportunities
           </p>
           <a
             className="resume-github-link"

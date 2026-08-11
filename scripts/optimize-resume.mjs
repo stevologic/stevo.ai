@@ -169,14 +169,15 @@ export function applyResumeEdits(current, edits, baseline = null) {
       role.title === truth.title,
       `title for ${truth.dates} diverges from content/achievements.json`,
     );
-  }
 
-  // Owner direction: the vCISO label is retired across the site and résumé,
-  // and no rewrite may reintroduce it.
-  assert(
-    !/vciso/i.test(JSON.stringify(next)),
-    'the term "vCISO" is retired and cannot appear in résumé copy',
-  );
+    const careerCopy = `${role.scope} ${role.highlights.join(" ")}`;
+    assert(
+      !/\b(?:vCISO|virtual chief information security officer|consult(?:ant|ing|ancy)|advis(?:or|ory)|client engagement)\b/i.test(
+        careerCopy,
+      ),
+      `employment history cannot be reframed as advisory or consulting work (${truth.dates})`,
+    );
+  }
 
   // --- Length budget keeps the print export at two pages. ------------------
   const budget = Math.floor(JSON.stringify(current).length * LENGTH_BUDGET);
@@ -190,7 +191,7 @@ export function applyResumeEdits(current, edits, baseline = null) {
   return next;
 }
 
-const systemPrompt = `You are a business advisor with full authority over this résumé's wording. Your client is Stephen M Abbott, and your mandate is to present him in the best possible light for VP of Cybersecurity, VP of AI Enablement, and senior consulting roles. Sharpen how the work is described so an executive buyer immediately sees seniority and impact. Never use the term "vCISO". The brand is Stephen M Abbott; never brand copy as "Stevo.AI" (the shipped product of that name is the only exception). Best light never means fabrication: the facts below are fixed.
+const systemPrompt = `You are a business advisor with full authority over this résumé's wording. Your client is Stephen M Abbott, and your mandate is to present him in the best possible light for full-time CISO, VP of Cybersecurity, and VP of AI Enablement roles. Founder-built companies and products demonstrate executive judgment and hands-on execution. Keep the résumé focused on full-time executive candidacy; vCISO and consulting services belong on the portfolio site, never in employment history. The brand is Stephen M Abbott; never brand copy as "Stevo.AI" (the shipped product of that name is the only exception). Best light never means fabrication: the facts below are fixed.
 
 You may rewrite:
 - each role's "scope" line
@@ -234,6 +235,7 @@ async function requestEdits(current, baseline, correction = "") {
         {
           role: "user",
           content:
+            `Canonical achievements and positioning:\n\n${JSON.stringify(baseline, null, 2)}\n\n` +
             `Current résumé content:\n\n${JSON.stringify(current, null, 2)}\n\n` +
             `Sharpen it.${correction ? `\n\n${correction}` : ""}`,
         },

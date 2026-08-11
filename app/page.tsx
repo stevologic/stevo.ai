@@ -3,9 +3,9 @@ import { PortfolioExperience } from "@/components/PortfolioExperience";
 import { githubSyncedAt, projects } from "@/lib/project-data";
 
 export const metadata: Metadata = {
-  title: "Stephen M Abbott — Cybersecurity & AI Enablement",
+  title: "Stephen M Abbott — Cybersecurity & AI Executive",
   description:
-    "Cybersecurity and AI enablement consulting from Stephen M Abbott: security leadership, AI governance, secure delivery, application security, and supply-chain assurance.",
+    "Open to full-time CISO, VP Cybersecurity, and VP AI Enablement opportunities; providing vCISO and AI-native cybersecurity and IT consulting; building founder-led products.",
   alternates: {
     canonical: "/",
   },

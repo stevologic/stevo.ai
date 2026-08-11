@@ -12,6 +12,34 @@ export const career = {
   enterpriseScale: "Fortune 100",
 } as const;
 
+/**
+ * The distinct paths this site supports. Keeping these together makes the
+ * hero explicit for executive recruiters, advisory buyers, and venture
+ * partners without blending permanent employment into client services.
+ */
+export const careerPaths = [
+  {
+    label: "Full-time leadership",
+    title: "CISO / VP Cybersecurity",
+    href: "#profile",
+  },
+  {
+    label: "Full-time leadership",
+    title: "VP AI Enablement",
+    href: "#profile",
+  },
+  {
+    label: "Executive advisory",
+    title: "vCISO / Cybersecurity & IT",
+    href: "#services",
+  },
+  {
+    label: "Company building",
+    title: "Founder ventures",
+    href: "#work",
+  },
+] as const;
+
 /** Metric tiles for the home page hero strip. */
 export const heroMetrics = [
   {
@@ -58,6 +86,8 @@ function clamp(text: string, limit: number) {
 
 /** At most this many projects lead the résumé, however many are featured. */
 const REPRESENTATIVE_LIMIT = 3;
+/** Keep the printable résumé curated even as daily discovery grows the site. */
+const ADDITIONAL_PRODUCT_LIMIT = 6;
 
 export const representativeWork = projects
   .filter((project) => project.featured)
@@ -73,6 +103,7 @@ export const representativeWork = projects
 
 export const additionalProducts = projects
   .filter((project) => !project.featured)
+  .slice(0, ADDITIONAL_PRODUCT_LIMIT)
   .map((project) => ({
     name: project.name,
     url: project.siteUrl,

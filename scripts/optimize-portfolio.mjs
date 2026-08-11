@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 // Applies the advisor critique to the portfolio as real edits: reframes copy,
 // recategorises, and reorders content/projects.json so enterprise-relevant
-// proof leads and hobby work sits behind it.
+// proof leads and consumer or venture work follows it.
 //
 // The model returns structured edits against named fields, never a rewritten
 // file. Everything is validated before it is written, and the invariants below
@@ -39,7 +39,7 @@ const apiKey = process.env.GROK_API_KEY?.trim() || "";
 const configuredModel = process.env.GROK_MODEL?.trim() || "grok-4.5";
 const maxTokens = Number(process.env.GROK_MAX_TOKENS || 8000);
 
-const CATEGORIES = ["Security", "AI systems", "Product lab"];
+const CATEGORIES = ["Security", "AI systems", "Products & ventures"];
 const IMMUTABLE = ["repo", "slug", "siteUrl", "sourceUrl"];
 const EDITABLE = [
   "name",
@@ -179,11 +179,12 @@ export function applyEdits(current, discovered, edits) {
     "the portfolio shrank, which must never happen",
   );
 
-  // Owner direction: the site advertises services, profile, and projects.
-  // The vCISO label is retired and no rewrite may reintroduce it.
+  // Owner direction: employment is positioned as full-time. The separate
+  // advisory lane may use vCISO, but portfolio copy must not recast a product
+  // as an employment arrangement.
   assert(
     !/vciso/i.test(JSON.stringify(result)),
-    'the term "vCISO" is retired and cannot appear in portfolio copy',
+    "vCISO belongs to the advisory service, not the product portfolio",
   );
   const retiredEmploymentQualifier = ["frac", "tional"].join("");
   assert(
@@ -193,22 +194,22 @@ export function applyEdits(current, discovered, edits) {
   return result;
 }
 
-const systemPrompt = `You are a business advisor with full authority over how this site is framed. Your client is Stephen M Abbott. The site advertises three things: his services (security leadership, cybersecurity consulting, AI enablement), his professional profile, and his shipped projects. Present him in the best possible light for senior security and AI leadership or consulting engagements. Position all leadership work as full-time and never introduce part-time, interim, or on-demand employment qualifiers. Never use the term "vCISO" or position him under that label; describe the service, not a title. The brand voice is Stephen M Abbott, never "Stevo.AI" — that name may appear only as the shipped product named Stevo.AI.
+const systemPrompt = `You are a business advisor with full authority over how this site is framed. Your client is Stephen M Abbott. The site supports three distinct paths: full-time CISO, VP Cybersecurity, and VP AI Enablement opportunities; vCISO plus cybersecurity and IT consulting for the AI-native enterprise; and founder-built companies and products. Present him in the best possible light across all three without confusing permanent employment with advisory services. Never introduce part-time, interim, or on-demand employment qualifiers. The brand voice is Stephen M Abbott, never "Stevo.AI" — that name may appear only as the shipped product named Stevo.AI.
 
-The core problem you are solving: enterprise-relevant security and AI work currently sits as a peer to hobby projects (a Dogecoin miner, a children's storybook app, an auto-clicker, a sports fan site, a merchandise storefront). A CISO evaluating a five- or six-figure engagement reads that as a lack of focus.
+The portfolio must do two jobs at once: lead with enterprise-relevant security and AI evidence for executive hiring teams and advisory buyers, then present consumer and commerce products as proof of founder-level product strategy, engineering execution, automation, and market experimentation.
 
 Your job is to REFRAME, RECATEGORISE and REORDER. You must not remove anything.
 
 Hard rules:
 - Return every project slug in "order". Omitting one is a failure. Nothing is ever deleted; lower-relevance work simply moves down.
-- Lead with the work that proves enterprise security and AI capability. Hobby and consumer products come last.
+- Lead with the work that proves enterprise security and AI capability. Consumer products and founder ventures follow as a distinct portfolio lane; never dismiss them as hobbies.
 - Never invent a number. Only use figures already present in that project's data. Do not claim users, revenue, customers, or scale that is not given to you.
 - Keep every tagline under 120 characters and every description under 400.
 - Write for a buyer, not a developer. A tagline should say what the thing does and why it matters, not list technologies.
 - "featured" should be true only for the strongest enterprise-relevant proof. Three at most.
 - Do not change a project's name unless the current one is genuinely unclear.
 - Only include a project in "projects" if you are actually changing it.
-- "category" must be exactly one of: "Security", "AI systems", "Product lab".
+- "category" must be exactly one of: "Security", "AI systems", "Products & ventures".
   These are the site's filter buttons. Any other value is rejected.
 
 Return ONLY valid JSON, no markdown fence, in exactly this shape:

@@ -12,7 +12,7 @@ import {
 import { ProtectedEmailButton } from "@/components/ProtectedEmail";
 import { socialHandles } from "@/lib/contact";
 import { credentialHighlights } from "@/lib/credentials";
-import { heroMetrics } from "@/lib/career";
+import { careerPaths, heroMetrics } from "@/lib/career";
 import {
   engagementModels,
   engagementProcess,
@@ -25,7 +25,7 @@ const filters: Array<"All work" | ProjectCategory> = [
   "All work",
   "Security",
   "AI systems",
-  "Product lab",
+  "Products & ventures",
 ];
 
 
@@ -300,14 +300,14 @@ export function PortfolioExperience({
           <span>Stephen M Abbott</span>
         </a>
         <nav className={mobileOpen ? "nav-links nav-links-open" : "nav-links"}>
+          <a href="#profile" onClick={() => setMobileOpen(false)}>
+            Executive
+          </a>
           <a href="#services" onClick={() => setMobileOpen(false)}>
-            Services
+            Advisory
           </a>
           <a href="#work" onClick={() => setMobileOpen(false)}>
-            Portfolio
-          </a>
-          <a href="#profile" onClick={() => setMobileOpen(false)}>
-            Profile
+            Ventures
           </a>
           <Link href="/resume/" onClick={() => setMobileOpen(false)}>
             Résumé
@@ -315,7 +315,7 @@ export function PortfolioExperience({
         </nav>
         <div className="header-actions">
           <a className="header-contact" href="#contact">
-            Discuss an engagement
+            Start a conversation
           </a>
           <button
             className="menu-button"
@@ -340,37 +340,38 @@ export function PortfolioExperience({
           <div className="hero-copy" data-reveal>
             <p className="eyebrow">
               <span>Stephen M Abbott</span>
-              <span>Services · Profile · Projects</span>
+              <span>Executive leadership · Advisory · Ventures</span>
             </p>
             <h1>
-              Proven in the enterprise.
-              <span>Built in the open.</span>
+              Secure the enterprise.
+              <span>Enable what comes next.</span>
             </h1>
             <p className="hero-intro">
-              Focused on helping leaders strengthen cybersecurity, govern AI
-              adoption, and turn high-consequence technology decisions into
-              executable programs and working systems—through security leadership,
-              targeted advisory, and hands-on delivery.
+              Stephen M Abbott brings 16 years across enterprise technology and
+              11 years in cybersecurity. He is open to full-time CISO, VP of
+              Cybersecurity, and VP of AI Enablement roles; provides vCISO and
+              cybersecurity and IT consulting for organizations operating in an
+              AI-native era; and builds founder-led companies and products.
             </p>
             <div className="hero-actions">
               <a className="button button-primary" href="#contact">
-                Discuss an engagement <Arrow />
+                Start a conversation <Arrow />
               </a>
-              <a className="button button-secondary" href="#services">
-                Explore services
-              </a>
+              <Link className="button button-secondary" href="/resume/">
+                View executive résumé
+              </Link>
             </div>
           </div>
 
           <aside
             className="hero-console"
             data-reveal
-            aria-label="Professional engagement options"
+            aria-label="Career and engagement paths"
           >
             <div className="console-header">
-              <span className="console-kicker">Engagement signal</span>
+              <span className="console-kicker">Ways to work together</span>
               <span className="console-live">
-                <span className="status-dot" aria-hidden="true" /> Select availability
+                <span className="status-dot" aria-hidden="true" /> Open to conversations
               </span>
             </div>
             <div className="identity-card">
@@ -386,26 +387,20 @@ export function PortfolioExperience({
               </div>
               <div className="identity-details">
                 <strong>Stephen M Abbott</strong>
-                <span>Security &amp; AI advisor</span>
-                <Link href="/resume/">Professional profile <Arrow /></Link>
+                <span>Cybersecurity &amp; AI executive</span>
+                <Link href="/resume/">Executive résumé <Arrow /></Link>
               </div>
             </div>
-            {/* Derived from the service tracks, so the card cannot list a
-                different set of services than the section below it. */}
             <div className="activity-list">
-              {serviceTracks.map((service) => (
-                <a
-                  key={service.id}
-                  href="#services"
-                  onClick={() => setActiveService(service.id)}
-                >
-                  <span>{service.title}</span>
-                  <small>{service.mode}</small>
+              {careerPaths.map((path) => (
+                <a key={path.title} href={path.href}>
+                  <span>{path.title}</span>
+                  <small>{path.label}</small>
                 </a>
               ))}
             </div>
             <p className="console-footnote">
-              Principal-led engagements · Focused scope · Accountable outcomes
+              Full-time leadership · Executive advisory · Founder-led ventures
             </p>
           </aside>
         </section>
@@ -432,12 +427,12 @@ export function PortfolioExperience({
 
         <section className="services-section section" id="services">
           <div className="section-heading section-heading-light" data-reveal>
-            <p className="section-number">Professional services</p>
-            <h2>Security leadership and AI enablement that move with the business.</h2>
+            <p className="section-number">Advisory services</p>
+            <h2>Cybersecurity and AI leadership for the AI-native enterprise.</h2>
             <p>
-              Principal-led engagements for leaders who need experienced
-              judgment, an executable path, and enough hands-on depth to turn
-              strategy into measurable progress.
+              Executive leadership and principal-led advisory for organizations
+              that need stronger cyber risk decisions, governed AI adoption,
+              resilient IT, and hands-on delivery.
             </p>
           </div>
 
@@ -468,7 +463,7 @@ export function PortfolioExperience({
               >
                 <p className="service-signal">
                   <span className="status-dot" aria-hidden="true" />
-                  Considering select professional engagements
+                  Available for select vCISO and consulting engagements
                 </p>
                 <h3>{service.title}</h3>
                 <p>{service.description}</p>
@@ -550,14 +545,58 @@ export function PortfolioExperience({
           </div>
         </section>
 
+        <section className="profile-section section" id="profile">
+          <div className="profile-photo-wrap" data-reveal>
+            <Image
+              src="/stephen-abbott-profile.png"
+              alt="Portrait of Stephen M Abbott"
+              width={311}
+              height={296}
+              loading="lazy"
+            />
+            <span className="photo-caption">Cybersecurity executive · AI leader · Founder</span>
+          </div>
+          <div className="profile-copy" data-reveal>
+            <p className="section-number">Executive profile</p>
+            <blockquote>Stephen M Abbott</blockquote>
+            <p>
+              Stephen&apos;s record maps directly to CISO, VP of Cybersecurity,
+              and VP of AI Enablement mandates: board-ready risk reporting,
+              cybersecurity strategy, CTEM, application and supply-chain
+              security, governed AI adoption, multi-team leadership, and
+              measurable enterprise risk reduction.
+            </p>
+            <p>
+              Through vCISO and cybersecurity and IT consulting engagements, he
+              brings that operating discipline to clients. As a founder, he
+              turns emerging technology into live companies and products—proof
+              that his strategy is grounded in systems that ship.
+            </p>
+            <div className="profile-actions">
+              <Link className="text-link" href="/resume/">
+                View executive résumé <Arrow />
+              </Link>
+              <a
+                className="text-link"
+                href="https://github.com/stevologic"
+                target="_blank"
+                rel="noreferrer"
+              >
+                Explore founder portfolio <Arrow />
+              </a>
+            </div>
+          </div>
+        </section>
+
         <section className="work-section section" id="work">
           <div className="section-heading" data-reveal>
-            <p className="section-number">Portfolio</p>
-            <h2>Built by hand. Running in public.</h2>
+            <p className="section-number">Founder portfolio</p>
+            <h2>Companies, products, and open-source systems built from idea to launch.</h2>
             <p>
-              Products and open-source systems built by Stephen M
-              Abbott—evidence of the technical depth behind every professional
-              engagement.
+              Stephen creates, launches, and operates security, AI, commerce,
+              and consumer products—evidence of product strategy, engineering
+              execution, automation, go-to-market experimentation, and
+              accountable ownership.
             </p>
           </div>
 
@@ -587,58 +626,16 @@ export function PortfolioExperience({
           </div>
         </section>
 
-        <section className="profile-section section" id="profile">
-          <div className="profile-photo-wrap" data-reveal>
-            <Image
-              src="/stephen-abbott-profile.png"
-              alt="Portrait of Stephen M Abbott"
-              width={311}
-              height={296}
-              loading="lazy"
-            />
-            <span className="photo-caption">Advisor · Engineer · Builder</span>
-          </div>
-          <div className="profile-copy" data-reveal>
-            <p className="section-number">Profile</p>
-            <blockquote>Stephen M Abbott</blockquote>
-            <p>
-              Stephen leads with over 16 years of experience across enterprise
-              technology, security engineering, program leadership, and product
-              delivery—including 11 years focused on cybersecurity.
-            </p>
-            <p>
-              His résumé and portfolio show the operating range behind the
-              consultancy: executive and board-level risk judgment, leadership
-              of multi-team engineering organizations, measurable risk
-              reduction at enterprise scale, and the ability to build the
-              systems being advised—not merely describe them.
-            </p>
-            <div className="profile-actions">
-              <Link className="text-link" href="/resume/">
-                Read Stephen&apos;s résumé <Arrow />
-              </Link>
-              <a
-                className="text-link"
-                href="https://github.com/stevologic"
-                target="_blank"
-                rel="noreferrer"
-              >
-                Explore the portfolio <Arrow />
-              </a>
-            </div>
-          </div>
-        </section>
-
         <section className="closing-section section" id="contact">
-          <p className="section-number">Professional engagements</p>
-          <h2>Let&apos;s start with a conversation.</h2>
+          <p className="section-number">Leadership · Advisory · Venture opportunities</p>
+          <h2>Let&apos;s talk about what comes next.</h2>
           <p>
-            Bring Stephen the consequential problem: a security program that
-            needs leadership, an AI initiative that needs guardrails and
-            traction, or a system that must become both useful and defensible.
+            Discuss a full-time CISO or VP mandate, a vCISO or consulting
+            engagement, an AI-native cybersecurity or IT transformation, or a
+            founder and venture partnership.
           </p>
           <div className="hero-actions">
-            <ProtectedEmailButton />
+            <ProtectedEmailButton label="Start a conversation" />
             <Link className="button button-secondary" href="/resume/">
               Review résumé
             </Link>
@@ -667,7 +664,7 @@ export function PortfolioExperience({
           <span>Stephen M Abbott</span>
         </div>
         <p>
-          Cybersecurity consulting · AI enablement · Shipped products
+          Cybersecurity executive · vCISO &amp; consulting · Founder ventures
           <a className="footer-security-link" href="/.well-known/security.txt">
             Security disclosure policy
           </a>

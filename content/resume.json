@@ -7,7 +7,7 @@
       "highlights": [
         "Directed enterprise CTEM and remediation through an 11-person team.",
         "Established risk prioritization, quantification, and governed AI-assisted remediation with executive leadership.",
-        "Set risk-appetite measures and KRIs for board and executive reporting.",
+        "Contributed to risk-appetite measures and KRIs for board and executive reporting.",
         "Cut open-source dependencies more than 75%; drove developer ownership through engagement and preventative controls.",
         "Grew security leaders who advanced to senior and director roles."
       ]
@@ -58,20 +58,20 @@
   ],
   "focusAreas": [
     {
+      "title": "Executive security leadership and governance",
+      "description": "Translate enterprise risk, resilience, program priorities, and board measures into an accountable operating model."
+    },
+    {
       "title": "Application and supply-chain security",
       "description": "Govern vulnerability intelligence, dependency analysis, licenses, SBOMs, and accountable remediation."
     },
     {
-      "title": "Agentic cybersecurity enablement",
-      "description": "Human-accountable agents for triage, remediation, and evidence—bounded, reviewable, owned."
+      "title": "Governed enterprise AI enablement",
+      "description": "Move from use-case strategy to bounded AI workflows with human approval, evidence, rollback, and ownership."
     },
     {
-      "title": "Governed AI adoption and agent architecture",
-      "description": "Bounded-context AI with human approval, evidence, and rollback—orchestration, MCP, memory, local-first."
-    },
-    {
-      "title": "AI product engineering",
-      "description": "Ship emerging model capabilities as production web, desktop, API, and CLI products."
+      "title": "Founder-led AI product engineering",
+      "description": "Turn emerging model capabilities into launched web, desktop, API, and CLI products with market context."
     }
   ],
   "technicalBreadth": [
