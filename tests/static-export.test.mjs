@@ -223,14 +223,23 @@ test("credentials are named rather than counted", async () => {
   )?.[0];
 
   assert.ok(strip, "index is missing the credential strip");
-  for (const credential of [
+  const credentialOrder = [
     "Offensive Security Certified Professional",
+    "BA, Arizona State University",
     "AWS Certified Cloud Practitioner",
     "Harvard &amp; Duke leadership programs",
-    "BA, Arizona State University",
-  ]) {
+  ];
+
+  for (const credential of credentialOrder) {
     assert.ok(strip.includes(credential), `credential strip omits ${credential}`);
   }
+
+  const credentialPositions = credentialOrder.map((credential) => strip.indexOf(credential));
+  assert.deepEqual(
+    credentialPositions,
+    [...credentialPositions].sort((left, right) => left - right),
+    "homepage credentials are not published in the intended order",
+  );
 
   // CRISC is training, not a certification, so it stays off the headline strip
   // and is disclosed in full on the resume instead.

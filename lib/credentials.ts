@@ -52,7 +52,7 @@ export const credentials: Credential[] = [
 /** Named credentials for the homepage strip, in order of buyer relevance. */
 export const credentialHighlights = [
   "Offensive Security Certified Professional",
-  "AWS Certified Cloud Practitioner",
   "BA, Arizona State University",
+  "AWS Certified Cloud Practitioner",
   "Harvard & Duke leadership programs",
 ];
