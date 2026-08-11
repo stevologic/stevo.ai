@@ -205,7 +205,7 @@ Hard rules:
 - Lead with the work that proves enterprise security and AI capability. Consumer products and founder ventures follow as a distinct portfolio lane; never dismiss them as hobbies.
 - Never invent a number. Only use figures already present in that project's data. Do not claim users, revenue, customers, or scale that is not given to you.
 - Keep every tagline under 120 characters and every description under 400.
-- Write for a buyer, not a developer. A tagline should say what the thing does and why it matters, not list technologies.
+- Write for a buyer, not a developer. A tagline should say what the thing does and why it matters, not list technologies. The description must add mechanism, scope, or proof; never restate the tagline in longer words, repeat status, or repeat a metric.
 - "featured" should be true only for the strongest enterprise-relevant proof. Three at most.
 - Do not change a project's name unless the current one is genuinely unclear.
 - Only include a project in "projects" if you are actually changing it.

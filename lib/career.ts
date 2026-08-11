@@ -19,22 +19,17 @@ export const career = {
  */
 export const careerPaths = [
   {
-    label: "Full-time leadership",
-    title: "CISO / VP Cybersecurity",
+    label: "Full-time executive roles",
+    title: "CISO · VP Cybersecurity · VP AI Enablement",
     href: "#profile",
   },
   {
-    label: "Full-time leadership",
-    title: "VP AI Enablement",
-    href: "#profile",
-  },
-  {
-    label: "Executive advisory",
-    title: "vCISO / Cybersecurity & IT",
+    label: "Advisory engagements",
+    title: "vCISO · Cybersecurity & IT",
     href: "#services",
   },
   {
-    label: "Company building",
+    label: "Products & partnerships",
     title: "Founder ventures",
     href: "#work",
   },
@@ -44,15 +39,15 @@ export const careerPaths = [
 export const heroMetrics = [
   {
     value: String(career.yearsInTechnology),
-    label: "Years of Enterprise IT Experience",
+    label: "Years in enterprise technology",
   },
   {
     value: String(career.yearsInCybersecurity),
-    label: "Years of Enterprise Cybersecurity Experience",
+    label: "Years in cybersecurity",
   },
   // Derived, so daily project discovery cannot leave the count stale.
   { value: String(projects.length), label: "Live products" },
-  { value: career.enterpriseScale, label: "Enterprise experience" },
+  { value: career.enterpriseScale, label: "Operating scale" },
 ] as const;
 
 /** Metric tiles for the résumé header. */

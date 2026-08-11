@@ -58,12 +58,10 @@ export default function ResumePage() {
             Cybersecurity &amp; AI Executive · CISO · VP Cybersecurity · VP AI Enablement
           </p>
           <p className="resume-introduction">
-            Cybersecurity and AI enablement executive with 16 years across
-            enterprise technology and 11 years in cybersecurity at Fortune 100
-            scale. Led organizations of up to 26 engineers and programs spanning
-            board-level risk, CTEM, application and software supply-chain
-            security, sensitive-data protection, governed AI, and resilient
-            systems—combining executive judgment with founder-level delivery.
+            Cybersecurity and AI enablement executive spanning board risk, CTEM,
+            application and software supply-chain security, sensitive-data
+            protection, governed AI, and resilient systems—combining enterprise
+            leadership with founder-level delivery.
           </p>
 
           <ul className="resume-contact" aria-label="Contact">
@@ -81,28 +79,6 @@ export default function ResumePage() {
             ))}
           </dl>
         </header>
-
-        <section className="resume-section" aria-labelledby="resume-profile-heading">
-          <div className="resume-section-heading">
-            <h2 id="resume-profile-heading" className="resume-section-title">
-              Executive profile
-            </h2>
-          </div>
-          <div className="resume-section-content">
-            <p className="resume-profile-copy">
-              Stephen brings the operating scope expected of a CISO or VP of
-              Cybersecurity: board-ready risk measures, enterprise security
-              strategy, CTEM, application and supply-chain security, resilience,
-              and leadership of organizations of up to 26 engineers.
-            </p>
-            <p className="resume-profile-copy">
-              For VP of AI Enablement mandates, he pairs governance with working
-              systems: human-accountable agents, secure automation, and launched
-              products. His founder portfolio further demonstrates product
-              strategy, engineering execution, and go-to-market ownership.
-            </p>
-          </div>
-        </section>
 
         <section
           className="resume-section resume-career-section"
@@ -280,8 +256,7 @@ export default function ResumePage() {
 
         <footer className="resume-footer">
           <p className="resume-availability">
-            Employer names intentionally omitted · Open to full-time CISO, VP
-            Cybersecurity, and VP AI Enablement opportunities
+            Employer names intentionally omitted
           </p>
           <a
             className="resume-github-link"

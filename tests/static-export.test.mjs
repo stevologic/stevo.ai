@@ -52,15 +52,14 @@ test("site presents executive, advisory, and founder paths with social metadata"
 
   assert.match(html, /Secure the enterprise\./i);
   assert.match(html, /Enable what comes next\./i);
-  assert.match(html, /CISO \/ VP Cybersecurity/);
-  assert.match(html, /VP AI Enablement/);
-  assert.match(html, /vCISO \/ Cybersecurity &amp; IT/);
+  assert.match(html, /CISO · VP Cybersecurity · VP AI Enablement/);
+  assert.match(html, /vCISO · Cybersecurity &amp; IT/);
   assert.match(html, /Founder ventures/);
-  assert.match(html, /Full-time leadership/);
-  assert.match(html, /Executive advisory/);
+  assert.match(html, /Full-time executive roles/);
+  assert.match(html, /Advisory engagements/);
   assert.match(html, /vCISO &amp; security leadership/);
   assert.match(html, /AI enablement &amp; governance/i);
-  assert.match(html, /Available for select vCISO and consulting engagements/i);
+  assert.doesNotMatch(html, /Available for select vCISO and consulting engagements/i);
   assert.match(html, /Shiba Studio/);
   assert.match(html, /security-recipes\.ai/);
   assert.match(html, /Stephen M Abbott/);
@@ -99,13 +98,51 @@ test("advisory services lead into executive proof and founder portfolio", async 
   assert.ok(workIndex > profileIndex);
   // Sections are labelled, not numbered.
   assert.match(html, /class="section-number">Advisory services</);
-  assert.match(html, /class="section-number">Executive profile</);
+  assert.match(html, /class="section-number">Executive record</);
   assert.match(html, /class="section-number">Founder portfolio</);
-  assert.match(html, /class="section-number">Leadership · Advisory · Venture opportunities</);
+  assert.match(html, /class="section-number">Contact</);
   assert.doesNotMatch(html, /class="section-number">0\d \//);
-  assert.match(html, /vCISO leadership/);
-  assert.match(html, /Cybersecurity &amp; IT advisory/);
-  assert.match(html, /AI enablement sprint/);
+  assert.match(html, /Retained leadership/);
+  assert.match(html, /Decision advisory/);
+  assert.match(html, /Delivery sprint/);
+});
+
+test("each homepage section has one distinct job", async () => {
+  const html = await exportedPage("index.html");
+  const heroIntro = html.match(/<p class="hero-intro">([\s\S]*?)<\/p>/)?.[1];
+  const identity = html.match(
+    /<div class="identity-card">([\s\S]*?)<div class="activity-list">/,
+  )?.[1];
+  const profile = html.match(
+    /<section class="profile-section section" id="profile">([\s\S]*?)<\/section>/,
+  )?.[1];
+  const closing = html.match(
+    /<section class="closing-section section" id="contact">([\s\S]*?)<\/section>/,
+  )?.[1];
+  const footer = html.match(/<footer class="site-footer">([\s\S]*?)<\/footer>/)?.[1];
+
+  assert.ok(heroIntro && identity && profile && closing && footer);
+  assert.doesNotMatch(heroIntro, /\b(?:16|11) years|\b(?:v?CISO|VP)\b/i);
+  assert.doesNotMatch(identity, /href="\/resume\//);
+  assert.doesNotMatch(html, /console-footnote/);
+
+  // The executive section proves the positioning instead of repeating it.
+  for (const proof of ["26 engineers", "92%", "75%", "99.99%"]) {
+    assert.ok(profile.includes(proof), `executive record omits ${proof}`);
+  }
+  assert.doesNotMatch(profile, /\b(?:vCISO|VP Cybersecurity|VP AI Enablement)\b/i);
+  assert.match(profile, /Read the full career record/);
+
+  // The close has one decision: contact Stephen. Social profiles live here,
+  // not again in the adjacent footer.
+  const closingActions = closing.match(
+    /<div class="hero-actions">([\s\S]*?)<\/div>/,
+  )?.[1];
+  assert.ok(closingActions);
+  assert.match(closingActions, /Email Stephen/);
+  assert.doesNotMatch(closingActions, /href=/);
+  assert.doesNotMatch(footer, /social-handles/);
+  assert.equal((html.match(/<ul class="social-handles"/g) || []).length, 1);
 });
 
 test("hero career strip summarizes professional experience", async () => {
@@ -116,10 +153,10 @@ test("hero career strip summarizes professional experience", async () => {
 
   assert.ok(careerStrip);
   assert.match(careerStrip, /Career highlights/);
-  assert.match(careerStrip, />16<\/strong><span>Years of Enterprise IT Experience/);
+  assert.match(careerStrip, />16<\/strong><span>Years in enterprise technology/);
   assert.match(
     careerStrip,
-    />11<\/strong><span>Years of Enterprise Cybersecurity Experience/,
+    />11<\/strong><span>Years in cybersecurity/,
   );
   // Derived from the project data, so discovery cannot leave it stale.
   const projects = await publishedProjects();
@@ -127,7 +164,7 @@ test("hero career strip summarizes professional experience", async () => {
     careerStrip,
     new RegExp(`>${projects.length}</strong><span>Live products`),
   );
-  assert.match(careerStrip, />Fortune 100<\/strong><span>Enterprise experience/);
+  assert.match(careerStrip, />Fortune 100<\/strong><span>Operating scale/);
   assert.doesNotMatch(careerStrip, /CVE records indexed|Package ecosystems/);
 });
 
@@ -159,7 +196,7 @@ test("portrait imagery is swapped between the hero and executive profile", async
 test("leadership scale is described in executive terms, not a headcount", async () => {
   const html = await exportedPage("index.html");
 
-  assert.match(html, /multi-team leadership/);
+  assert.match(html, /organizations of up to 26 engineers/);
   assert.doesNotMatch(html, /teams of up to \d+/i);
 });
 
@@ -211,18 +248,21 @@ test("service tracks name the frameworks they are measured against", async () =>
   assert.match(html, /Measured against/);
 });
 
-test("engagement models state deliverables and a process", async () => {
+test("engagement formats, process, and safeguards stay distinct", async () => {
   const html = await exportedPage("index.html");
 
-  assert.match(html, /class="engagement-deliverables"/);
+  assert.doesNotMatch(html, /class="engagement-deliverables"/);
+  for (const format of ["Retained leadership", "Decision advisory", "Delivery sprint"]) {
+    assert.ok(html.includes(format), `engagement formats omit ${format}`);
+  }
   assert.match(html, /How an engagement runs/);
   for (const phase of ["Baseline", "Prioritize", "Operate", "Transfer"]) {
     assert.ok(html.includes(`<h4>${phase}</h4>`), `process omits ${phase}`);
   }
 
-  assert.match(html, /Working principles/);
-  assert.match(html, /Client confidentiality/);
-  assert.match(html, /Built to be handed over/);
+  assert.match(html, /Professional safeguards/);
+  assert.match(html, /Confidential by default/);
+  assert.doesNotMatch(html, /Working principles|Built to be handed over/);
 });
 
 test("the site publishes a coordinated disclosure policy", async () => {
@@ -296,7 +336,7 @@ test("email contact is revealed interactively instead of exposed to basic scrape
     ),
   ]);
 
-  assert.match(html, /Start a conversation/);
+  assert.match(html, /Email Stephen/);
   assert.doesNotMatch(html, /mailto:/i);
   assert.doesNotMatch(html, /[A-Za-z0-9._%+-]+@gmail\.com/i);
   assert.doesNotMatch(resumeHtml, /mailto:/i);
@@ -365,8 +405,8 @@ test("executive candidacy, advisory services, and employment history stay distin
   assert.doesNotMatch(html, /\bCEO\b/);
   assert.doesNotMatch(resumeHtml, /\bCEO\b/);
   assert.match(html, /CISO/);
-  assert.match(html, /VP of Cybersecurity/);
-  assert.match(html, /VP of AI Enablement/);
+  assert.match(html, /VP Cybersecurity/);
+  assert.match(html, /VP AI Enablement/);
   assert.match(html, /vCISO/);
   assert.match(html, /Founder portfolio/);
 
@@ -461,6 +501,10 @@ test("GitHub traffic aggregates stay privacy-conscious wherever they appear", as
   const withTraffic = snapshot.repositories.filter(
     (repository) => repository.traffic,
   );
+  const withVisibleTraffic = withTraffic.filter(
+    (repository) =>
+      repository.traffic.views.count > 0 || repository.traffic.clones.count > 0,
+  );
   for (const repository of withTraffic) {
     assert.equal(repository.traffic.windowDays, 14);
     assert.equal(typeof repository.traffic.fetchedAt, "string");
@@ -471,9 +515,9 @@ test("GitHub traffic aggregates stay privacy-conscious wherever they appear", as
   }
 
   assert.equal(
-    (html.match(/class="project-traffic"/g) || []).length,
-    withTraffic.length,
-    "every repository with traffic data should render a traffic block",
+    (html.match(/class="project-traffic(?:\s|\")/g) || []).length,
+    withVisibleTraffic.length,
+    "every repository with meaningful traffic should render a traffic block",
   );
   assert.ok(withTraffic.length > 0, "traffic data has stopped being collected");
   assert.match(html, /GitHub views \//);
@@ -562,6 +606,11 @@ test("professional resume is detailed, private, and print-ready", async () => {
   assert.match(html, /2014-2019/);
   assert.match(html, /2010-2014/);
   assert.match(html, /Employer names intentionally omitted/);
+  assert.doesNotMatch(
+    html,
+    /id="resume-profile-heading">Executive profile/,
+    "the header summary already performs this job",
+  );
   assert.match(html, /Print \/ save as PDF/);
   assert.doesNotMatch(html, /American Express/i);
   assert.doesNotMatch(html, /Full career r(?:é|&eacute;|&#xE9;)sum(?:é|&eacute;|&#xE9;) available on request/i);
@@ -904,22 +953,16 @@ test("projects without a public repository still publish", async () => {
   assert.equal(snapshot.repositories.length, withRepos);
 });
 
-test("the profile name stays on one line", async () => {
-  const styles = await readFile(
-    new URL("../app/globals.css", import.meta.url),
-    "utf8",
-  );
-  const rule = styles.match(/\.profile-copy blockquote\s*{[^}]*}/s)?.[0];
+test("the executive record uses a meaningful heading, not a repeated name", async () => {
+  const [html, styles] = await Promise.all([
+    exportedPage("index.html"),
+    readFile(new URL("../app/globals.css", import.meta.url), "utf8"),
+  ]);
 
-  assert.ok(rule, "profile name rule not found");
-  assert.match(rule, /white-space: nowrap/);
-  // The old scale reached 6rem and wrapped the surname in this column.
-  const max = rule.match(/font-size: clamp\([^,]+,[^,]+,\s*([\d.]+)rem\)/)?.[1];
-  assert.ok(max, "profile name needs a clamped font size");
-  assert.ok(
-    Number(max) <= 4.5,
-    `profile name max font size is ${max}rem, large enough to overflow`,
-  );
+  assert.match(html, /Enterprise judgment\. Measurable outcomes\. Technical depth\./);
+  assert.doesNotMatch(html, /<blockquote>Stephen M Abbott<\/blockquote>/);
+  assert.match(styles, /\.profile-copy > h2\s*{/);
+  assert.doesNotMatch(styles, /\.profile-copy blockquote\s*{/);
 });
 
 test("the site critique action is wired to Grok correctly", async () => {
@@ -1106,7 +1149,7 @@ test("the critique brief carries readable copy, not build artifacts", async () =
 
   // Real copy from both pages, so the advisor reviews what a visitor reads.
   assert.match(brief, /Secure the enterprise/);
-  assert.match(brief, /Start a conversation/);
+  assert.match(brief, /Discuss an opportunity/);
   assert.match(brief, /Enterprise platforms/);
 
   // None of the export plumbing.
@@ -1116,8 +1159,8 @@ test("the critique brief carries readable copy, not build artifacts", async () =
   assert.doesNotMatch(brief, /<!--/, "React comment markers leaked");
 
   // Stat tiles must keep their labels; a bare "16" tells an advisor nothing.
-  assert.match(brief, /16 — Years of Enterprise IT Experience/);
-  assert.match(brief, /Fortune 100 — Enterprise experience/);
+  assert.match(brief, /16 — Years in enterprise technology/);
+  assert.match(brief, /Fortune 100 — Operating scale/);
 });
 
 test("the resume curates the site's strongest founder-built projects", async () => {

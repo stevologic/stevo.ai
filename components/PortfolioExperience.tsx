@@ -17,7 +17,6 @@ import {
   engagementModels,
   engagementProcess,
   serviceTracks,
-  workingPrinciples,
 } from "@/lib/services";
 import type { PortfolioProject, ProjectCategory } from "@/lib/project-data";
 
@@ -75,8 +74,22 @@ const ProjectCard = memo(function ProjectCard({
 }) {
   const latestSignal = project.github.releaseTag
     ? `Release ${project.github.releaseTag}`
-    : project.github.language || project.statusLabel;
+    : null;
   const traffic = project.github.traffic;
+  const trafficSignals = traffic
+    ? [
+        {
+          label: `GitHub views / ${traffic.windowDays}d`,
+          count: traffic.views.count,
+          detail: `${formatCompactNumber(traffic.views.uniques)} visitors`,
+        },
+        {
+          label: `GitHub clones / ${traffic.windowDays}d`,
+          count: traffic.clones.count,
+          detail: `${formatCompactNumber(traffic.clones.uniques)} cloners`,
+        },
+      ].filter((signal) => signal.count > 0)
+    : [];
 
   function handlePointerMove(event: ReactPointerEvent<HTMLElement>) {
     const bounds = event.currentTarget.getBoundingClientRect();
@@ -140,7 +153,7 @@ const ProjectCard = memo(function ProjectCard({
               .join("")}
           </span>
         )}
-        <span className="project-signal">{latestSignal}</span>
+        {latestSignal ? <span className="project-signal">{latestSignal}</span> : null}
       </div>
 
       <div className="project-card-copy">
@@ -159,38 +172,31 @@ const ProjectCard = memo(function ProjectCard({
         <span>{project.github.language || project.tech[0]}</span>
         {/* Only projects with a repository have a last-pushed date; without one
             "Updated Active now" is just the fallback leaking through. */}
-        <span>
-          {project.github.pushedAt
-            ? `Updated ${formatDate(project.github.pushedAt)}`
-            : project.statusLabel}
-        </span>
+        {project.github.pushedAt ? (
+          <span>Updated {formatDate(project.github.pushedAt)}</span>
+        ) : null}
       </div>
 
-      {traffic && (
+      {traffic && trafficSignals.length > 0 ? (
         <dl
-          className="project-traffic"
+          className={
+            trafficSignals.length === 1
+              ? "project-traffic project-traffic-single"
+              : "project-traffic"
+          }
           aria-label={`${project.name} GitHub traffic during the last ${traffic.windowDays} days, captured ${formatDate(traffic.fetchedAt)}`}
         >
-          <div>
-            <dt>GitHub views / {traffic.windowDays}d</dt>
-            <dd>
-              {formatCompactNumber(traffic.views.count)}
-              <small>
-                {formatCompactNumber(traffic.views.uniques)} visitors
-              </small>
-            </dd>
-          </div>
-          <div>
-            <dt>GitHub clones / {traffic.windowDays}d</dt>
-            <dd>
-              {formatCompactNumber(traffic.clones.count)}
-              <small>
-                {formatCompactNumber(traffic.clones.uniques)} cloners
-              </small>
-            </dd>
-          </div>
+          {trafficSignals.map((signal) => (
+            <div key={signal.label}>
+              <dt>{signal.label}</dt>
+              <dd>
+                {formatCompactNumber(signal.count)}
+                <small>{signal.detail}</small>
+              </dd>
+            </div>
+          ))}
         </dl>
-      )}
+      ) : null}
 
       <div className="project-links">
         <a href={project.siteUrl} target="_blank" rel="noreferrer">
@@ -300,11 +306,11 @@ export function PortfolioExperience({
           <span>Stephen M Abbott</span>
         </a>
         <nav className={mobileOpen ? "nav-links nav-links-open" : "nav-links"}>
+          <a href="#services" onClick={() => setMobileOpen(false)}>
+            Services
+          </a>
           <a href="#profile" onClick={() => setMobileOpen(false)}>
             Executive
-          </a>
-          <a href="#services" onClick={() => setMobileOpen(false)}>
-            Advisory
           </a>
           <a href="#work" onClick={() => setMobileOpen(false)}>
             Ventures
@@ -315,7 +321,7 @@ export function PortfolioExperience({
         </nav>
         <div className="header-actions">
           <a className="header-contact" href="#contact">
-            Start a conversation
+            Contact
           </a>
           <button
             className="menu-button"
@@ -339,23 +345,21 @@ export function PortfolioExperience({
           </div>
           <div className="hero-copy" data-reveal>
             <p className="eyebrow">
-              <span>Stephen M Abbott</span>
-              <span>Executive leadership · Advisory · Ventures</span>
+              <span>Risk decisions</span>
+              <span>AI governance · Product delivery</span>
             </p>
             <h1>
               Secure the enterprise.
               <span>Enable what comes next.</span>
             </h1>
             <p className="hero-intro">
-              Stephen M Abbott brings 16 years across enterprise technology and
-              11 years in cybersecurity. He is open to full-time CISO, VP of
-              Cybersecurity, and VP of AI Enablement roles; provides vCISO and
-              cybersecurity and IT consulting for organizations operating in an
-              AI-native era; and builds founder-led companies and products.
+              Cybersecurity and AI executive who turns risk, governance, and
+              emerging technology into durable operating capability—from board
+              decisions to production systems.
             </p>
             <div className="hero-actions">
               <a className="button button-primary" href="#contact">
-                Start a conversation <Arrow />
+                Discuss an opportunity <Arrow />
               </a>
               <Link className="button button-secondary" href="/resume/">
                 View executive résumé
@@ -388,7 +392,6 @@ export function PortfolioExperience({
               <div className="identity-details">
                 <strong>Stephen M Abbott</strong>
                 <span>Cybersecurity &amp; AI executive</span>
-                <Link href="/resume/">Executive résumé <Arrow /></Link>
               </div>
             </div>
             <div className="activity-list">
@@ -399,9 +402,6 @@ export function PortfolioExperience({
                 </a>
               ))}
             </div>
-            <p className="console-footnote">
-              Full-time leadership · Executive advisory · Founder-led ventures
-            </p>
           </aside>
         </section>
 
@@ -430,9 +430,9 @@ export function PortfolioExperience({
             <p className="section-number">Advisory services</p>
             <h2>Cybersecurity and AI leadership for the AI-native enterprise.</h2>
             <p>
-              Executive leadership and principal-led advisory for organizations
-              that need stronger cyber risk decisions, governed AI adoption,
-              resilient IT, and hands-on delivery.
+              For organizations facing a consequential decision, program reset,
+              or capability gap: clear priorities, defensible controls, and an
+              operating model the internal team can own.
             </p>
           </div>
 
@@ -463,7 +463,7 @@ export function PortfolioExperience({
               >
                 <p className="service-signal">
                   <span className="status-dot" aria-hidden="true" />
-                  Available for select vCISO and consulting engagements
+                  {service.mode}
                 </p>
                 <h3>{service.title}</h3>
                 <p>{service.description}</p>
@@ -500,16 +500,9 @@ export function PortfolioExperience({
           >
             {engagementModels.map((model) => (
               <article key={model.title} data-reveal>
+                <span>{model.label}</span>
                 <h3>{model.title}</h3>
                 <p>{model.description}</p>
-                <ul
-                  className="engagement-deliverables"
-                  aria-label={`${model.title} deliverables`}
-                >
-                  {model.deliverables.map((deliverable) => (
-                    <li key={deliverable}>{deliverable}</li>
-                  ))}
-                </ul>
               </article>
             ))}
           </div>
@@ -517,10 +510,7 @@ export function PortfolioExperience({
           <div className="engagement-process" data-reveal>
             <div className="engagement-process-heading">
               <span className="detail-label">How an engagement runs</span>
-              <h3>
-                Baseline the truth, prioritize honestly, operate the cadence,
-                then hand it over.
-              </h3>
+              <h3>A clear path from evidence to internal ownership.</h3>
             </div>
             <ol>
               {engagementProcess.map((phase) => (
@@ -532,16 +522,12 @@ export function PortfolioExperience({
             </ol>
           </div>
 
-          <div className="working-principles" data-reveal>
-            <span className="detail-label">Working principles</span>
-            <div className="working-principles-grid">
-              {workingPrinciples.map((principle) => (
-                <article key={principle.title}>
-                  <h3>{principle.title}</h3>
-                  <p>{principle.description}</p>
-                </article>
-              ))}
-            </div>
+          <div className="engagement-safeguards" data-reveal>
+            <span className="detail-label">Professional safeguards</span>
+            <p>
+              Confidential by default, with transparent assumptions and source
+              evidence attached to every recommendation.
+            </p>
           </div>
         </section>
 
@@ -554,36 +540,27 @@ export function PortfolioExperience({
               height={296}
               loading="lazy"
             />
-            <span className="photo-caption">Cybersecurity executive · AI leader · Founder</span>
           </div>
           <div className="profile-copy" data-reveal>
-            <p className="section-number">Executive profile</p>
-            <blockquote>Stephen M Abbott</blockquote>
+            <p className="section-number">Executive record</p>
+            <h2>Enterprise judgment. Measurable outcomes. Technical depth.</h2>
             <p>
-              Stephen&apos;s record maps directly to CISO, VP of Cybersecurity,
-              and VP of AI Enablement mandates: board-ready risk reporting,
-              cybersecurity strategy, CTEM, application and supply-chain
-              security, governed AI adoption, multi-team leadership, and
-              measurable enterprise risk reduction.
+              Across enterprise cybersecurity roles, Stephen led organizations
+              of up to 26 engineers, cut sensitive-data findings by 92% while
+              tripling detection coverage, reduced open-source dependencies by
+              more than 75%, and sustained 99.99% availability for critical
+              transaction platforms.
             </p>
             <p>
-              Through vCISO and cybersecurity and IT consulting engagements, he
-              brings that operating discipline to clients. As a founder, he
-              turns emerging technology into live companies and products—proof
-              that his strategy is grounded in systems that ship.
+              His scope spans board-facing risk measures, CTEM, application and
+              software supply-chain security, security data platforms,
+              resilience, and governed AI—supported by hands-on product and
+              engineering work.
             </p>
             <div className="profile-actions">
               <Link className="text-link" href="/resume/">
-                View executive résumé <Arrow />
+                Read the full career record <Arrow />
               </Link>
-              <a
-                className="text-link"
-                href="https://github.com/stevologic"
-                target="_blank"
-                rel="noreferrer"
-              >
-                Explore founder portfolio <Arrow />
-              </a>
             </div>
           </div>
         </section>
@@ -591,12 +568,12 @@ export function PortfolioExperience({
         <section className="work-section section" id="work">
           <div className="section-heading" data-reveal>
             <p className="section-number">Founder portfolio</p>
-            <h2>Companies, products, and open-source systems built from idea to launch.</h2>
+            <h2>Products built from idea to operating reality.</h2>
             <p>
-              Stephen creates, launches, and operates security, AI, commerce,
-              and consumer products—evidence of product strategy, engineering
-              execution, automation, go-to-market experimentation, and
-              accountable ownership.
+              Each project below is tied to a live product, public repository,
+              or operating storefront. Together they demonstrate secure
+              engineering, AI orchestration, automation, commerce, and
+              customer-facing delivery.
             </p>
           </div>
 
@@ -627,26 +604,14 @@ export function PortfolioExperience({
         </section>
 
         <section className="closing-section section" id="contact">
-          <p className="section-number">Leadership · Advisory · Venture opportunities</p>
-          <h2>Let&apos;s talk about what comes next.</h2>
+          <p className="section-number">Contact</p>
+          <h2>Start the right conversation.</h2>
           <p>
-            Discuss a full-time CISO or VP mandate, a vCISO or consulting
-            engagement, an AI-native cybersecurity or IT transformation, or a
-            founder and venture partnership.
+            Share the role, mandate, or product challenge; Stephen will reply
+            directly.
           </p>
           <div className="hero-actions">
-            <ProtectedEmailButton label="Start a conversation" />
-            <Link className="button button-secondary" href="/resume/">
-              Review résumé
-            </Link>
-            <a
-              className="button button-secondary"
-              href="https://github.com/stevologic"
-              target="_blank"
-              rel="noreferrer"
-            >
-              Explore portfolio <Arrow />
-            </a>
+            <ProtectedEmailButton label="Email Stephen" />
           </div>
 
           <div className="closing-connect">
@@ -664,7 +629,6 @@ export function PortfolioExperience({
           <span>Stephen M Abbott</span>
         </div>
         <p>
-          Cybersecurity executive · vCISO &amp; consulting · Founder ventures
           <a className="footer-security-link" href="/.well-known/security.txt">
             Security disclosure policy
           </a>
@@ -672,7 +636,6 @@ export function PortfolioExperience({
         <span className="site-footer-legal">
           © {new Date().getFullYear()} Stephen M Abbott
         </span>
-        <SocialHandles label="Social profiles" />
       </footer>
     </div>
   );

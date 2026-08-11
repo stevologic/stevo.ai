@@ -4,7 +4,7 @@ export interface ServiceTrack {
   title: string;
   description: string;
   outcomes: string[];
-  /** How the track is delivered, shown on the hero identity card. */
+  /** How the track is delivered, shown in the active service detail. */
   mode: string;
   /**
    * Reference frameworks the work maps to. These describe the standards an
@@ -20,7 +20,7 @@ export const serviceTracks: ServiceTrack[] = [
     label: "vCISO",
     title: "vCISO & security leadership",
     description:
-      "Provide accountable CISO-level leadership: set strategy, establish an operating cadence, translate cyber risk for executives and boards, and align security priorities with the business.",
+      "An accountable security executive relationship for organizations that need experienced direction, governance, and board confidence.",
     outcomes: [
       "Cybersecurity strategy, roadmap, and operating cadence",
       "Board-ready risk measures and executive decision support",
@@ -36,14 +36,14 @@ export const serviceTracks: ServiceTrack[] = [
     ],
     mode: "Executive advisory",
     bestFor:
-      "Organizations seeking experienced security leadership through a vCISO or retained advisory relationship.",
+      "A security program entering growth, transition, board scrutiny, or a reset.",
   },
   {
     id: "enable",
     label: "Enable",
     title: "AI enablement & governance",
     description:
-      "Turn AI interest into governed business capability with a practical use-case roadmap, clear human authority, and controls designed for how agents and teams actually work.",
+      "A controlled path from scattered experimentation to business-owned AI capability.",
     outcomes: [
       "Use-case portfolio and adoption roadmap",
       "AI policy and control architecture",
@@ -58,14 +58,14 @@ export const serviceTracks: ServiceTrack[] = [
     ],
     mode: "Enterprise adoption",
     bestFor:
-      "Leadership teams moving from AI experimentation to governed, measurable enterprise adoption.",
+      "Teams with promising use cases but unclear ownership, controls, or measures.",
   },
   {
     id: "deliver",
     label: "Modernize",
     title: "AI-native cybersecurity & IT consulting",
     description:
-      "Modernize how cybersecurity and IT teams decide, automate, and deliver by redesigning workflows around trustworthy AI, durable controls, and measurable service outcomes.",
+      "Redesign the operating work—not just the tooling—so teams make faster decisions with controls intact.",
     outcomes: [
       "AI-native operating model and workflow redesign",
       "Cybersecurity and IT process automation",
@@ -81,14 +81,14 @@ export const serviceTracks: ServiceTrack[] = [
     ],
     mode: "AI-native transformation",
     bestFor:
-      "Cybersecurity and IT organizations that need better decisions, stronger automation, and a practical path from legacy process to AI-native operations.",
+      "Teams constrained by manual work, fragmented tooling, or legacy process.",
   },
   {
     id: "assure",
     label: "Build",
     title: "Secure AI & product delivery",
     description:
-      "Design and ship useful AI systems and secure products with scoped context, durable memory, tool orchestration, application security, and software supply-chain assurance built into delivery.",
+      "Move a defined security or AI use case into a defensible working system.",
     outcomes: [
       "MCP servers, agent toolchains, and workflow automation",
       "Production prototypes and secure architecture",
@@ -104,46 +104,34 @@ export const serviceTracks: ServiceTrack[] = [
     ],
     mode: "Hands-on delivery",
     bestFor:
-      "Teams that need a working, defensible system and an internal owner who can carry it forward.",
+      "Teams with an approved use case that now needs architecture and implementation.",
   },
 ];
 
 export interface EngagementModel {
+  label: string;
   title: string;
   description: string;
-  deliverables: string[];
 }
 
 export const engagementModels: EngagementModel[] = [
   {
-    title: "vCISO leadership",
+    label: "Ongoing",
+    title: "Retained leadership",
     description:
-      "Ongoing executive security leadership, operating cadence, and board-ready decision support.",
-    deliverables: [
-      "Security strategy and roadmap",
-      "Executive and board-ready risk reporting",
-      "A standing operating cadence",
-    ],
+      "Recurring executive ownership for strategy, governance, risk decisions, and board communication.",
   },
   {
-    title: "Cybersecurity & IT advisory",
+    label: "Bounded",
+    title: "Decision advisory",
     description:
-      "A bounded strategy, governance, risk, or architecture decision moved to resolution.",
-    deliverables: [
-      "A written recommendation with options and trade-offs",
-      "The evidence and reasoning behind the call",
-      "Named owners and next actions",
-    ],
+      "A consequential decision resolved with evidence, trade-offs, an accountable owner, and a practical roadmap.",
   },
   {
-    title: "AI enablement sprint",
+    label: "Build to transfer",
+    title: "Delivery sprint",
     description:
-      "Hands-on implementation, prototype, or security improvement with evidence and transfer.",
-    deliverables: [
-      "A working system or control, not a slide deck",
-      "Runbook and operating documentation",
-      "Handover to an internal owner",
-    ],
+      "A focused implementation that leaves a working control or system, operating documentation, and a clear adoption path.",
   },
 ];
 
@@ -161,34 +149,11 @@ export const engagementProcess = [
   {
     title: "Operate",
     description:
-      "Run the cadence: remediation, measurement, and the executive conversations that keep a security program moving between reviews.",
+      "Track remediation and outcomes while resolving the executive decisions that keep the program moving.",
   },
   {
     title: "Transfer",
     description:
       "Leave documented decisions, working systems, and an internal owner who can carry the program forward without the consultant.",
-  },
-];
-
-export const workingPrinciples = [
-  {
-    title: "Evidence, not assertion",
-    description:
-      "Recommendations arrive with the data and reasoning behind them, so they can be challenged, verified, and defended to an auditor or a board.",
-  },
-  {
-    title: "Client confidentiality",
-    description:
-      "Client and employer names are never used as marketing. The résumé published on this site is deliberately employer-anonymized for exactly that reason.",
-  },
-  {
-    title: "Built to be handed over",
-    description:
-      "Every engagement targets an internal owner. Success is a capable team that no longer needs the engagement, not a permanent dependency.",
-  },
-  {
-    title: "Coordinated disclosure",
-    description:
-      "This site publishes a security.txt disclosure policy. Security advice is worth less from a practice that does not practise it.",
   },
 ];

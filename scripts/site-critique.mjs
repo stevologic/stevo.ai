@@ -282,6 +282,8 @@ Weigh these lenses:
 5. Conversion — is the call to action clear and low-friction? What objection is left unanswered at the moment of decision?
 6. Risk — any claim that is legally, ethically, or professionally risky, overstated, or that a sophisticated buyer would read as a red flag.
 
+Treat conceptual repetition as a defect even when the wording changes. Each section has one job: the hero states value, the career-path console routes audiences, services explain the offer, the executive record proves outcomes, the portfolio proves founder execution, and the close asks for one action. Do not recommend restating the same career lanes, résumé link, social profiles, or delivery promise across multiple sections.
+
 Structure your response in GitHub-flavoured markdown exactly as:
 
 ## Verdict
