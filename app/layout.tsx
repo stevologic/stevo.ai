@@ -53,7 +53,7 @@ export const metadata: Metadata = {
   keywords: [
     "cybersecurity consultant",
     "AI enablement consultant",
-    "fractional security leadership",
+    "full-time security leadership",
     "AI governance",
     "AI security",
     "cybersecurity",

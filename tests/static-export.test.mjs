@@ -44,7 +44,11 @@ test("exports the site, install icons, and social assets", async () => {
 });
 
 test("site contains service-first positioning and social metadata", async () => {
-  const html = await exportedPage("index.html");
+  const [html, resumeHtml] = await Promise.all([
+    exportedPage("index.html"),
+    exportedPage("resume/index.html"),
+  ]);
+  const retiredEmploymentQualifier = ["frac", "tional"].join("");
 
   assert.match(html, /Proven in the enterprise\./i);
   assert.match(html, /Built in the open\./i);
@@ -67,6 +71,8 @@ test("site contains service-first positioning and social metadata", async () => 
   assert.match(html, /apple-mobile-web-app-capable/);
   assert.doesNotMatch(html, /Your site is taking shape|codex-preview/i);
   assert.doesNotMatch(html, />Navigate<|⌘ K|Site navigator/i);
+  assert.doesNotMatch(html, new RegExp(retiredEmploymentQualifier, "i"));
+  assert.doesNotMatch(resumeHtml, new RegExp(retiredEmploymentQualifier, "i"));
 });
 
 test("professional services precede delivery proof and portfolio", async () => {
@@ -90,7 +96,7 @@ test("professional services precede delivery proof and portfolio", async () => {
   assert.match(html, /class="section-number">Profile</);
   assert.match(html, /class="section-number">Professional engagements</);
   assert.doesNotMatch(html, /class="section-number">0\d \//);
-  assert.match(html, /Fractional leadership/);
+  assert.match(html, /Full-time leadership/);
   assert.match(html, /Advisory intensive/);
   assert.match(html, /Delivery sprint/);
 });
@@ -920,6 +926,7 @@ test("the portfolio optimizer cannot lose or fabricate project data", async () =
   }
 
   // Each of these must be refused rather than written to the portfolio.
+  const retiredEmploymentQualifier = ["frac", "tional"].join("");
   const forbidden = [
     ["removes a project", { order: slugs.slice(0, -1) }],
     ["invents a project", { order: [...slugs, "made-up-platform"] }],
@@ -928,7 +935,18 @@ test("the portfolio optimizer cannot lose or fabricate project data", async () =
       "reintroduces the retired vCISO label",
       {
         order: slugs,
-        projects: { [slugs[0]]: { tagline: "Fractional vCISO in a box." } },
+        projects: { [slugs[0]]: { tagline: "Interim vCISO in a box." } },
+      },
+    ],
+    [
+      "reintroduces a retired part-time employment qualifier",
+      {
+        order: slugs,
+        projects: {
+          [slugs[0]]: {
+            tagline: `${retiredEmploymentQualifier} security leadership.`,
+          },
+        },
       },
     ],
     [

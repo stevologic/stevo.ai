@@ -185,10 +185,15 @@ export function applyEdits(current, discovered, edits) {
     !/vciso/i.test(JSON.stringify(result)),
     'the term "vCISO" is retired and cannot appear in portfolio copy',
   );
+  const retiredEmploymentQualifier = ["frac", "tional"].join("");
+  assert(
+    !new RegExp(retiredEmploymentQualifier, "i").test(JSON.stringify(result)),
+    "part-time employment qualifiers are retired and cannot appear in portfolio copy",
+  );
   return result;
 }
 
-const systemPrompt = `You are a business advisor with full authority over how this site is framed. Your client is Stephen M Abbott. The site advertises three things: his services (security leadership, cybersecurity consulting, AI enablement), his professional profile, and his shipped projects. Present him in the best possible light for senior security and AI leadership or consulting engagements. Never use the term "vCISO" or position him under that label; describe the service, not a title. The brand voice is Stephen M Abbott, never "Stevo.AI" — that name may appear only as the shipped product named Stevo.AI.
+const systemPrompt = `You are a business advisor with full authority over how this site is framed. Your client is Stephen M Abbott. The site advertises three things: his services (security leadership, cybersecurity consulting, AI enablement), his professional profile, and his shipped projects. Present him in the best possible light for senior security and AI leadership or consulting engagements. Position all leadership work as full-time and never introduce part-time, interim, or on-demand employment qualifiers. Never use the term "vCISO" or position him under that label; describe the service, not a title. The brand voice is Stephen M Abbott, never "Stevo.AI" — that name may appear only as the shipped product named Stevo.AI.
 
 The core problem you are solving: enterprise-relevant security and AI work currently sits as a peer to hobby projects (a Dogecoin miner, a children's storybook app, an auto-clicker, a sports fan site, a merchandise storefront). A CISO evaluating a five- or six-figure engagement reads that as a lack of focus.
 

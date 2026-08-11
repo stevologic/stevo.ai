@@ -34,9 +34,9 @@ export const serviceTracks: ServiceTrack[] = [
       "CIS Controls v8",
       "FAIR risk quantification",
     ],
-    mode: "Fractional",
+    mode: "Full-time",
     bestFor:
-      "Organizations that need senior security leadership without adding a full-time CISO.",
+      "Organizations ready to embed senior security leadership as a full-time operating partner.",
   },
   {
     id: "enable",
@@ -113,9 +113,9 @@ export interface EngagementModel {
 
 export const engagementModels: EngagementModel[] = [
   {
-    title: "Fractional leadership",
+    title: "Full-time leadership",
     description:
-      "Ongoing security leadership, operating cadence, and executive decision support.",
+      "Embedded security leadership, operating cadence, and executive decision support.",
     deliverables: [
       "Security strategy and roadmap",
       "Executive and board-ready risk reporting",
