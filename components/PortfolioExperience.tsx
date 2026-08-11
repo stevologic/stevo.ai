@@ -605,7 +605,7 @@ export function PortfolioExperience({
 
         <section className="closing-section section" id="contact">
           <p className="section-number">Contact</p>
-          <h2>Start the right conversation.</h2>
+          <h2>Bring the hard problem.</h2>
           <p>
             Share the role, mandate, or product challenge; Stephen will reply
             directly.
