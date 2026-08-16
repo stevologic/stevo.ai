@@ -312,6 +312,32 @@
     "statusLabel": "Live"
   },
   {
+    "slug": "arizona-now",
+    "name": "Arizona Now",
+    "category": "Products & ventures",
+    "featured": false,
+    "tagline": "Source-linked Arizona events and local-business listings.",
+    "description": "Live Arizona events product with curated, source-linked listings, local-business directory space, and featured events—browse by city, calendar, or map, with Google sign-in.",
+    "siteUrl": "https://az-now.com",
+    "metrics": [
+      "Live site",
+      "Arizona events",
+      "Business listings"
+    ],
+    "tech": [
+      "Python",
+      "JavaScript",
+      "nginx",
+      "Docker"
+    ],
+    "capabilities": [
+      "Curated Arizona events",
+      "Business listings",
+      "Featured events"
+    ],
+    "statusLabel": "Live"
+  },
+  {
     "repo": "doge-miner",
     "slug": "doge-miner",
     "name": "DOGE MINER",

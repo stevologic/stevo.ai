@@ -813,6 +813,36 @@ test("Arrowhead Paesano is published as a project", async () => {
   assert.match(html, /arrowheadpaesanowebsite/);
 });
 
+test("Arizona Now is published as a live product without a public source", async () => {
+  const html = await exportedPage("index.html");
+  const projects = await publishedProjects();
+
+  const product = projects.find((project) => project.slug === "arizona-now");
+  assert.ok(product, "Arizona Now is missing");
+  assert.equal(product.name, "Arizona Now");
+  assert.equal(product.category, "Products & ventures");
+  assert.equal(product.statusLabel, "Live");
+  assert.equal(product.featured, false);
+  assert.equal(product.siteUrl, "https://az-now.com");
+  assert.equal(product.repo, undefined, "private repo must not be catalogued");
+  assert.equal(product.sourceUrl, undefined, "it has no public source");
+
+  assert.match(html, /Arizona Now/);
+  assert.match(html, /https:\/\/az-now\.com/);
+  assert.doesNotMatch(html, /aznow\.org/);
+  assert.doesNotMatch(html, /stevologic\/arizonanow/);
+
+  const card = html
+    .match(/<article class="project-card[\s\S]*?<\/article>/g)
+    ?.find((markup) => markup.includes("Arizona Now"));
+  assert.ok(card, "Arizona Now card not found");
+  assert.match(card, /href="https:\/\/az-now\.com"/);
+  assert.match(card, /Visit live product/);
+  assert.doesNotMatch(card, /class="project-source"/);
+  assert.doesNotMatch(card, /class="project-traffic"/);
+  assert.doesNotMatch(card, /Stripe|buy featured|purchase featured/i);
+});
+
 test("project discovery publishes newly public repositories safely", async () => {
   const [config, curated, discovered] = await Promise.all([
     readFile(new URL("../content/discovery.json", import.meta.url), "utf8"),
