@@ -610,7 +610,7 @@ export function PortfolioExperience({
           <div className="hero-actions">
             <ProtectedEmailButton label="Email Stephen" />
             <a className="button button-secondary" href={recruiterLine.href}>
-              Recruiter line
+              {recruiterLine.label}
               <span>{recruiterLine.display}</span>
             </a>
           </div>
