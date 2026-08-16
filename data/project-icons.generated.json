@@ -63,6 +63,12 @@
       "source": "http://desertwandersupplyco.com/cdn/shop/files/Pasted_image_20250721145019.png?v=1753149901",
       "fetchedAt": "2026-07-25T22:29:28.597Z"
     },
+    "arizona-now": {
+      "src": "/project-icons/arizona-now.png",
+      "background": "#f6f1ec",
+      "source": "https://az-now.com/assets/apple-touch-icon.png",
+      "fetchedAt": "2026-08-16T18:36:00.000Z"
+    },
     "doge-miner": {
       "src": "/project-icons/doge-miner.png",
       "background": "#0a0a0f",
