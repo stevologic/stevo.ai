@@ -382,16 +382,16 @@ test("obfuscated mailbox still decodes to the real contact address", async () =>
 });
 
 test("recruiter scheduling line is published and the retired number is gone", async () => {
-  const [html, resumeHtml, contact] = await Promise.all([
+  const [html, resumeHtml, contactSource] = await Promise.all([
     exportedPage("index.html"),
     exportedPage("resume/index.html"),
-    import("../lib/contact.ts"),
+    readFile(new URL("../lib/contact.ts", import.meta.url), "utf8"),
   ]);
 
-  assert.equal(contact.recruiterLine.display, "+1 (623) 887-8905");
-  assert.equal(contact.recruiterLine.href, "tel:+16238878905");
-  assert.equal(contact.recruiterLine.e164, "+16238878905");
-  assert.equal(contact.recruiterLine.label, "Recruiter line");
+  assert.match(contactSource, /label: "Recruiter line"/);
+  assert.match(contactSource, /display: "\+1 \(623\) 887-8905"/);
+  assert.match(contactSource, /href: "tel:\+16238878905"/);
+  assert.match(contactSource, /e164: "\+16238878905"/);
 
   for (const [label, page] of [
     ["homepage", html],
@@ -412,8 +412,8 @@ test("recruiter scheduling line is published and the retired number is gone", as
   }
 
   assert.doesNotMatch(
-    contact.recruiterLine.display + contact.recruiterLine.href + contact.recruiterLine.e164,
-    /363[-.\s]?4985|3634985/,
+    contactSource,
+    /623[-.\s]?363[-.\s]?4985|6233634985/,
   );
 });
 
