@@ -10,7 +10,7 @@ import {
   type PointerEvent as ReactPointerEvent,
 } from "react";
 import { ProtectedEmailButton } from "@/components/ProtectedEmail";
-import { socialHandles } from "@/lib/contact";
+import { recruiterLine, socialHandles } from "@/lib/contact";
 import { credentialHighlights } from "@/lib/credentials";
 import { careerPaths, heroMetrics } from "@/lib/career";
 import {
@@ -609,6 +609,10 @@ export function PortfolioExperience({
           </p>
           <div className="hero-actions">
             <ProtectedEmailButton label="Email Stephen" />
+            <a className="button button-secondary" href={recruiterLine.href}>
+              Recruiter line
+              <span>{recruiterLine.display}</span>
+            </a>
           </div>
 
           <div className="closing-connect">

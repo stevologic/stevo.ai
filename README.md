@@ -94,10 +94,12 @@ sizes go full bleed with a proportionally larger glyph, because italic serif
 hairlines disappear into anti-aliasing at 16px. Re-run it after changing either
 colour token.
 
-Contact handles live in `lib/contact.ts` and feed the contact block, the footer,
-the résumé header, and the `sameAs` structured data from one list. The email
-address is stored XOR-masked and decoded in the browser, so it never appears in
-the static export.
+Contact handles live in `lib/contact.ts` and feed the contact block, the
+résumé header, and the `sameAs` structured data from one list. The recruiter
+scheduling line is published in the same module so the homepage CTA, résumé
+header, and Person `telephone` cannot drift. The email address is stored
+XOR-masked and decoded in the browser, so it never appears in the static
+export.
 
 Service tracks, engagement models, the engagement process, and working
 principles live in `lib/services.ts`; credentials live in `lib/credentials.ts`.
