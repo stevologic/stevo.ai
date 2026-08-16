@@ -3,6 +3,7 @@ import Link from "next/link";
 
 import { PrintButton } from "../../components/PrintButton";
 import { ProtectedEmailAddress } from "../../components/ProtectedEmail";
+import { recruiterLine } from "@/lib/contact";
 import { credentials } from "@/lib/credentials";
 import {
   additionalProducts,
@@ -67,6 +68,14 @@ export default function ResumePage() {
           <ul className="resume-contact" aria-label="Contact">
             <li>
               <ProtectedEmailAddress />
+            </li>
+            <li>
+              <a href={recruiterLine.href}>
+                <span className="resume-contact-network">
+                  {recruiterLine.label}
+                </span>
+                {recruiterLine.display}
+              </a>
             </li>
           </ul>
 

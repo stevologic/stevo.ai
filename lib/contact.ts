@@ -40,6 +40,14 @@ export const socialHandles: SocialHandle[] = [
 
 export const socialProfileUrls = socialHandles.map((profile) => profile.href);
 
+/** Public scheduling line for recruiters and hiring managers. */
+export const recruiterLine = {
+  label: "Recruiter line",
+  display: "+1 (623) 887-8905",
+  href: "tel:+16238878905",
+  e164: "+16238878905",
+} as const;
+
 const protectedMailbox = [
   100, 99, 114, 103, 127, 114, 121, 118, 117, 117, 120, 99, 99, 37, 39,
 ];

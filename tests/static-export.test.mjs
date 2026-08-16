@@ -133,14 +133,17 @@ test("each homepage section has one distinct job", async () => {
   assert.doesNotMatch(profile, /\b(?:vCISO|VP Cybersecurity|VP AI Enablement)\b/i);
   assert.match(profile, /Read the full career record/);
 
-  // The close has one decision: contact Stephen. Social profiles live here,
-  // not again in the adjacent footer.
+  // The close has two decisions: email Stephen, or call the recruiter line.
+  // Social profiles live here, not again in the adjacent footer.
   const closingActions = closing.match(
     /<div class="hero-actions">([\s\S]*?)<\/div>/,
   )?.[1];
   assert.ok(closingActions);
   assert.match(closingActions, /Email Stephen/);
-  assert.doesNotMatch(closingActions, /href=/);
+  assert.match(closingActions, /Recruiter line/);
+  assert.match(closingActions, /href="tel:\+16238878905"/);
+  assert.match(closingActions, /\+1 \(623\) 887-8905/);
+  assert.doesNotMatch(closingActions, /mailto:/i);
   assert.doesNotMatch(footer, /social-handles/);
   assert.equal((html.match(/<ul class="social-handles"/g) || []).length, 1);
 });
@@ -378,6 +381,42 @@ test("obfuscated mailbox still decodes to the real contact address", async () =>
   assert.equal(decodeProtectedEmail(), "stephenabbott20@gmail.com");
 });
 
+test("recruiter scheduling line is published and the retired number is gone", async () => {
+  const [html, resumeHtml, contactSource] = await Promise.all([
+    exportedPage("index.html"),
+    exportedPage("resume/index.html"),
+    readFile(new URL("../lib/contact.ts", import.meta.url), "utf8"),
+  ]);
+
+  assert.match(contactSource, /label: "Recruiter line"/);
+  assert.match(contactSource, /display: "\+1 \(623\) 887-8905"/);
+  assert.match(contactSource, /href: "tel:\+16238878905"/);
+  assert.match(contactSource, /e164: "\+16238878905"/);
+
+  for (const [label, page] of [
+    ["homepage", html],
+    ["resume", resumeHtml],
+  ]) {
+    assert.match(page, /Recruiter line/, `${label} omits the recruiter-line label`);
+    assert.match(page, /tel:\+16238878905/, `${label} omits the recruiter tel link`);
+    assert.match(
+      page,
+      /\+1 \(623\) 887-8905/,
+      `${label} omits the formatted recruiter number`,
+    );
+    assert.doesNotMatch(
+      page,
+      /623[-.\s]?363[-.\s]?4985|6233634985|\+1[-.\s]?623[-.\s]?363[-.\s]?4985/,
+      `${label} still publishes the retired number`,
+    );
+  }
+
+  assert.doesNotMatch(
+    contactSource,
+    /623[-.\s]?363[-.\s]?4985|6233634985/,
+  );
+});
+
 test("social handles are published on the site and in structured data", async () => {
   const [html, resumeHtml] = await Promise.all([
     exportedPage("index.html"),
@@ -415,6 +454,7 @@ test("social handles are published on the site and in structured data", async ()
   }
   const person = graph.find((node) => node["@type"] === "Person");
   assert.equal(person.jobTitle, "Cybersecurity Executive and AI Enablement Leader");
+  assert.equal(person.telephone, "+16238878905");
   const portfolio = graph.find((node) => node["@type"] === "ItemList");
   const projects = await publishedProjects();
   assert.equal(portfolio.numberOfItems, projects.length);
@@ -640,16 +680,20 @@ test("professional resume is detailed, private, and print-ready", async () => {
   assert.doesNotMatch(html, /American Express/i);
   assert.doesNotMatch(html, /Full career r(?:é|&eacute;|&#xE9;)sum(?:é|&eacute;|&#xE9;) available on request/i);
 
-  // Contact is email only. Assert on the contact list itself: the site-wide
-  // JSON-LD in the page head legitimately carries the social profiles, and the
-  // resume document cannot be matched with a lazy regex because career roles
-  // are nested <article> elements that terminate it early.
+  // Contact is email plus the recruiter scheduling line. Assert on the contact
+  // list itself: the site-wide JSON-LD in the page head legitimately carries
+  // the social profiles, and the resume document cannot be matched with a lazy
+  // regex because career roles are nested <article> elements that terminate it
+  // early.
   const contact = html.match(
     /<ul class="resume-contact"[^>]*>[\s\S]*?<\/ul>/,
   )?.[0];
   assert.ok(contact, "resume contact list not found");
   assert.doesNotMatch(contact, /MadeItHappen|twitch\.tv|discord\.com|x\.com/i);
-  assert.equal((contact.match(/<li>/g) || []).length, 1, "email only");
+  assert.equal((contact.match(/<li>/g) || []).length, 2, "email and recruiter line");
+  assert.match(contact, /Recruiter line/);
+  assert.match(contact, /href="tel:\+16238878905"/);
+  assert.match(contact, /\+1 \(623\) 887-8905/);
 
   // Sections are unnumbered.
   assert.doesNotMatch(html, /resume-section-index/);

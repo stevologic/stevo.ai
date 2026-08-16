@@ -1,5 +1,5 @@
 import type { Metadata, Viewport } from "next";
-import { socialProfileUrls } from "@/lib/contact";
+import { recruiterLine, socialProfileUrls } from "@/lib/contact";
 import { credentials } from "@/lib/credentials";
 import { projects } from "@/lib/project-data";
 import { serviceTracks } from "@/lib/services";
@@ -159,6 +159,7 @@ const structuredData = {
       url: `${siteUrl}/resume/`,
       image: `${siteUrl}/stephen-abbott-profile.png`,
       jobTitle: "Cybersecurity Executive and AI Enablement Leader",
+      telephone: recruiterLine.e164,
       worksFor: { "@id": `${siteUrl}/#organization` },
       sameAs: socialProfileUrls,
       alumniOf: {
