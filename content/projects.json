@@ -121,7 +121,7 @@
     "category": "AI systems",
     "featured": false,
     "tagline": "Raise enterprise message quality with AI inside Slack and existing channels.",
-    "description": "Multi-provider writing assistant that rewrites, translates, summarizes, and reformats messages via Slack, HTTP API, CLI, or Python—clearer communication without pulling teams out of the tools they already use.",
+    "description": "Selects among multiple model providers per request so quality, cost, and policy can be balanced. Staff get rewrite, translation, summary, and format help without a new workplace surface.",
     "siteUrl": "https://stevologic.github.io/pro-response/",
     "sourceUrl": "https://github.com/stevologic/pro-response",
     "metrics": [
@@ -147,10 +147,10 @@
     "repo": "spare-cycles",
     "slug": "spare-cycles",
     "name": "Spare Cycles",
-    "category": "Products & ventures",
+    "category": "AI systems",
     "featured": false,
-    "tagline": "Open-source distributed inference research across volunteer nodes.",
-    "description": "MIT-licensed research platform pooling volunteer Claude, GPT, Grok, or Ollama capacity behind an OpenAI-compatible API—demonstrating distributed orchestration and multi-provider routing.",
+    "tagline": "Pool multi-provider inference across volunteer nodes to study routing without vendor lock-in.",
+    "description": "Volunteer contributors attach Claude, GPT, Grok, or local Ollama capacity. An OpenAI-compatible front door lets teams examine orchestration, failover, and provider mixing without building their own mesh.",
     "siteUrl": "https://sparecycles.io/",
     "sourceUrl": "https://github.com/stevologic/spare-cycles",
     "metrics": [
@@ -177,7 +177,7 @@
     "category": "Products & ventures",
     "featured": false,
     "tagline": "Idea to illustrated, narrated children's storybook—entirely in the browser.",
-    "description": "Browser-based story studio that writes, illustrates, narrates, and exports children's books with user-selected AI providers—a complete consumer AI workflow delivered without a backend.",
+    "description": "A parent chooses a model provider; the studio writes the story, generates illustrations, narrates with word-level highlighting, and exports a finished video book. End-to-end consumer product, nothing to host.",
     "siteUrl": "https://tinybookbuddies.ai",
     "sourceUrl": "https://github.com/stevologic/tiny-book-buddies-ai",
     "metrics": [
@@ -206,7 +206,7 @@
     "category": "Products & ventures",
     "featured": false,
     "tagline": "Portable Windows auto-clicker with record/replay and optional AI patterns.",
-    "description": "Desktop automation utility with humanized cursor movement, global hotkeys, system-wide record/replay, and optional cloud or local AI pattern generation—packaged as a portable Windows utility with no installer.",
+    "description": "Humanized cursor movement and global hotkeys sit on top of system-wide record and replay, with optional pattern generation from a cloud or local model. Shipped as a finished desktop utility.",
     "siteUrl": "https://mouseclicker.app",
     "sourceUrl": "https://github.com/stevologic/mouse_clicker",
     "metrics": [
@@ -229,13 +229,64 @@
     "statusLabel": "v3.7 available"
   },
   {
+    "slug": "desert-wander-supply",
+    "name": "Desert Wander Supply Co.",
+    "category": "Products & ventures",
+    "featured": false,
+    "tagline": "Southwest outdoor gear storefront for desert travel and EDC.",
+    "description": "A merchandised retail catalog with hosted checkout and email capture, taken from a niche outdoor concept through payment and fulfilment as a live store.",
+    "siteUrl": "https://desertwandersupplyco.com",
+    "metrics": [
+      "Shopify storefront",
+      "24+ products",
+      "Apparel · Outdoor · Pet"
+    ],
+    "tech": [
+      "Shopify",
+      "Liquid",
+      "Hosted checkout"
+    ],
+    "capabilities": [
+      "Merchandised catalog",
+      "Checkout and fulfilment",
+      "Email capture"
+    ],
+    "statusLabel": "Live"
+  },
+  {
+    "slug": "arizona-now",
+    "name": "Arizona Now",
+    "category": "Products & ventures",
+    "featured": false,
+    "tagline": "Source-linked Arizona events and local-business listings.",
+    "description": "Curated, source-linked listings and local-business directory space, browsable by city, calendar, or map, with featured placements for standout events and businesses.",
+    "siteUrl": "https://az-now.com",
+    "metrics": [
+      "Live site",
+      "Arizona events",
+      "Business listings"
+    ],
+    "tech": [
+      "Python",
+      "JavaScript",
+      "nginx",
+      "Docker"
+    ],
+    "capabilities": [
+      "Curated Arizona events",
+      "Business listings",
+      "Featured events"
+    ],
+    "statusLabel": "Live"
+  },
+  {
     "repo": "doge-commerce-kit",
     "slug": "doge-commerce-kit",
     "name": "DOGE Commerce Kit",
     "category": "Products & ventures",
     "featured": false,
     "tagline": "Non-custodial toolkit for accepting Dogecoin in person or online.",
-    "description": "Non-custodial commerce toolkit with browser wallet utilities, point-of-sale checkout, payment QR codes, on-chain verification, a local order ledger, and embeddable components for independent sellers.",
+    "description": "Browser wallet tools, counter checkout, payment QR codes, on-chain confirmation, and a local order ledger keep acceptance under the merchant's control from the counter to the web.",
     "siteUrl": "https://commerce.dog",
     "sourceUrl": "https://github.com/stevologic/doge-commerce-kit",
     "metrics": [
@@ -263,8 +314,8 @@
     "name": "Arrowhead Paesano",
     "category": "Products & ventures",
     "featured": false,
-    "tagline": "Chiefs fan site with an automated weekly game-preview desk.",
-    "description": "Static fan site for the Arrowhead Paesano YouTube channel: privacy-friendly playback from a checked-in snapshot, plus a sourced weekly preview with matchups, projections, and a ready-to-shoot run-of-show.",
+    "tagline": "Automated weekly game-preview desk for the Arrowhead Paesano Chiefs channel.",
+    "description": "Produces a sourced weekly preview with matchups, projections, and a shoot-ready run-of-show, and publishes channel playback from a checked-in snapshot so the property stays current between recordings.",
     "siteUrl": "https://arrowheadpaesano.com",
     "sourceUrl": "https://github.com/stevologic/arrowheadpaesanowebsite",
     "metrics": [
@@ -287,64 +338,13 @@
     "statusLabel": "Live"
   },
   {
-    "slug": "desert-wander-supply",
-    "name": "Desert Wander Supply Co.",
-    "category": "Products & ventures",
-    "featured": false,
-    "tagline": "Southwest outdoor gear storefront for desert travel and EDC.",
-    "description": "Hosted storefront for desert exploration gear spanning apparel, outdoor accessories, and pet gear, with a merchandised catalog, checkout, and customer email capture.",
-    "siteUrl": "https://desertwandersupplyco.com",
-    "metrics": [
-      "Shopify storefront",
-      "24+ products",
-      "Apparel · Outdoor · Pet"
-    ],
-    "tech": [
-      "Shopify",
-      "Liquid",
-      "Hosted checkout"
-    ],
-    "capabilities": [
-      "Merchandised catalog",
-      "Checkout and fulfilment",
-      "Email capture"
-    ],
-    "statusLabel": "Live"
-  },
-  {
-    "slug": "arizona-now",
-    "name": "Arizona Now",
-    "category": "Products & ventures",
-    "featured": false,
-    "tagline": "Source-linked Arizona events and local-business listings.",
-    "description": "Live Arizona events product with curated, source-linked listings, local-business directory space, and featured events—browse by city, calendar, or map, with Google sign-in.",
-    "siteUrl": "https://az-now.com",
-    "metrics": [
-      "Live site",
-      "Arizona events",
-      "Business listings"
-    ],
-    "tech": [
-      "Python",
-      "JavaScript",
-      "nginx",
-      "Docker"
-    ],
-    "capabilities": [
-      "Curated Arizona events",
-      "Business listings",
-      "Featured events"
-    ],
-    "statusLabel": "Live"
-  },
-  {
     "repo": "doge-miner",
     "slug": "doge-miner",
     "name": "DOGE MINER",
     "category": "Products & ventures",
     "featured": false,
-    "tagline": "Cross-platform Scrypt pool miner with live dashboard and hardware telemetry.",
-    "description": "Full-stack Dogecoin pool miner for CPU and OpenCL GPUs, with live pool responses, share statistics, hardware telemetry, and on-chain wallet data in a transparent, registration-free product.",
+    "tagline": "Mine to a Dogecoin pool with live shares, hardware stats, and on-chain wallet data in view.",
+    "description": "Submits work to a public pool, tracks share acceptance, and shows hardware plus on-chain wallet figures in one dashboard—hashing through pool response and wallet state as a single product.",
     "siteUrl": "https://doge-miner.io",
     "sourceUrl": "https://github.com/stevologic/doge-miner",
     "metrics": [

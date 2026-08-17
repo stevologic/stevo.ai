@@ -3,24 +3,24 @@
     {
       "dates": "2024-2026",
       "title": "Director, Cybersecurity",
-      "scope": "Board risk quantification · Enterprise CTEM · Developer-owned security",
+      "scope": "Enterprise CTEM · Board risk measures · Governed AI remediation",
       "highlights": [
-        "Directed enterprise CTEM and remediation through an 11-person team.",
+        "Owned enterprise CTEM and remediation operations with an 11-person team.",
         "Established risk prioritization, quantification, and governed AI-assisted remediation with executive leadership.",
-        "Contributed to risk-appetite measures and KRIs for board and executive reporting.",
-        "Cut open-source dependencies more than 75%; drove developer ownership through engagement and preventative controls.",
+        "Shaped risk-appetite measures and KRIs for recurring board and executive reporting.",
+        "Cut open-source dependencies more than 75% and improved ownership through engagement and preventative controls.",
         "Grew security leaders who advanced to senior and director roles."
       ]
     },
     {
       "dates": "2021-2024",
       "title": "Director, Security Data & Risk Intelligence",
-      "scope": "Sensitive-data protection · Supply-chain intelligence · Security data platforms",
+      "scope": "Risk intelligence · Sensitive-data protection · Supply-chain intelligence",
       "highlights": [
-        "Led up to 26 engineers delivering sensitive-data detection, software-composition intelligence, and repository enrichment platforms.",
-        "Cut sensitive-data findings by 92%, tripled detection coverage, and raised fidelity through automation with human review.",
+        "Led an engineering organization of up to 26 delivering sensitive-data detection, composition intelligence, and repository enrichment.",
+        "Cut sensitive-data findings 92%, tripled detection coverage, and raised fidelity through automation with human review.",
         "Owned application risk assessments, BIA, DR requirements, and resilience planning for critical platforms.",
-        "Delivered risk-intelligence platforms and analytics that drove prioritization, governance, and executive decisions.",
+        "Drove executive decisions, prioritization, and governance through risk-intelligence platforms and analytics.",
         "Hardened IaC pipelines and encryption with cloud and identity teams; advanced engineers to senior roles."
       ]
     },
@@ -59,7 +59,7 @@
   "focusAreas": [
     {
       "title": "Executive security leadership and governance",
-      "description": "Translate enterprise risk, resilience, program priorities, and board measures into an accountable operating model."
+      "description": "Turn enterprise risk, resilience, and board measures into an accountable cybersecurity operating model."
     },
     {
       "title": "Application and supply-chain security",
@@ -67,7 +67,7 @@
     },
     {
       "title": "Governed enterprise AI enablement",
-      "description": "Move from use-case strategy to bounded AI workflows with human approval, evidence, rollback, and ownership."
+      "description": "Design AI adoption around business value, bounded context, human approval, evidence, rollback, and ownership."
     },
     {
       "title": "Founder-led AI product engineering",
