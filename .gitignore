@@ -44,3 +44,8 @@ next-env.d.ts
 
 # generated advisory output, published as a workflow artifact and issue
 /critique/
+
+# Worker lock files
+worker.lock
+worker.lock-journal
+
