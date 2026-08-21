@@ -200,6 +200,31 @@
     "statusLabel": "Live"
   },
   {
+    "slug": "sonnys-world",
+    "name": "Sonny’s World",
+    "category": "Products & ventures",
+    "featured": false,
+    "tagline": "A bilingual English–Spanish learning playground for a small child, with living picture-book videos.",
+    "description": "A bilingual English and Spanish playground for a young child aged two to five: letters, numbers, words, songs, sign language, and living picture-book videos, built for a grandparent and a small person to sit and learn together.",
+    "siteUrl": "https://sonnys.world",
+    "metrics": [
+      "English · Spanish",
+      "Ages 2–5",
+      "Living picture-book videos"
+    ],
+    "tech": [
+      "React",
+      "Vite",
+      "Grok App Builder"
+    ],
+    "capabilities": [
+      "Bilingual letters, numbers, and words",
+      "Songs, stories, and sign language",
+      "Living picture-book videos"
+    ],
+    "statusLabel": "Live"
+  },
+  {
     "repo": "mouse_clicker",
     "slug": "mouseclicker",
     "name": "mouseclicker.app",
