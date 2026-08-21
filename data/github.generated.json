@@ -1,6 +1,6 @@
 {
   "schemaVersion": 2,
-  "generatedAt": "2026-07-25T22:29:25.017Z",
+  "generatedAt": "2026-08-21T07:18:57.940Z",
   "source": "https://api.github.com",
   "apiVersion": "2022-11-28",
   "defaultOwner": "stevologic",
@@ -24,10 +24,10 @@
       "template": false,
       "stars": 1,
       "forks": 0,
-      "openIssues": 3,
+      "openIssues": 4,
       "createdAt": "2026-04-22T00:58:53Z",
-      "updatedAt": "2026-07-25T22:09:40Z",
-      "pushedAt": "2026-07-25T22:27:54Z",
+      "updatedAt": "2026-08-17T13:56:10Z",
+      "pushedAt": "2026-08-21T05:55:47Z",
       "owner": {
         "login": "stevologic",
         "url": "https://github.com/stevologic",
@@ -62,7 +62,7 @@
       "fullName": "stevologic/oss-deps-explorer",
       "description": "A REST API and optional browser UI for exploring package dependencies.",
       "url": "https://github.com/stevologic/oss-deps-explorer",
-      "homepage": null,
+      "homepage": "https://ossde.dev",
       "topics": [
         "applicationsecurity",
         "appsec",
@@ -80,10 +80,10 @@
       "template": false,
       "stars": 3,
       "forks": 0,
-      "openIssues": 0,
+      "openIssues": 5,
       "createdAt": "2025-07-28T05:26:58Z",
-      "updatedAt": "2026-07-12T08:34:24Z",
-      "pushedAt": "2026-07-12T08:34:16Z",
+      "updatedAt": "2026-08-16T15:11:34Z",
+      "pushedAt": "2026-08-16T15:12:36Z",
       "owner": {
         "login": "stevologic",
         "url": "https://github.com/stevologic",
@@ -131,8 +131,8 @@
       "forks": 1,
       "openIssues": 0,
       "createdAt": "2026-07-07T18:55:49Z",
-      "updatedAt": "2026-07-24T07:29:10Z",
-      "pushedAt": "2026-07-24T07:28:39Z",
+      "updatedAt": "2026-08-16T15:11:06Z",
+      "pushedAt": "2026-08-17T08:08:55Z",
       "owner": {
         "login": "stevologic",
         "url": "https://github.com/stevologic",
@@ -156,6 +156,55 @@
         "clones": {
           "count": 769,
           "uniques": 152
+        }
+      }
+    },
+    {
+      "projectKeys": [
+        "stevo-ai"
+      ],
+      "name": "stevo.ai",
+      "fullName": "stevologic/stevo.ai",
+      "description": "A portfolio of launched products, in depth professional background and catalog of professional services for Stephen M Abbott",
+      "url": "https://github.com/stevologic/stevo.ai",
+      "homepage": "https://stevo.ai",
+      "topics": [],
+      "primaryLanguage": "JavaScript",
+      "defaultBranch": "main",
+      "visibility": "public",
+      "archived": false,
+      "disabled": false,
+      "fork": false,
+      "template": false,
+      "stars": 1,
+      "forks": 0,
+      "openIssues": 1,
+      "createdAt": "2026-07-23T21:19:54Z",
+      "updatedAt": "2026-08-17T10:08:48Z",
+      "pushedAt": "2026-08-21T07:10:40Z",
+      "owner": {
+        "login": "stevologic",
+        "url": "https://github.com/stevologic",
+        "avatarUrl": "https://avatars.githubusercontent.com/u/5211665?v=4"
+      },
+      "license": {
+        "key": "mit",
+        "name": "MIT License",
+        "spdxId": "MIT",
+        "url": null
+      },
+      "latestRelease": null,
+      "releases": [],
+      "traffic": {
+        "windowDays": 14,
+        "fetchedAt": "2026-07-25T22:29:24.941Z",
+        "views": {
+          "count": 28,
+          "uniques": 1
+        },
+        "clones": {
+          "count": 302,
+          "uniques": 101
         }
       }
     },
@@ -243,6 +292,64 @@
     },
     {
       "projectKeys": [
+        "spare-cycles"
+      ],
+      "name": "spare-cycles",
+      "fullName": "stevologic/spare-cycles",
+      "description": "♻️ Donate your idle AI compute. A marketplace of vibe-coding projects + a pool of donated tokens — OpenAI-compatible proxy in front, volunteer nodes (Claude/GPT/Grok/Ollama) behind. MIT.",
+      "url": "https://github.com/stevologic/spare-cycles",
+      "homepage": "https://sparecycles.io/",
+      "topics": [
+        "ai",
+        "donation",
+        "fastapi",
+        "llm",
+        "marketplace",
+        "ollama",
+        "openai-compatible",
+        "volunteer-computing"
+      ],
+      "primaryLanguage": "Python",
+      "defaultBranch": "main",
+      "visibility": "public",
+      "archived": false,
+      "disabled": false,
+      "fork": false,
+      "template": false,
+      "stars": 1,
+      "forks": 0,
+      "openIssues": 0,
+      "createdAt": "2026-07-23T19:27:10Z",
+      "updatedAt": "2026-07-30T16:33:06Z",
+      "pushedAt": "2026-07-30T16:29:29Z",
+      "owner": {
+        "login": "stevologic",
+        "url": "https://github.com/stevologic",
+        "avatarUrl": "https://avatars.githubusercontent.com/u/5211665?v=4"
+      },
+      "license": {
+        "key": "mit",
+        "name": "MIT License",
+        "spdxId": "MIT",
+        "url": null
+      },
+      "latestRelease": null,
+      "releases": [],
+      "traffic": {
+        "windowDays": 14,
+        "fetchedAt": "2026-07-25T22:29:24.511Z",
+        "views": {
+          "count": 5,
+          "uniques": 1
+        },
+        "clones": {
+          "count": 0,
+          "uniques": 0
+        }
+      }
+    },
+    {
+      "projectKeys": [
         "tiny-book-buddies-ai"
       ],
       "name": "tiny-book-buddies-ai",
@@ -287,64 +394,6 @@
         "clones": {
           "count": 461,
           "uniques": 157
-        }
-      }
-    },
-    {
-      "projectKeys": [
-        "spare-cycles"
-      ],
-      "name": "spare-cycles",
-      "fullName": "stevologic/spare-cycles",
-      "description": "♻️ Donate your idle AI compute. A marketplace of vibe-coding projects + a pool of donated tokens — OpenAI-compatible proxy in front, volunteer nodes (Claude/GPT/Grok/Ollama) behind. MIT.",
-      "url": "https://github.com/stevologic/spare-cycles",
-      "homepage": "https://sparecycles.io/",
-      "topics": [
-        "ai",
-        "donation",
-        "fastapi",
-        "llm",
-        "marketplace",
-        "ollama",
-        "openai-compatible",
-        "volunteer-computing"
-      ],
-      "primaryLanguage": "Python",
-      "defaultBranch": "main",
-      "visibility": "public",
-      "archived": false,
-      "disabled": false,
-      "fork": false,
-      "template": false,
-      "stars": 1,
-      "forks": 0,
-      "openIssues": 0,
-      "createdAt": "2026-07-23T19:27:10Z",
-      "updatedAt": "2026-07-25T20:44:31Z",
-      "pushedAt": "2026-07-25T20:44:27Z",
-      "owner": {
-        "login": "stevologic",
-        "url": "https://github.com/stevologic",
-        "avatarUrl": "https://avatars.githubusercontent.com/u/5211665?v=4"
-      },
-      "license": {
-        "key": "mit",
-        "name": "MIT License",
-        "spdxId": "MIT",
-        "url": null
-      },
-      "latestRelease": null,
-      "releases": [],
-      "traffic": {
-        "windowDays": 14,
-        "fetchedAt": "2026-07-25T22:29:24.511Z",
-        "views": {
-          "count": 5,
-          "uniques": 1
-        },
-        "clones": {
-          "count": 0,
-          "uniques": 0
         }
       }
     },
@@ -598,8 +647,8 @@
       "forks": 0,
       "openIssues": 0,
       "createdAt": "2026-07-11T09:17:03Z",
-      "updatedAt": "2026-07-18T06:33:36Z",
-      "pushedAt": "2026-07-18T06:33:32Z",
+      "updatedAt": "2026-08-16T15:11:48Z",
+      "pushedAt": "2026-08-16T15:10:39Z",
       "owner": {
         "login": "stevologic",
         "url": "https://github.com/stevologic",
@@ -647,8 +696,8 @@
       "forks": 0,
       "openIssues": 0,
       "createdAt": "2026-05-22T02:21:10Z",
-      "updatedAt": "2026-07-25T20:10:40Z",
-      "pushedAt": "2026-07-25T20:09:25Z",
+      "updatedAt": "2026-08-20T11:44:09Z",
+      "pushedAt": "2026-08-20T11:43:50Z",
       "owner": {
         "login": "stevologic",
         "url": "https://github.com/stevologic",
@@ -696,8 +745,8 @@
       "forks": 0,
       "openIssues": 0,
       "createdAt": "2026-07-11T06:50:33Z",
-      "updatedAt": "2026-07-24T06:38:54Z",
-      "pushedAt": "2026-07-24T06:38:59Z",
+      "updatedAt": "2026-08-16T15:11:20Z",
+      "pushedAt": "2026-08-16T15:10:35Z",
       "owner": {
         "login": "stevologic",
         "url": "https://github.com/stevologic",
@@ -721,55 +770,6 @@
         "clones": {
           "count": 81,
           "uniques": 57
-        }
-      }
-    },
-    {
-      "projectKeys": [
-        "stevo-ai"
-      ],
-      "name": "stevo.ai",
-      "fullName": "stevologic/stevo.ai",
-      "description": "A portfolio of launched products, in depth professional background and catalog of professional services for Stephen M Abbott",
-      "url": "https://github.com/stevologic/stevo.ai",
-      "homepage": "https://stevo.ai",
-      "topics": [],
-      "primaryLanguage": "JavaScript",
-      "defaultBranch": "main",
-      "visibility": "public",
-      "archived": false,
-      "disabled": false,
-      "fork": false,
-      "template": false,
-      "stars": 1,
-      "forks": 0,
-      "openIssues": 0,
-      "createdAt": "2026-07-23T21:19:54Z",
-      "updatedAt": "2026-07-25T22:21:33Z",
-      "pushedAt": "2026-07-25T22:22:10Z",
-      "owner": {
-        "login": "stevologic",
-        "url": "https://github.com/stevologic",
-        "avatarUrl": "https://avatars.githubusercontent.com/u/5211665?v=4"
-      },
-      "license": {
-        "key": "mit",
-        "name": "MIT License",
-        "spdxId": "MIT",
-        "url": null
-      },
-      "latestRelease": null,
-      "releases": [],
-      "traffic": {
-        "windowDays": 14,
-        "fetchedAt": "2026-07-25T22:29:24.941Z",
-        "views": {
-          "count": 28,
-          "uniques": 1
-        },
-        "clones": {
-          "count": 302,
-          "uniques": 101
         }
       }
     }
