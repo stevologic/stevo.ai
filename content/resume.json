@@ -3,11 +3,11 @@
     {
       "dates": "2024-2026",
       "title": "Director, Cybersecurity",
-      "scope": "Enterprise CTEM · Board risk measures · Governed AI remediation",
+      "scope": "Board risk · Enterprise CTEM · Governed AI",
       "highlights": [
-        "Owned enterprise CTEM and remediation operations with an 11-person team.",
-        "Established risk prioritization, quantification, and governed AI-assisted remediation with executive leadership.",
-        "Shaped risk-appetite measures and KRIs for recurring board and executive reporting.",
+        "Led enterprise CTEM and remediation operations with an 11-person team.",
+        "Introduced risk prioritization, quantification, and governed AI-assisted remediation with executive leadership.",
+        "Shaped risk-appetite measures and KRIs for board and executive reporting.",
         "Cut open-source dependencies more than 75% and improved ownership through engagement and preventative controls.",
         "Grew security leaders who advanced to senior and director roles."
       ]
@@ -15,12 +15,12 @@
     {
       "dates": "2021-2024",
       "title": "Director, Security Data & Risk Intelligence",
-      "scope": "Risk intelligence · Sensitive-data protection · Supply-chain intelligence",
+      "scope": "Sensitive-data protection · Risk intelligence · Supply-chain intelligence",
       "highlights": [
         "Led an engineering organization of up to 26 delivering sensitive-data detection, composition intelligence, and repository enrichment.",
         "Cut sensitive-data findings 92%, tripled detection coverage, and raised fidelity through automation with human review.",
-        "Owned application risk assessments, BIA, DR requirements, and resilience planning for critical platforms.",
-        "Drove executive decisions, prioritization, and governance through risk-intelligence platforms and analytics.",
+        "Owned application risk assessments, BIA, DR, and resilience planning for critical platforms.",
+        "Drove executive decisions, prioritization, and governance through risk-intelligence platforms.",
         "Hardened IaC pipelines and encryption with cloud and identity teams; advanced engineers to senior roles."
       ]
     },
@@ -39,7 +39,7 @@
       "title": "Senior Security Engineer, Detection & Infrastructure",
       "scope": "SIEM · Network visibility · Detection telemetry",
       "highlights": [
-        "Built SIEM, full-packet-capture, and centralized logging platforms that powered enterprise detection and security operations.",
+        "Built SIEM, full-packet-capture, and centralized logging platforms that powered enterprise detection.",
         "Expanded network visibility and threat-detection coverage through encrypted-traffic inspection.",
         "Deployed globally distributed, highly available security infrastructure across data centers.",
         "Delivered incident-response detections from logs, network telemetry, IDS/IPS, and endpoint signals."
@@ -52,7 +52,7 @@
       "highlights": [
         "Operated backend services for business-critical transaction systems in a regulated environment.",
         "Sustained 99.99% availability through performance monitoring and automated CI/CD deployments.",
-        "Delivered DR and resilience for high-stakes systems—foundation for later security leadership."
+        "Delivered DR and resilience programs for high-stakes systems."
       ]
     }
   ],
@@ -63,15 +63,15 @@
     },
     {
       "title": "Application and supply-chain security",
-      "description": "Govern vulnerability intelligence, dependency analysis, licenses, SBOMs, and accountable remediation."
+      "description": "Govern vulnerability intelligence, dependencies, licenses, SBOMs, and accountable remediation."
     },
     {
       "title": "Governed enterprise AI enablement",
       "description": "Design AI adoption around business value, bounded context, human approval, evidence, rollback, and ownership."
     },
     {
-      "title": "Founder-led AI product engineering",
-      "description": "Turn emerging model capabilities into launched web, desktop, API, and CLI products with market context."
+      "title": "Founder-led AI product delivery",
+      "description": "Launch AI products—web, desktop, API, and CLI—with clear users, delivery paths, and market position."
     }
   ],
   "technicalBreadth": [

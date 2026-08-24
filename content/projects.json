@@ -120,14 +120,14 @@
     "name": "Pro Response",
     "category": "AI systems",
     "featured": false,
-    "tagline": "Raise enterprise message quality with AI inside Slack and existing channels.",
-    "description": "Selects among multiple model providers per request so quality, cost, and policy can be balanced. Staff get rewrite, translation, summary, and format help without a new workplace surface.",
+    "tagline": "Improve enterprise writing quality inside Slack—without adding another workplace surface.",
+    "description": "Routes each request across multiple model providers so quality, cost, and policy can be balanced, giving staff rewrite, translation, summary, and format help where they already work.",
     "siteUrl": "https://stevologic.github.io/pro-response/",
     "sourceUrl": "https://github.com/stevologic/pro-response",
     "metrics": [
       "14 writing modes",
       "Slack · API · CLI",
-      "Python 3.9+"
+      "Multi-provider routing"
     ],
     "tech": [
       "Python",
@@ -149,8 +149,8 @@
     "name": "Spare Cycles",
     "category": "AI systems",
     "featured": false,
-    "tagline": "Pool multi-provider inference across volunteer nodes to study routing without vendor lock-in.",
-    "description": "Volunteer contributors attach Claude, GPT, Grok, or local Ollama capacity. An OpenAI-compatible front door lets teams examine orchestration, failover, and provider mixing without building their own mesh.",
+    "tagline": "Orchestrate multi-provider inference through one front door—without vendor lock-in.",
+    "description": "Contributors attach Claude, GPT, Grok, or local Ollama capacity behind an OpenAI-compatible interface, so teams can inspect routing, failover, and provider mixing without standing up their own mesh.",
     "siteUrl": "https://sparecycles.io/",
     "sourceUrl": "https://github.com/stevologic/spare-cycles",
     "metrics": [
@@ -205,7 +205,7 @@
     "category": "Products & ventures",
     "featured": false,
     "tagline": "A bilingual English–Spanish learning playground for a small child, with living picture-book videos.",
-    "description": "A bilingual English and Spanish playground for a young child aged two to five: letters, numbers, words, songs, sign language, and living picture-book videos, built for a grandparent and a small person to sit and learn together.",
+    "description": "Letters, numbers, words, songs, and sign language are organized for a grandparent and a young child to sit and learn together.",
     "siteUrl": "https://sonnys.world",
     "metrics": [
       "English · Spanish",
@@ -230,8 +230,8 @@
     "name": "mouseclicker.app",
     "category": "Products & ventures",
     "featured": false,
-    "tagline": "Portable Windows auto-clicker with record/replay and optional AI patterns.",
-    "description": "Humanized cursor movement and global hotkeys sit on top of system-wide record and replay, with optional pattern generation from a cloud or local model. Shipped as a finished desktop utility.",
+    "tagline": "Record, replay, and humanize Windows click workflows from a single portable app.",
+    "description": "Global hotkeys and humanized cursor movement sit on top of system-wide record and replay, with optional pattern generation from a cloud or local model.",
     "siteUrl": "https://mouseclicker.app",
     "sourceUrl": "https://github.com/stevologic/mouse_clicker",
     "metrics": [
@@ -279,32 +279,6 @@
     "statusLabel": "Live"
   },
   {
-    "slug": "arizona-now",
-    "name": "Arizona Now",
-    "category": "Products & ventures",
-    "featured": false,
-    "tagline": "Source-linked Arizona events and local-business listings.",
-    "description": "Curated, source-linked listings and local-business directory space, browsable by city, calendar, or map, with featured placements for standout events and businesses.",
-    "siteUrl": "https://az-now.com",
-    "metrics": [
-      "Live site",
-      "Arizona events",
-      "Business listings"
-    ],
-    "tech": [
-      "Python",
-      "JavaScript",
-      "nginx",
-      "Docker"
-    ],
-    "capabilities": [
-      "Curated Arizona events",
-      "Business listings",
-      "Featured events"
-    ],
-    "statusLabel": "Live"
-  },
-  {
     "repo": "doge-commerce-kit",
     "slug": "doge-commerce-kit",
     "name": "DOGE Commerce Kit",
@@ -330,6 +304,32 @@
       "Point-of-sale checkout",
       "Client-side wallet tools",
       "On-chain payment verification"
+    ],
+    "statusLabel": "Live"
+  },
+  {
+    "slug": "arizona-now",
+    "name": "Arizona Now",
+    "category": "Products & ventures",
+    "featured": false,
+    "tagline": "Source-linked Arizona events and local-business listings.",
+    "description": "Source-linked listings and a local-business directory can be browsed by city, calendar, or map, with featured placements for standout events and businesses.",
+    "siteUrl": "https://az-now.com",
+    "metrics": [
+      "Arizona events",
+      "Business listings",
+      "City · calendar · map"
+    ],
+    "tech": [
+      "Python",
+      "JavaScript",
+      "nginx",
+      "Docker"
+    ],
+    "capabilities": [
+      "Curated Arizona events",
+      "Business listings",
+      "Featured events"
     ],
     "statusLabel": "Live"
   },
@@ -368,8 +368,8 @@
     "name": "DOGE MINER",
     "category": "Products & ventures",
     "featured": false,
-    "tagline": "Mine to a Dogecoin pool with live shares, hardware stats, and on-chain wallet data in view.",
-    "description": "Submits work to a public pool, tracks share acceptance, and shows hardware plus on-chain wallet figures in one dashboard—hashing through pool response and wallet state as a single product.",
+    "tagline": "Mine to a Dogecoin pool while watching shares, hardware, and wallet state in one view.",
+    "description": "Share acceptance, hardware telemetry, and on-chain wallet figures stay visible on one dashboard while work goes to a public pool, so hashing and wallet data are operated as a single product.",
     "siteUrl": "https://doge-miner.io",
     "sourceUrl": "https://github.com/stevologic/doge-miner",
     "metrics": [
