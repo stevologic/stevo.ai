@@ -50,8 +50,11 @@ test("site presents the consultancy, packages, and proof with social metadata", 
   ]);
   const retiredEmploymentQualifier = ["frac", "tional"].join("");
 
-  assert.match(html, /Cybersecurity and AI enablement\./i);
-  assert.match(html, /I run the program with your team, then leave it with them\./i);
+  assert.match(html, /One seat for cybersecurity and AI\./);
+  assert.doesNotMatch(html, /I run the program with your team, then leave it with them\./i);
+  assert.doesNotMatch(html, /I run cybersecurity and AI programs\./i);
+  assert.doesNotMatch(html, /Secure the enterprise\./i);
+  assert.doesNotMatch(html, /Enable what comes next\./i);
   assert.match(html, /Cybersecurity and AI enablement consultancy/);
   assert.match(html, />Packages</);
   assert.match(html, />Background</);

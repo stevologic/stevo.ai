@@ -364,8 +364,7 @@ export function PortfolioExperience({
               <span>vCISO · AI governance · Secure delivery</span>
             </p>
             <h1>
-              Cybersecurity and AI enablement.
-              <span>I run the program with your team, then leave it with them.</span>
+              One seat for cybersecurity and AI.
             </h1>
             <p className="hero-intro">
               vCISO work, AI controls, and the occasional build. The point is a
