@@ -16,12 +16,15 @@
   ],
   "identity": {
     "name": "Stephen M Abbott",
+    "practice": "Cybersecurity and AI enablement consultancy",
+    "intake": "stevo.ai scheduling line",
     "targetRoles": [
+      "Cybersecurity and AI Enablement Principal",
+      "Virtual Chief Information Security Officer (vCISO)",
+      "Cybersecurity and IT Consultant for the AI-native enterprise",
       "Chief Information Security Officer (CISO)",
       "VP of Cybersecurity",
       "VP of AI Enablement",
-      "Virtual Chief Information Security Officer (vCISO)",
-      "Cybersecurity and IT Consultant for the AI-native enterprise",
       "Founder and Product Builder"
     ]
   },

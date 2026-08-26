@@ -1,0 +1,80 @@
+name: Practice growth brief
+
+# Asks Grok for a weekly marketing and lead brief for the cybersecurity and
+# AI enablement practice. It writes an artifact. It does not send mail, post
+# publicly, book a calendar, open a pull request, or change the live site.
+#
+# Use the brief later when AI marketing, lead generation, and meeting
+# scheduling are wired up. Until then it is a draft a person can act on.
+#
+# Setup:
+#   secrets.GROK_API_KEY  required. Create at https://console.x.ai
+#   vars.GROK_MODEL       optional, defaults to grok-4.5
+
+on:
+  # Dispatch only while Actions billing on this account is constrained.
+  # Re-enable a weekly cron when spend is healthy; the script stays cheap
+  # and no-op-safe without GROK_API_KEY.
+  workflow_dispatch:
+    inputs:
+      model:
+        description: "Model override, e.g. grok-4.5 (blank uses vars.GROK_MODEL)"
+        required: false
+        type: string
+
+concurrency:
+  group: practice-growth
+  cancel-in-progress: false
+
+permissions:
+  contents: read
+
+jobs:
+  growth:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+
+    steps:
+      - name: Check out source
+        uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
+
+      - name: Set up Node.js
+        uses: actions/setup-node@249970729cb0ef3589644e2896645e5dc5ba9c38 # v6
+        with:
+          node-version: 24
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build static site
+        run: npm run build
+
+      - name: Confirm the API key is configured
+        id: preflight
+        env:
+          GROK_API_KEY: ${{ secrets.GROK_API_KEY }}
+        run: |
+          if [[ -z "$GROK_API_KEY" ]]; then
+            echo 'configured=false' >> "$GITHUB_OUTPUT"
+            echo '::warning title=Practice growth::GROK_API_KEY is not set, so the brief was skipped. Add it under Settings > Secrets and variables > Actions.'
+          else
+            echo 'configured=true' >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Draft the growth brief
+        if: steps.preflight.outputs.configured == 'true'
+        env:
+          GROK_API_KEY: ${{ secrets.GROK_API_KEY }}
+          GROK_MODEL: ${{ inputs.model || vars.GROK_MODEL || 'grok-4.5' }}
+          GROK_MODEL_AUTO_UPGRADE: ${{ vars.GROK_MODEL_AUTO_UPGRADE || 'true' }}
+        run: npm run growth
+
+      - name: Upload the brief
+        if: steps.preflight.outputs.configured == 'true'
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        with:
+          name: practice-growth-brief
+          path: critique/growth-brief.md
+          retention-days: 90
+          if-no-files-found: warn

@@ -10,12 +10,13 @@ import {
   type PointerEvent as ReactPointerEvent,
 } from "react";
 import { ProtectedEmailButton } from "@/components/ProtectedEmail";
-import { recruiterLine, socialHandles } from "@/lib/contact";
+import { socialHandles, voiceLine } from "@/lib/contact";
 import { credentialHighlights } from "@/lib/credentials";
 import { careerPaths, heroMetrics } from "@/lib/career";
+import { practice } from "@/lib/practice";
 import {
-  engagementModels,
   engagementProcess,
+  servicePackages,
   serviceTracks,
 } from "@/lib/services";
 import type { PortfolioProject, ProjectCategory } from "@/lib/project-data";
@@ -306,14 +307,14 @@ export function PortfolioExperience({
           <span>Stephen M Abbott</span>
         </a>
         <nav className={mobileOpen ? "nav-links nav-links-open" : "nav-links"}>
-          <a href="#services" onClick={() => setMobileOpen(false)}>
-            Services
+          <a href="#packages" onClick={() => setMobileOpen(false)}>
+            Packages
           </a>
           <a href="#profile" onClick={() => setMobileOpen(false)}>
-            Executive
+            Background
           </a>
           <a href="#work" onClick={() => setMobileOpen(false)}>
-            Ventures
+            Portfolio
           </a>
           <Link href="/resume/" onClick={() => setMobileOpen(false)}>
             Résumé
@@ -345,35 +346,35 @@ export function PortfolioExperience({
           </div>
           <div className="hero-copy" data-reveal>
             <p className="eyebrow">
-              <span>Risk decisions</span>
-              <span>AI governance · Product delivery</span>
+              <span>{practice.headline}</span>
+              <span>vCISO · AI governance · Secure delivery</span>
             </p>
             <h1>
               Secure the enterprise.
               <span>Enable what comes next.</span>
             </h1>
             <p className="hero-intro">
-              Cybersecurity and AI executive who turns risk, governance, and
-              emerging technology into durable operating capability—from board
+              A practice that turns risk, governance, and emerging technology
+              into operating capability the internal team can own—from board
               decisions to production systems.
             </p>
             <div className="hero-actions">
-              <a className="button button-primary" href="#contact">
-                Discuss an opportunity <Arrow />
+              <a className="button button-primary" href={voiceLine.href}>
+                Call the stevo.ai line <Arrow />
               </a>
-              <Link className="button button-secondary" href="/resume/">
-                View executive résumé
-              </Link>
+              <a className="button button-secondary" href="#packages">
+                View packages
+              </a>
             </div>
           </div>
 
           <aside
             className="hero-console"
             data-reveal
-            aria-label="Career and engagement paths"
+            aria-label="Practice paths"
           >
             <div className="console-header">
-              <span className="console-kicker">Ways to work together</span>
+              <span className="console-kicker">How to start</span>
             </div>
             <div className="identity-card">
               <div className="profile-frame">
@@ -387,8 +388,8 @@ export function PortfolioExperience({
                 />
               </div>
               <div className="identity-details">
-                <strong>Stephen M Abbott</strong>
-                <span>Cybersecurity &amp; AI executive</span>
+                <strong>{practice.name}</strong>
+                <span>{practice.role}</span>
               </div>
             </div>
             <div className="activity-list">
@@ -424,12 +425,51 @@ export function PortfolioExperience({
 
         <section className="services-section section" id="services">
           <div className="section-heading section-heading-light" data-reveal>
-            <p className="section-number">Advisory services</p>
+            <p className="section-number">Packages</p>
+            <h2>Four ways to start. Same outcome: a decision the team can own.</h2>
+            <p>
+              Scoped cybersecurity and AI enablement work for organizations
+              facing a consequential decision, program reset, or capability
+              gap. Call the stevo.ai line to book a consult, interview, or
+              partnership.
+            </p>
+          </div>
+
+          <div
+            className="package-grid"
+            id="packages"
+            aria-label="Consulting packages"
+          >
+            {servicePackages.map((servicePackage) => (
+              <article key={servicePackage.id} data-reveal>
+                <div className="package-topline">
+                  <span>{servicePackage.label}</span>
+                  <span className="package-cadence">{servicePackage.cadence}</span>
+                </div>
+                <h3>{servicePackage.title}</h3>
+                <p>{servicePackage.description}</p>
+                <div className="package-includes">
+                  <span className="detail-label">Included</span>
+                  <ul>
+                    {servicePackage.includes.map((item) => (
+                      <li key={item}>{item}</li>
+                    ))}
+                  </ul>
+                </div>
+                <p className="package-best-for">{servicePackage.bestFor}</p>
+                <a className="package-start" href={voiceLine.href}>
+                  Book on the stevo.ai line <Arrow />
+                </a>
+              </article>
+            ))}
+          </div>
+
+          <div className="section-heading section-heading-light" data-reveal>
+            <p className="section-number">Practice areas</p>
             <h2>Cybersecurity and AI leadership for the AI-native enterprise.</h2>
             <p>
-              For organizations facing a consequential decision, program reset,
-              or capability gap: clear priorities, defensible controls, and an
-              operating model the internal team can own.
+              Packages draw from these areas. The work is measured against
+              named frameworks, not claimed certifications.
             </p>
           </div>
 
@@ -490,20 +530,6 @@ export function PortfolioExperience({
             ))}
           </div>
 
-          <div
-            className="operating-model"
-            id="engagements"
-            aria-label="Professional engagement models"
-          >
-            {engagementModels.map((model) => (
-              <article key={model.title} data-reveal>
-                <span>{model.label}</span>
-                <h3>{model.title}</h3>
-                <p>{model.description}</p>
-              </article>
-            ))}
-          </div>
-
           <div className="engagement-process" data-reveal>
             <div className="engagement-process-heading">
               <span className="detail-label">How an engagement runs</span>
@@ -539,7 +565,7 @@ export function PortfolioExperience({
             />
           </div>
           <div className="profile-copy" data-reveal>
-            <p className="section-number">Executive record</p>
+            <p className="section-number">Background</p>
             <h2>Enterprise judgment. Measurable outcomes. Technical depth.</h2>
             <p>
               Across enterprise cybersecurity roles, Stephen led organizations
@@ -564,7 +590,7 @@ export function PortfolioExperience({
 
         <section className="work-section section" id="work">
           <div className="section-heading" data-reveal>
-            <p className="section-number">Founder portfolio</p>
+            <p className="section-number">Portfolio</p>
             <h2>Products built from idea to operating reality.</h2>
             <p>
               Each project below is tied to a live product, public repository,
@@ -604,15 +630,15 @@ export function PortfolioExperience({
           <p className="section-number">Contact</p>
           <h2>Bring the hard problem.</h2>
           <p>
-            Share the role, mandate, or product challenge; Stephen will reply
-            directly.
+            {voiceLine.note} Email remains available when a written brief is
+            the better start.
           </p>
           <div className="hero-actions">
-            <ProtectedEmailButton label="Email Stephen" />
-            <a className="button button-secondary" href={recruiterLine.href}>
-              {recruiterLine.label}
-              <span>{recruiterLine.display}</span>
+            <a className="button button-primary" href={voiceLine.href}>
+              {voiceLine.label}
+              <span>{voiceLine.display}</span>
             </a>
+            <ProtectedEmailButton label="Email Stephen" variant="secondary" />
           </div>
 
           <div className="closing-connect">
