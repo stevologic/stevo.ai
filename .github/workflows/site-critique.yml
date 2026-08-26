@@ -3,7 +3,7 @@ name: Site critique
 # Reviews the site as a buyer of cybersecurity and AI enablement consulting,
 # then applies the portfolio half of that advice as real edits and opens a
 # pull request with the diff. The site is a consultancy: packages are the
-# offer, the Grok voice assistant is intake, and background plus portfolio
+# offer, the stevo.ai line is intake, and background plus portfolio
 # stay as proof. The critique must not recast the homepage as a job hunt.
 #
 # It proposes changes, it does not publish them. The critique disagrees with

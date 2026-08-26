@@ -6,7 +6,7 @@ background and a founder portfolio still on the site as proof.
 
 ## What is included
 
-- Consulting packages with a Grok voice assistant as the public intake line
+- Consulting packages with the stevo.ai line as the public intake and scheduling number
 - Practice areas measured against named security and AI frameworks
 - Curated live products enriched with current GitHub activity, releases, and traffic
 - A semantic professional profile at `/resume/` that prints to exactly two pages
@@ -96,12 +96,14 @@ hairlines disappear into anti-aliasing at 16px. Re-run it after changing either
 colour token.
 
 Contact handles live in `lib/contact.ts` and feed the contact block, the
-résumé header, and the `sameAs` structured data from one list. The Grok
-voice assistant is the published intake number, so the homepage CTA, résumé
-header, and Person `telephone` cannot drift. Meeting scheduling is planned
-in the same module (`scheduling`) and stays unpublished until a booking URL
-exists. The email address is stored XOR-masked and decoded in the browser,
-so it never appears in the static export.
+résumé header, and the `sameAs` structured data from one list. The
+**stevo.ai line** (`+1 (623) 887-8905`) is the published intake number, so
+the homepage CTA, résumé header, and Person `telephone` cannot drift. The
+voice assistant answers as stevo.ai, never as Stephen, and books consults,
+interviews, and partnerships. A personal cell must never appear. Meeting
+scheduling via a public calendar URL stays unpublished until one exists.
+The email address is stored XOR-masked and decoded in the browser, so it
+never appears in the static export.
 
 Company framing lives in `lib/practice.ts`. Service tracks, commercial
 packages, the engagement process, and working principles live in
@@ -212,12 +214,12 @@ Model ids use a dot: `grok-4.5` is valid, `grok-4-5` returns model-not-found.
 
 ## Practice growth brief
 
-A second weekly Action asks Grok for marketing, lead, and meeting-prep
+A dispatch-only Action asks Grok for marketing, lead, and meeting-prep
 drafts. It writes `critique/growth-brief.md` as a 90-day artifact. It does
 **not** send mail, post publicly, book a calendar, open a pull request, or
 change the live site. That is deliberate: AI marketing and meeting
 scheduling are the next wiring, not something an unattended job should
-execute.
+execute. It stays off the weekly cron while Actions spend is constrained.
 
 ```sh
 GROK_API_KEY=... npm run growth

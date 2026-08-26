@@ -360,7 +360,7 @@ export function PortfolioExperience({
             </p>
             <div className="hero-actions">
               <a className="button button-primary" href={voiceLine.href}>
-                Call the voice assistant <Arrow />
+                Call the stevo.ai line <Arrow />
               </a>
               <a className="button button-secondary" href="#packages">
                 View packages
@@ -389,9 +389,7 @@ export function PortfolioExperience({
               </div>
               <div className="identity-details">
                 <strong>{practice.name}</strong>
-                <span>
-                  {practice.role}, {practice.title}
-                </span>
+                <span>{practice.role}</span>
               </div>
             </div>
             <div className="activity-list">
@@ -432,8 +430,8 @@ export function PortfolioExperience({
             <p>
               Scoped cybersecurity and AI enablement work for organizations
               facing a consequential decision, program reset, or capability
-              gap. Call the Grok voice assistant to qualify the need and
-              schedule a meeting.
+              gap. Call the stevo.ai line to book a consult, interview, or
+              partnership.
             </p>
           </div>
 
@@ -460,7 +458,7 @@ export function PortfolioExperience({
                 </div>
                 <p className="package-best-for">{servicePackage.bestFor}</p>
                 <a className="package-start" href={voiceLine.href}>
-                  Start with the voice assistant <Arrow />
+                  Book on the stevo.ai line <Arrow />
                 </a>
               </article>
             ))}

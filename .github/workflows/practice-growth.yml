@@ -12,9 +12,9 @@ name: Practice growth brief
 #   vars.GROK_MODEL       optional, defaults to grok-4.5
 
 on:
-  schedule:
-    # 09:18 Thursday UTC, after the Monday site critique has had time to land.
-    - cron: "18 9 * * 4"
+  # Dispatch only while Actions billing on this account is constrained.
+  # Re-enable a weekly cron when spend is healthy; the script stays cheap
+  # and no-op-safe without GROK_API_KEY.
   workflow_dispatch:
     inputs:
       model:

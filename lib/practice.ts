@@ -6,16 +6,16 @@
 export const practice = {
   name: "Stephen M Abbott",
   title: "Cybersecurity & AI Enablement",
-  role: "Principal",
+  role: "Cybersecurity & AI executive",
   headline: "Cybersecurity and AI enablement consultancy",
   description:
     "A cybersecurity and AI enablement consultancy led by Stephen M Abbott. The practice turns risk, governance, and emerging technology into operating capability the internal team can own.",
   socialTitle: "Stephen M Abbott — Cybersecurity & AI Enablement",
   socialDescription:
-    "Cybersecurity and AI enablement consultancy: vCISO leadership, AI governance, and secure delivery. Call the Grok voice assistant to start.",
+    "Cybersecurity and AI enablement consultancy: vCISO leadership, AI governance, and secure delivery. Call the stevo.ai line to book a consult, interview, or partnership.",
   socialImageAlt:
     "Stephen M Abbott: cybersecurity and AI enablement consultancy.",
-  jobTitle: "Principal, Cybersecurity and AI Enablement",
+  jobTitle: "Cybersecurity and AI Executive",
   knowsAbout: [
     "Cybersecurity consulting",
     "AI enablement",

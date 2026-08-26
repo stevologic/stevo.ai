@@ -70,7 +70,9 @@ test("site presents the consultancy, packages, and proof with social metadata", 
   assert.match(html, /twitter:image/);
   assert.match(html, /twitter:image:alt/);
   assert.match(html, /og:image:width/);
-  assert.match(html, /Call the Grok voice assistant to start/);
+  assert.match(html, /Call the stevo\.ai line to book a consult, interview, or partnership/);
+  assert.match(html, /never as Stephen/);
+  assert.match(html, /Cybersecurity &amp; AI executive/);
   assert.match(html, /rel="canonical" href="https:\/\/stevo\.ai\/?"/);
   assert.match(html, /rel="apple-touch-icon"/);
   assert.match(html, /href="\/apple-touch-icon\.png"/);
@@ -137,14 +139,14 @@ test("each homepage section has one distinct job", async () => {
   assert.doesNotMatch(profile, /\b(?:vCISO|VP Cybersecurity|VP AI Enablement)\b/i);
   assert.match(profile, /Read the full career record/);
 
-  // The close has two decisions: call the Grok voice assistant, or email.
+  // The close has two decisions: call the stevo.ai line, or email.
   // Social profiles live here, not again in the adjacent footer.
   const closingActions = closing.match(
     /<div class="hero-actions">([\s\S]*?)<\/div>/,
   )?.[1];
   assert.ok(closingActions);
   assert.match(closingActions, /Email Stephen/);
-  assert.match(closingActions, /Grok voice assistant/);
+  assert.match(closingActions, /stevo\.ai line/);
   assert.match(closingActions, /href="tel:\+16238878905"/);
   assert.match(closingActions, /\+1 \(623\) 887-8905/);
   assert.doesNotMatch(closingActions, /mailto:/i);
@@ -298,7 +300,7 @@ test("consulting packages publish inclusions without invented prices", async () 
   for (const cadence of ["Monthly", "4–6 weeks", "2–3 weeks", "Scoped build"]) {
     assert.ok(packages.includes(cadence), `packages omit cadence ${cadence}`);
   }
-  assert.match(packages, /Start with the voice assistant/);
+  assert.match(packages, /Book on the stevo\.ai line/);
   assert.doesNotMatch(packages, /\$\d/);
   assert.doesNotMatch(html, /class="operating-model"/);
 });
@@ -409,24 +411,25 @@ test("obfuscated mailbox still decodes to the real contact address", async () =>
   assert.equal(decodeProtectedEmail(), "stephenabbott20@gmail.com");
 });
 
-test("Grok voice assistant is the published intake line and the retired number is gone", async () => {
+test("the stevo.ai line is the published intake number and the retired number is gone", async () => {
   const [html, resumeHtml, contactSource] = await Promise.all([
     exportedPage("index.html"),
     exportedPage("resume/index.html"),
     readFile(new URL("../lib/contact.ts", import.meta.url), "utf8"),
   ]);
 
-  assert.match(contactSource, /label: "Grok voice assistant"/);
+  assert.match(contactSource, /label: "stevo.ai line"/);
   assert.match(contactSource, /display: "\+1 \(623\) 887-8905"/);
   assert.match(contactSource, /href: "tel:\+16238878905"/);
   assert.match(contactSource, /e164: "\+16238878905"/);
+  assert.match(contactSource, /never as Stephen/);
   assert.match(contactSource, /status: "planned"/);
 
   for (const [label, page] of [
     ["homepage", html],
     ["resume", resumeHtml],
   ]) {
-    assert.match(page, /Grok voice assistant/, `${label} omits the voice-assistant label`);
+    assert.match(page, /stevo\.ai line/, `${label} omits the stevo.ai line label`);
     assert.match(page, /tel:\+16238878905/, `${label} omits the voice-assistant tel link`);
     assert.match(
       page,
@@ -434,6 +437,7 @@ test("Grok voice assistant is the published intake line and the retired number i
       `${label} omits the formatted voice-assistant number`,
     );
     assert.doesNotMatch(page, /Recruiter line/, `${label} still labels the line for recruiters`);
+    assert.doesNotMatch(page, /Call Stephen/, `${label} presents the line as Stephen personally`);
     assert.doesNotMatch(
       page,
       /623[-.\s]?363[-.\s]?4985|6233634985|\+1[-.\s]?623[-.\s]?363[-.\s]?4985/,
@@ -485,7 +489,7 @@ test("social handles are published on the site and in structured data", async ()
     assert.deepEqual(node.sameAs, profiles);
   }
   const person = graph.find((node) => node["@type"] === "Person");
-  assert.equal(person.jobTitle, "Principal, Cybersecurity and AI Enablement");
+  assert.equal(person.jobTitle, "Cybersecurity and AI Executive");
   assert.equal(person.telephone, "+16238878905");
   const organization = graph.find((node) => {
     const type = node["@type"];
@@ -495,7 +499,7 @@ test("social handles are published on the site and in structured data", async ()
   });
   assert.ok(organization, "Organization node is missing");
   assert.equal(organization.telephone, "+16238878905");
-  assert.equal(organization.contactPoint?.name, "Grok voice assistant");
+  assert.equal(organization.contactPoint?.name, "stevo.ai line");
   assert.equal(organization.hasOfferCatalog?.itemListElement?.length, 4);
   const portfolio = graph.find((node) => node["@type"] === "ItemList");
   const projects = await publishedProjects();
@@ -723,7 +727,7 @@ test("professional resume is detailed, private, and print-ready", async () => {
   assert.doesNotMatch(html, /American Express/i);
   assert.doesNotMatch(html, /Full career r(?:é|&eacute;|&#xE9;)sum(?:é|&eacute;|&#xE9;) available on request/i);
 
-  // Contact is email plus the Grok voice assistant. Assert on the contact
+  // Contact is email plus the stevo.ai line. Assert on the contact
   // list itself: the site-wide JSON-LD in the page head legitimately carries
   // the social profiles, and the resume document cannot be matched with a lazy
   // regex because career roles are nested <article> elements that terminate it
@@ -734,7 +738,7 @@ test("professional resume is detailed, private, and print-ready", async () => {
   assert.ok(contact, "resume contact list not found");
   assert.doesNotMatch(contact, /MadeItHappen|twitch\.tv|discord\.com|x\.com/i);
   assert.equal((contact.match(/<li>/g) || []).length, 2, "email and voice assistant");
-  assert.match(contact, /Grok voice assistant/);
+  assert.match(contact, /stevo\.ai line/);
   assert.match(contact, /href="tel:\+16238878905"/);
   assert.match(contact, /\+1 \(623\) 887-8905/);
 
@@ -1130,7 +1134,7 @@ test("the site critique action is wired to Grok correctly", async () => {
   assert.doesNotMatch(script, /xai-[A-Za-z0-9]{8}/, "no API key literal");
   assert.match(script, /process\.env\.GROK_API_KEY/);
   assert.match(script, /cybersecurity and AI enablement consultancy/);
-  assert.match(script, /Grok voice assistant is the intake line/);
+  assert.match(script, /stevo.ai line is the intake/);
   assert.match(script, /Background and portfolio remain available as proof/);
 
   // It proposes changes on a branch; a person merges. It must never publish to
@@ -1177,7 +1181,7 @@ test("the practice growth action drafts marketing without publishing or sending"
   assert.match(workflow, /'grok-4\.5'/);
   assert.match(workflow, /npm run growth/);
   assert.match(JSON.parse(pkg).scripts.growth, /practice-growth\.mjs/);
-  assert.match(script, /Grok voice assistant/);
+  assert.match(script, /stevo.ai line/);
   assert.match(script, /servicePackages/);
   assert.match(script, /does not send/i);
   assert.doesNotMatch(workflow, /gh pr create|git push origin main/);
@@ -1315,7 +1319,7 @@ test("the critique brief carries readable copy, not build artifacts", async () =
 
   // Real copy from both pages, so the advisor reviews what a visitor reads.
   assert.match(brief, /Secure the enterprise/);
-  assert.match(brief, /Call the voice assistant|View packages/);
+  assert.match(brief, /Call the stevo\.ai line|View packages/);
   assert.match(brief, /Enterprise platforms/);
 
   // None of the export plumbing.
