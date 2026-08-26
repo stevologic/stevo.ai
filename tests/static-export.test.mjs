@@ -50,8 +50,8 @@ test("site presents the consultancy, packages, and proof with social metadata", 
   ]);
   const retiredEmploymentQualifier = ["frac", "tional"].join("");
 
-  assert.match(html, /Secure the enterprise\./i);
-  assert.match(html, /Enable what comes next\./i);
+  assert.match(html, /Cybersecurity and AI enablement\./i);
+  assert.match(html, /I run the program with your team, then leave it with them\./i);
   assert.match(html, /Cybersecurity and AI enablement consultancy/);
   assert.match(html, />Packages</);
   assert.match(html, />Background</);
@@ -70,8 +70,14 @@ test("site presents the consultancy, packages, and proof with social metadata", 
   assert.match(html, /twitter:image/);
   assert.match(html, /twitter:image:alt/);
   assert.match(html, /og:image:width/);
-  assert.match(html, /Call the stevo\.ai line to book a consult, interview, or partnership/);
-  assert.match(html, /never as Stephen/);
+  assert.doesNotMatch(html, /never as Stephen/);
+  assert.doesNotMatch(
+    html,
+    /The stevo\.ai voice assistant answers as stevo\.ai/,
+  );
+  assert.doesNotMatch(html, /Email remains available when a written brief/);
+  assert.doesNotMatch(html, /Call the stevo\.ai line|Book on the stevo\.ai line/);
+  assert.doesNotMatch(html, /scheduling line/);
   assert.match(html, /Cybersecurity &amp; AI executive/);
   assert.match(html, /rel="canonical" href="https:\/\/stevo\.ai\/?"/);
   assert.match(html, /rel="apple-touch-icon"/);
@@ -128,7 +134,8 @@ test("each homepage section has one distinct job", async () => {
   const footer = html.match(/<footer class="site-footer">([\s\S]*?)<\/footer>/)?.[1];
 
   assert.ok(heroIntro && identity && profile && closing && footer);
-  assert.doesNotMatch(heroIntro, /\b(?:16|11) years|\b(?:v?CISO|VP)\b/i);
+  assert.doesNotMatch(heroIntro, /\b(?:16|11) years|\bVP\b/);
+  assert.match(heroIntro, /vCISO work, AI controls, and the occasional build/);
   assert.doesNotMatch(identity, /href="\/resume\//);
   assert.doesNotMatch(html, /console-footnote/);
 
@@ -139,17 +146,20 @@ test("each homepage section has one distinct job", async () => {
   assert.doesNotMatch(profile, /\b(?:vCISO|VP Cybersecurity|VP AI Enablement)\b/i);
   assert.match(profile, /Read the full career record/);
 
-  // The close has two decisions: call the stevo.ai line, or email.
+  // The close has two decisions: the phone number, or email.
   // Social profiles live here, not again in the adjacent footer.
   const closingActions = closing.match(
     /<div class="hero-actions">([\s\S]*?)<\/div>/,
   )?.[1];
   assert.ok(closingActions);
-  assert.match(closingActions, /Email Stephen/);
-  assert.match(closingActions, /stevo\.ai scheduling line/);
+  assert.match(closingActions, /stephenabbott20@gmail\.com/);
+  assert.match(closingActions, /mailto:stephenabbott20@gmail\.com/);
   assert.match(closingActions, /href="tel:\+16238878905"/);
   assert.match(closingActions, /\+1 \(623\) 887-8905/);
-  assert.doesNotMatch(closingActions, /mailto:/i);
+  assert.doesNotMatch(closingActions, /scheduling line|voice assistant|never as Stephen/i);
+  assert.doesNotMatch(closing, /Bring the hard problem/);
+  assert.match(closing, /<h2>Contact<\/h2>/);
+  assert.doesNotMatch(closingActions, />Email</);
   assert.doesNotMatch(footer, /social-handles/);
   assert.equal((html.match(/<ul class="social-handles"/g) || []).length, 1);
 });
@@ -234,10 +244,9 @@ test("credentials are named rather than counted", async () => {
   assert.ok(strip, "index is missing the credential strip");
   const credentialOrder = [
     "Offensive Security Certified Professional",
-    "BA, Arizona State University",
-    "AWS Certified Cloud Practitioner",
-    "Harvard &amp; Duke leadership programs",
+    "BA, Walter Cronkite School of Journalism, Arizona State University",
   ];
+  assert.doesNotMatch(strip, /BA, Arizona State University</);
 
   for (const credential of credentialOrder) {
     assert.ok(strip.includes(credential), `credential strip omits ${credential}`);
@@ -253,6 +262,8 @@ test("credentials are named rather than counted", async () => {
   // CRISC is training, not a certification, so it stays off the headline strip
   // and is disclosed in full on the resume instead.
   assert.doesNotMatch(strip, /CRISC/);
+  assert.doesNotMatch(strip, /Harvard|Duke/);
+  assert.doesNotMatch(strip, /AWS Certified Cloud Practitioner/);
 
   // Completed training must never be presented as a held certification.
   assert.doesNotMatch(html, /CRISC certified|Certified in Risk and Information/i);
@@ -300,7 +311,9 @@ test("consulting packages publish inclusions without invented prices", async () 
   for (const cadence of ["Monthly", "4–6 weeks", "Scoped program", "Scoped build"]) {
     assert.ok(packages.includes(cadence), `packages omit cadence ${cadence}`);
   }
-  assert.match(packages, /Book on the stevo\.ai line/);
+  assert.doesNotMatch(packages, /Book on the stevo\.ai line|Call the stevo\.ai line/);
+  assert.match(html, /Four scoped ways in/);
+  assert.doesNotMatch(html, /consequential decision|Same outcome/);
   assert.doesNotMatch(packages, /\$\d/);
   assert.doesNotMatch(html, /class="operating-model"/);
 
@@ -321,6 +334,7 @@ test("engagement formats, process, and safeguards stay distinct", async () => {
     assert.ok(html.includes(format), `packages omit ${format}`);
   }
   assert.match(html, /How an engagement runs/);
+  assert.doesNotMatch(html, /A clear path from evidence to internal ownership/);
   for (const phase of ["Baseline", "Prioritize", "Operate", "Transfer"]) {
     assert.ok(html.includes(`<h4>${phase}</h4>`), `process omits ${phase}`);
   }
@@ -391,7 +405,7 @@ test("command palette and navigation hotkeys are removed", async () => {
   );
 });
 
-test("email contact is revealed interactively instead of exposed to basic scrapers", async () => {
+test("homepage contact prints the mailbox next to the phone", async () => {
   const [html, resumeHtml, contact, component] = await Promise.all([
     exportedPage("index.html"),
     exportedPage("resume/index.html"),
@@ -402,11 +416,15 @@ test("email contact is revealed interactively instead of exposed to basic scrape
     ),
   ]);
 
-  assert.match(html, /Email Stephen/);
-  assert.doesNotMatch(html, /mailto:/i);
-  assert.doesNotMatch(html, /[A-Za-z0-9._%+-]+@gmail\.com/i);
-  assert.doesNotMatch(resumeHtml, /mailto:/i);
-  assert.doesNotMatch(resumeHtml, /[A-Za-z0-9._%+-]+@gmail\.com/i);
+  const closingActions = html.match(
+    /<section class="closing-section section" id="contact">[\s\S]*?<div class="hero-actions">([\s\S]*?)<\/div>/,
+  )?.[1];
+  assert.ok(closingActions);
+  assert.match(closingActions, /stephenabbott20@gmail\.com/);
+  assert.match(closingActions, /mailto:stephenabbott20@gmail\.com/);
+  assert.doesNotMatch(closingActions, />Email</);
+  assert.doesNotMatch(html, /Email available on request/);
+  assert.doesNotMatch(resumeHtml, /Email available on request/);
   assert.match(contact, /decodeProtectedEmail/);
   assert.match(contact, /protectedMailbox/);
   assert.match(component, /decodeProtectedEmail/);
@@ -426,14 +444,17 @@ test("the stevo.ai line is the published intake number and the retired number is
     readFile(new URL("../lib/contact.ts", import.meta.url), "utf8"),
   ]);
 
-  assert.match(contactSource, /label: "stevo.ai scheduling line"/);
+  assert.match(contactSource, /label: "Phone"/);
   assert.match(contactSource, /display: "\+1 \(623\) 887-8905"/);
   assert.match(contactSource, /href: "tel:\+16238878905"/);
   assert.match(contactSource, /e164: "\+16238878905"/);
-  assert.match(contactSource, /never as Stephen/);
-  assert.match(contactSource, /books a follow-up with Stephen and the calling company/);
-  assert.match(html, /name, company, intent/);
-  assert.match(html, /consulting requests, interviews, and partnerships/);
+  assert.doesNotMatch(contactSource, /never as Stephen/);
+  assert.doesNotMatch(
+    contactSource,
+    /The stevo\.ai voice assistant answers as stevo\.ai/,
+  );
+  assert.doesNotMatch(html, /name, company, intent/);
+  assert.doesNotMatch(html, /consulting requests, interviews, and partnerships/);
   assert.match(contactSource, /answersAs: "stevo.ai"/);
   assert.match(contactSource, /timezone: "America\/Phoenix"/);
   assert.match(contactSource, /status: "planned"/);
@@ -442,12 +463,12 @@ test("the stevo.ai line is the published intake number and the retired number is
     ["homepage", html],
     ["resume", resumeHtml],
   ]) {
-    assert.match(page, /stevo\.ai scheduling line/, `${label} omits the scheduling-line label`);
-    assert.match(page, /tel:\+16238878905/, `${label} omits the voice-assistant tel link`);
+    assert.doesNotMatch(page, /scheduling line/, `${label} still explains a scheduling line`);
+    assert.match(page, /tel:\+16238878905/, `${label} omits the tel link`);
     assert.match(
       page,
       /\+1 \(623\) 887-8905/,
-      `${label} omits the formatted voice-assistant number`,
+      `${label} omits the formatted number`,
     );
     assert.doesNotMatch(page, /Recruiter line/, `${label} still labels the line for recruiters`);
     assert.doesNotMatch(page, /Call Stephen/, `${label} presents the line as Stephen personally`);
@@ -455,6 +476,12 @@ test("the stevo.ai line is the published intake number and the retired number is
       page,
       /623[-.\s]?363[-.\s]?4985|6233634985|\+1[-.\s]?623[-.\s]?363[-.\s]?4985/,
       `${label} still publishes the retired number`,
+    );
+    assert.doesNotMatch(page, /American Express/i, `${label} names an employer`);
+    assert.doesNotMatch(
+      page,
+      /intentionally omitted|available on request/i,
+      `${label} still advertises an omission`,
     );
   }
 
@@ -512,7 +539,7 @@ test("social handles are published on the site and in structured data", async ()
   });
   assert.ok(organization, "Organization node is missing");
   assert.equal(organization.telephone, "+16238878905");
-  assert.equal(organization.contactPoint?.name, "stevo.ai scheduling line");
+  assert.equal(organization.contactPoint?.name, "Phone");
   assert.equal(organization.hasOfferCatalog?.itemListElement?.length, 4);
   const portfolio = graph.find((node) => node["@type"] === "ItemList");
   const projects = await publishedProjects();
@@ -531,9 +558,8 @@ test("consultancy offer, background, and employment history stay distinct", asyn
   assert.match(html, /vCISO/);
   assert.match(html, /AI enablement/);
   assert.match(html, /class="section-number">Portfolio</);
-  assert.match(resumeHtml, /CISO/);
-  assert.match(resumeHtml, /VP Cybersecurity/);
-  assert.match(resumeHtml, /VP AI Enablement/);
+  assert.doesNotMatch(resumeHtml, /VP Cybersecurity/);
+  assert.doesNotMatch(resumeHtml, /VP AI Enablement/);
 
   const resumeDocument = resumeHtml.match(
     /<article class="resume-document">([\s\S]*?)<\/article>/,
@@ -639,10 +665,20 @@ test("GitHub traffic aggregates stay privacy-conscious wherever they appear", as
     assert.equal(typeof repository.traffic.clones.uniques, "number");
   }
 
+  const alsoShippedRepos = new Set([
+    "doge-miner",
+    "tiny-book-buddies-ai",
+    "mouse_clicker",
+    "arrowheadpaesanowebsite",
+  ]);
+  const visibleTraffic = withVisibleTraffic.filter((repository) => {
+    const repo = repository.repo || repository.name || "";
+    return !alsoShippedRepos.has(repo);
+  });
   assert.equal(
     (html.match(/class="project-traffic(?:\s|\")/g) || []).length,
-    withVisibleTraffic.length,
-    "every repository with meaningful traffic should render a traffic block",
+    visibleTraffic.length,
+    "every first-screen repository with meaningful traffic should render a traffic block",
   );
   assert.ok(withTraffic.length > 0, "traffic data has stopped being collected");
   assert.match(html, /GitHub views \//);
@@ -718,7 +754,11 @@ test("professional resume is detailed, private, and print-ready", async () => {
   // The role line stands alone; the resume is the person, not the company.
   assert.match(
     html,
-    /class="resume-role">\s*Cybersecurity &amp; AI Executive · CISO · VP Cybersecurity · VP AI Enablement/,
+    /class="resume-role">\s*Cybersecurity and AI Executive/,
+  );
+  assert.doesNotMatch(
+    html,
+    /CISO · VP Cybersecurity · VP AI Enablement/,
   );
   assert.match(html, /Professional experience/);
   assert.match(html, /16 years/);
@@ -730,7 +770,22 @@ test("professional resume is detailed, private, and print-ready", async () => {
   assert.match(html, /2019-2021/);
   assert.match(html, /2014-2019/);
   assert.match(html, /2010-2014/);
-  assert.match(html, /Employer names intentionally omitted/);
+  assert.match(html, /Senior Infrastructure Engineer/);
+  assert.doesNotMatch(html, /Resilient Transaction Platforms/);
+  assert.match(
+    html,
+    /Director-level at Fortune 100 payments: CTEM, board risk, and a security engineering org of up to 26/,
+  );
+  assert.doesNotMatch(html, /Employer names intentionally omitted/);
+  const intro = html.match(
+    /<p class="resume-introduction">([\s\S]*?)<\/p>/,
+  )?.[1];
+  assert.ok(intro);
+  assert.equal(
+    (intro.match(/Fortune 100 payments/g) || []).length,
+    1,
+    "Fortune 100 payments must appear once in the intro",
+  );
   assert.doesNotMatch(
     html,
     /id="resume-profile-heading">Executive profile/,
@@ -750,8 +805,8 @@ test("professional resume is detailed, private, and print-ready", async () => {
   )?.[0];
   assert.ok(contact, "resume contact list not found");
   assert.doesNotMatch(contact, /MadeItHappen|twitch\.tv|discord\.com|x\.com/i);
-  assert.equal((contact.match(/<li>/g) || []).length, 2, "email and voice assistant");
-  assert.match(contact, /stevo\.ai scheduling line/);
+  assert.equal((contact.match(/<li>/g) || []).length, 2, "email and phone");
+  assert.doesNotMatch(contact, /scheduling line/);
   assert.match(contact, /href="tel:\+16238878905"/);
   assert.match(contact, /\+1 \(623\) 887-8905/);
 
@@ -762,11 +817,15 @@ test("professional resume is detailed, private, and print-ready", async () => {
 test("resume publishes route-specific canonical and social metadata", async () => {
   const html = await exportedPage("resume/index.html");
 
-  assert.match(html, /Executive Résumé \| Stephen M Abbott/);
+  assert.match(html, /Résumé \| Stephen M Abbott/);
   assert.match(html, /https:\/\/stevo\.ai\/resume\//);
   assert.match(
     html,
-    /Employer-anonymized executive résumé for full-time CISO, VP Cybersecurity, and VP AI Enablement opportunities/,
+    /Résumé for Stephen M Abbott, cybersecurity and AI executive\./,
+  );
+  assert.doesNotMatch(
+    html,
+    /Employer-anonymized|full-time CISO|VP Cybersecurity|VP AI Enablement opportunities/,
   );
   assert.match(html, /https:\/\/stevo\.ai\/og-executive\.png/);
   assert.match(html, /summary_large_image/);
@@ -871,6 +930,71 @@ test("Arrowhead Paesano is published as a project", async () => {
   assert.match(html, /Arrowhead Paesano/);
   assert.match(html, /https:\/\/arrowheadpaesano\.com/);
   assert.match(html, /arrowheadpaesanowebsite/);
+});
+
+test("consumer side projects sit in Also shipped, not the first portfolio screen", async () => {
+  const html = await exportedPage("index.html");
+  const cards = html.match(/<article class="project-card[\s\S]*?<\/article>/g) || [];
+  const alsoShipped = html.match(
+    /<div class="also-shipped"[\s\S]*?<\/div>/,
+  )?.[0];
+
+  assert.ok(alsoShipped, "also-shipped section is missing");
+  for (const name of [
+    "DOGE MINER",
+    "Tiny Book Buddies AI",
+    "Sonny",
+    "mouseclicker.app",
+    "Arrowhead Paesano",
+  ]) {
+    assert.ok(alsoShipped.includes(name), `also shipped omits ${name}`);
+    assert.ok(
+      !cards.some((card) => card.includes(name)),
+      `${name} is still a first-screen card`,
+    );
+  }
+
+  assert.ok(cards.some((card) => card.includes("security-recipes.ai")));
+  assert.ok(cards.some((card) => card.includes("OSS Dependency Explorer")));
+  assert.ok(cards.some((card) => card.includes("Shiba Studio")));
+});
+
+test("homepage contact is a heading plus phone and email only", async () => {
+  const html = await exportedPage("index.html");
+  const closing = html.match(
+    /<section class="closing-section section" id="contact">([\s\S]*?)<\/section>/,
+  )?.[1];
+
+  assert.ok(closing);
+  assert.match(closing, /<h2>Contact<\/h2>/);
+  assert.match(closing, /\+1 \(623\) 887-8905/);
+  assert.match(closing, /stephenabbott20@gmail\.com/);
+  assert.doesNotMatch(closing, />Email</);
+  assert.equal(
+    (html.match(/href="tel:\+16238878905"/g) || []).length,
+    2,
+    "phone appears in the hero and contact only",
+  );
+  assert.match(html, /Part-time security executive/);
+  assert.match(html, /Pick the use cases, write the rules, name the owner/);
+  assert.match(html, /Fix the security and IT workflow, not only the stack/);
+  assert.match(
+    html,
+    /Build one approved use case so it can ship, then hand it to someone on your side/,
+  );
+
+  const vCISOBestFor =
+    /A security program entering growth, transition, board scrutiny, or a reset/;
+  const packages = html.match(
+    /<div class="package-grid"[^>]*>[\s\S]*?<div class="section-heading/,
+  )?.[0];
+  const vCISOTrack = html.match(
+    /<article class="service-detail" id="service-detail-lead"[\s\S]*?<\/article>/,
+  )?.[0];
+  assert.ok(packages);
+  assert.ok(vCISOTrack);
+  assert.match(packages, vCISOBestFor);
+  assert.doesNotMatch(vCISOTrack, vCISOBestFor);
 });
 
 test("Arizona Now is published as a live product without a public source", async () => {
@@ -1030,10 +1154,21 @@ test("project cards carry each site's own icon and theme colour", async () => {
     }
   }
 
-  // Cards render the icon rather than the old sequence number.
+  // Cards render the icon rather than the old sequence number. Consumer
+  // side projects live in Also shipped and do not get a card.
+  const alsoShippedSlugs = new Set([
+    "doge-miner",
+    "tiny-book-buddies-ai",
+    "sonnys-world",
+    "mouseclicker",
+    "arrowhead-paesano",
+  ]);
+  const firstScreen = projects.filter(
+    (project) => !alsoShippedSlugs.has(project.slug),
+  );
   assert.equal(
     (html.match(/class="project-favicon"/g) || []).length,
-    projects.length,
+    firstScreen.length,
   );
   assert.doesNotMatch(html, /class="project-index"/);
 
@@ -1118,9 +1253,15 @@ test("the executive record uses a meaningful heading, not a repeated name", asyn
     readFile(new URL("../app/globals.css", import.meta.url), "utf8"),
   ]);
 
-  assert.match(html, /Enterprise judgment\. Measurable outcomes\. Technical depth\./);
+  assert.doesNotMatch(
+    html,
+    /Enterprise judgment\. Measurable outcomes\. Technical depth\./,
+  );
+  assert.match(html, /26 engineers/);
+  assert.match(html, /92%/);
+  assert.match(html, /75%/);
+  assert.match(html, /99\.99%/);
   assert.doesNotMatch(html, /<blockquote>Stephen M Abbott<\/blockquote>/);
-  assert.match(styles, /\.profile-copy > h2\s*{/);
   assert.doesNotMatch(styles, /\.profile-copy blockquote\s*{/);
 });
 
@@ -1147,8 +1288,12 @@ test("the site critique action is wired to Grok correctly", async () => {
   assert.doesNotMatch(script, /xai-[A-Za-z0-9]{8}/, "no API key literal");
   assert.match(script, /process\.env\.GROK_API_KEY/);
   assert.match(script, /cybersecurity and AI enablement consultancy/);
-  assert.match(script, /stevo.ai line is the intake/);
+  assert.match(script, /Contact is a heading plus the stevo.ai line/);
   assert.match(script, /Background and portfolio remain available as proof/);
+  assert.match(script, /Headlines, package blurbs, contact, and the résumé header are locked/);
+  assert.match(workflow, /github.event_name == 'workflow_dispatch'/);
+  assert.match(workflow, /default: false/);
+  assert.match(workflow, /id: resume\n        if: false/);
 
   // It proposes changes on a branch; a person merges. It must never publish to
   // the live site on its own.
@@ -1331,8 +1476,8 @@ test("the critique brief carries readable copy, not build artifacts", async () =
   const brief = await buildBrief();
 
   // Real copy from both pages, so the advisor reviews what a visitor reads.
-  assert.match(brief, /Secure the enterprise/);
-  assert.match(brief, /Call the stevo\.ai line|View packages/);
+  assert.match(brief, /Cybersecurity and AI enablement/);
+  assert.match(brief, /View packages|\+1 \(623\) 887-8905/);
   assert.match(brief, /Enterprise platforms/);
 
   // None of the export plumbing.
@@ -1454,6 +1599,16 @@ test("the resume optimizer cannot rewrite employment history", async () => {
     ["edits the tool inventory", { technicalBreadth: { Security: { value: "Splunk" } } }],
     ["edits commercial products", { commercialProducts: { "Application security": { value: "Veracode" } } }],
     ["invents a focus area", { focusAreas: { "Quantum readiness": { description: "Post-quantum work." } } }],
+    [
+      "rewrites locked Brand QA focus areas",
+      {
+        focusAreas: {
+          [current.focusAreas[0].title]: {
+            description: "A longer consultant rewrite of the locked card.",
+          },
+        },
+      },
+    ],
     [
       "pads the resume past the page budget",
       {

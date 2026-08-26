@@ -40,24 +40,17 @@ export const socialHandles: SocialHandle[] = [
 
 export const socialProfileUrls = socialHandles.map((profile) => profile.href);
 
-/**
- * Public intake and scheduling line. The stevo.ai voice assistant answers as
- * stevo.ai, never as Stephen. It fields consulting requests, interviews, and
- * partnerships, then books a follow-up with Stephen and the calling company.
- */
+/** Public stevo.ai line. Do not publish a personal cell. */
 export const voiceLine = {
-  label: "stevo.ai scheduling line",
+  label: "Phone",
   display: "+1 (623) 887-8905",
   href: "tel:+16238878905",
   e164: "+16238878905",
-  note: "The stevo.ai voice assistant answers as stevo.ai, never as Stephen. It fields consulting requests, interviews, and partnerships, takes name, company, intent, and a callback or email, and books a follow-up with Stephen and the calling company.",
 } as const;
 
 /**
- * How the live Grok Voice Think Fast 2.0 line already behaves. The site does
- * not implement this — the voice agent does. Keep this as the hook for later
- * marketing and meeting-scheduling work. Do not publish a personal cell, a
- * paid scheduler, or a calendar booking URL until one exists.
+ * Unpublished intake metadata. Do not render this on the site or invent a
+ * voice-agent product description from it.
  */
 export const voiceIntake = {
   answersAs: "stevo.ai",

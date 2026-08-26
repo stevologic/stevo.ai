@@ -17,9 +17,9 @@ import {
   technicalBreadth,
 } from "@/lib/resume-content";
 
-const resumeTitle = "Executive Résumé | Stephen M Abbott";
+const resumeTitle = "Résumé | Stephen M Abbott";
 const resumeDescription =
-  "Employer-anonymized executive résumé for full-time CISO, VP Cybersecurity, and VP AI Enablement opportunities, backed by enterprise security leadership, governed AI, and founder-built product execution.";
+  "Résumé for Stephen M Abbott, cybersecurity and AI executive.";
 
 export const metadata: Metadata = {
   title: resumeTitle,
@@ -56,13 +56,12 @@ export default function ResumePage() {
           <p className="resume-eyebrow">Professional resume</p>
           <h1 className="resume-name">Stephen M Abbott</h1>
           <p className="resume-role">
-            Cybersecurity &amp; AI Executive · CISO · VP Cybersecurity · VP AI Enablement
+            Cybersecurity and AI Executive
           </p>
           <p className="resume-introduction">
-            Cybersecurity and AI enablement executive spanning board risk, CTEM,
-            application and software supply-chain security, sensitive-data
-            protection, governed AI, and resilient systems—combining enterprise
-            leadership with founder-level delivery.
+            Cybersecurity and AI executive. Director-level at Fortune 100
+            payments: CTEM, board risk, and a security engineering org of up
+            to 26.
           </p>
 
           <ul className="resume-contact" aria-label="Contact">
@@ -70,12 +69,7 @@ export default function ResumePage() {
               <ProtectedEmailAddress />
             </li>
             <li>
-              <a href={voiceLine.href}>
-                <span className="resume-contact-network">
-                  {voiceLine.label}
-                </span>
-                {voiceLine.display}
-              </a>
+              <a href={voiceLine.href}>{voiceLine.display}</a>
             </li>
           </ul>
 
@@ -264,9 +258,6 @@ export default function ResumePage() {
         </section>
 
         <footer className="resume-footer">
-          <p className="resume-availability">
-            Employer names intentionally omitted
-          </p>
           <a
             className="resume-github-link"
             href="https://github.com/stevologic"

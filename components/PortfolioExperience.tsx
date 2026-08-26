@@ -9,8 +9,7 @@ import {
   useState,
   type PointerEvent as ReactPointerEvent,
 } from "react";
-import { ProtectedEmailButton } from "@/components/ProtectedEmail";
-import { socialHandles, voiceLine } from "@/lib/contact";
+import { decodeProtectedEmail, socialHandles, voiceLine } from "@/lib/contact";
 import { credentialHighlights } from "@/lib/credentials";
 import { careerPaths, heroMetrics } from "@/lib/career";
 import { practice } from "@/lib/practice";
@@ -27,6 +26,15 @@ const filters: Array<"All work" | ProjectCategory> = [
   "AI systems",
   "Products & ventures",
 ];
+
+/** Consumer / side products kept on the site, off the first portfolio screen. */
+const alsoShippedSlugs = new Set([
+  "doge-miner",
+  "tiny-book-buddies-ai",
+  "sonnys-world",
+  "mouseclicker",
+  "arrowhead-paesano",
+]);
 
 
 function formatDate(value?: string) {
@@ -232,10 +240,16 @@ export function PortfolioExperience({
   const [mobileOpen, setMobileOpen] = useState(false);
   const rootRef = useRef<HTMLDivElement>(null);
 
+  const primaryProjects = projects.filter(
+    (project) => !alsoShippedSlugs.has(project.slug),
+  );
+  const alsoShipped = projects.filter((project) =>
+    alsoShippedSlugs.has(project.slug),
+  );
   const visibleProjects =
     activeFilter === "All work"
-      ? projects
-      : projects.filter((project) => project.category === activeFilter);
+      ? primaryProjects
+      : primaryProjects.filter((project) => project.category === activeFilter);
 
   useEffect(() => {
     const onKeyDown = (event: KeyboardEvent) => {
@@ -350,17 +364,16 @@ export function PortfolioExperience({
               <span>vCISO · AI governance · Secure delivery</span>
             </p>
             <h1>
-              Secure the enterprise.
-              <span>Enable what comes next.</span>
+              Cybersecurity and AI enablement.
+              <span>I run the program with your team, then leave it with them.</span>
             </h1>
             <p className="hero-intro">
-              A practice that turns risk, governance, and emerging technology
-              into operating capability the internal team can own—from board
-              decisions to production systems.
+              vCISO work, AI controls, and the occasional build. The point is a
+              decision your people can run after I am gone.
             </p>
             <div className="hero-actions">
               <a className="button button-primary" href={voiceLine.href}>
-                Call the stevo.ai line <Arrow />
+                {voiceLine.display} <Arrow />
               </a>
               <a className="button button-secondary" href="#packages">
                 View packages
@@ -426,13 +439,7 @@ export function PortfolioExperience({
         <section className="services-section section" id="services">
           <div className="section-heading section-heading-light" data-reveal>
             <p className="section-number">Packages</p>
-            <h2>Four ways to start. Same outcome: a decision the team can own.</h2>
-            <p>
-              Scoped cybersecurity and AI enablement work for organizations
-              facing a consequential decision, program reset, or capability
-              gap. Call the stevo.ai line to book a consult, interview, or
-              partnership.
-            </p>
+            <h2>Four scoped ways in.</h2>
           </div>
 
           <div
@@ -457,20 +464,13 @@ export function PortfolioExperience({
                   </ul>
                 </div>
                 <p className="package-best-for">{servicePackage.bestFor}</p>
-                <a className="package-start" href={voiceLine.href}>
-                  Book on the stevo.ai line <Arrow />
-                </a>
               </article>
             ))}
           </div>
 
           <div className="section-heading section-heading-light" data-reveal>
             <p className="section-number">Practice areas</p>
-            <h2>Cybersecurity and AI leadership for the AI-native enterprise.</h2>
-            <p>
-              Packages draw from these areas. The work is measured against
-              named frameworks, not claimed certifications.
-            </p>
+            <h2>Practice areas.</h2>
           </div>
 
           <div className="service-workbench" data-reveal>
@@ -513,10 +513,12 @@ export function PortfolioExperience({
                       ))}
                     </ul>
                   </div>
-                  <div className="best-for">
-                    <span className="detail-label">Best for</span>
-                    <p>{service.bestFor}</p>
-                  </div>
+                  {service.bestFor ? (
+                    <div className="best-for">
+                      <span className="detail-label">Best for</span>
+                      <p>{service.bestFor}</p>
+                    </div>
+                  ) : null}
                 </div>
                 <div className="service-standards">
                   <span className="detail-label">Measured against</span>
@@ -532,8 +534,7 @@ export function PortfolioExperience({
 
           <div className="engagement-process" data-reveal>
             <div className="engagement-process-heading">
-              <span className="detail-label">How an engagement runs</span>
-              <h3>A clear path from evidence to internal ownership.</h3>
+              <h3>How an engagement runs</h3>
             </div>
             <ol>
               {engagementProcess.map((phase) => (
@@ -566,7 +567,6 @@ export function PortfolioExperience({
           </div>
           <div className="profile-copy" data-reveal>
             <p className="section-number">Background</p>
-            <h2>Enterprise judgment. Measurable outcomes. Technical depth.</h2>
             <p>
               Across enterprise cybersecurity roles, Stephen led organizations
               of up to 26 engineers, cut sensitive-data findings by 92% while
@@ -575,10 +575,9 @@ export function PortfolioExperience({
               transaction platforms.
             </p>
             <p>
-              His scope spans board-facing risk measures, CTEM, application and
-              software supply-chain security, security data platforms,
-              resilience, and governed AI—supported by hands-on product and
-              engineering work.
+              Board-facing risk, CTEM, application and software supply-chain
+              security, security data platforms, resilience, and governed AI,
+              with hands-on product and engineering work.
             </p>
             <div className="profile-actions">
               <Link className="text-link" href="/resume/">
@@ -624,21 +623,46 @@ export function PortfolioExperience({
               <ProjectCard project={project} index={index} key={project.slug} />
             ))}
           </div>
+
+          {alsoShipped.length > 0 ? (
+            <div className="also-shipped" data-reveal>
+              <p className="detail-label">Also shipped</p>
+              <ul>
+                {alsoShipped.map((project) => (
+                  <li key={project.slug}>
+                    <a href={project.siteUrl} target="_blank" rel="noreferrer">
+                      {project.name}
+                    </a>
+                    {project.sourceUrl ? (
+                      <a
+                        className="also-shipped-source"
+                        href={project.sourceUrl}
+                        target="_blank"
+                        rel="noreferrer"
+                      >
+                        Source
+                      </a>
+                    ) : null}
+                  </li>
+                ))}
+              </ul>
+            </div>
+          ) : null}
         </section>
 
         <section className="closing-section section" id="contact">
           <p className="section-number">Contact</p>
-          <h2>Bring the hard problem.</h2>
-          <p>
-            {voiceLine.note} Email remains available when a written brief is
-            the better start.
-          </p>
+          <h2>Contact</h2>
           <div className="hero-actions">
             <a className="button button-primary" href={voiceLine.href}>
-              {voiceLine.label}
-              <span>{voiceLine.display}</span>
+              {voiceLine.display}
             </a>
-            <ProtectedEmailButton label="Email Stephen" variant="secondary" />
+            <a
+              className="button button-secondary"
+              href={`mailto:${decodeProtectedEmail()}`}
+            >
+              {decodeProtectedEmail()}
+            </a>
           </div>
 
           <div className="closing-connect">

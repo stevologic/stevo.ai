@@ -11,7 +11,7 @@ export interface ServiceTrack {
    * engagement is measured against — not certifications held.
    */
   standards: string[];
-  bestFor: string;
+  bestFor?: string;
 }
 
 export const serviceTracks: ServiceTrack[] = [
@@ -35,8 +35,6 @@ export const serviceTracks: ServiceTrack[] = [
       "FAIR risk quantification",
     ],
     mode: "Executive advisory",
-    bestFor:
-      "A security program entering growth, transition, board scrutiny, or a reset.",
   },
   {
     id: "enable",
@@ -150,8 +148,7 @@ export interface ServicePackage {
 /**
  * Commercial packages the practice sells. Scope and inclusions live here so
  * the homepage, JSON-LD offer catalog, and weekly growth brief cannot drift.
- * Dollar prices are not published: a security engagement is scoped after the
- * voice assistant qualifies the need.
+ * Dollar prices are not published.
  */
 export const servicePackages: ServicePackage[] = [
   {
@@ -160,7 +157,7 @@ export const servicePackages: ServicePackage[] = [
     title: "vCISO retainer",
     cadence: "Monthly",
     description:
-      "An accountable security executive relationship for organizations that need direction, governance, and board confidence without standing up a full-time CISO.",
+      "Part-time security executive. Roadmap, board risk, and the weekly operating cadence. Your team stays the team.",
     includes: [
       "Security strategy, roadmap, and operating cadence",
       "Board-ready risk measures and decision support",
@@ -177,7 +174,7 @@ export const servicePackages: ServicePackage[] = [
     title: "AI enablement sprint",
     cadence: "4–6 weeks",
     description:
-      "A controlled path from scattered experimentation to business-owned AI capability, with policy and controls the team can operate.",
+      "Pick the use cases, write the rules, name the owner. Four to six weeks.",
     includes: [
       "Use-case portfolio and adoption roadmap",
       "AI policy and control architecture",
@@ -194,7 +191,7 @@ export const servicePackages: ServicePackage[] = [
     title: "AI-native modernization",
     cadence: "Scoped program",
     description:
-      "Redesign the operating work—not just the tooling—so cybersecurity and IT teams make faster decisions with controls intact.",
+      "Fix the security and IT workflow, not only the stack.",
     includes: [
       "AI-native operating model and workflow redesign",
       "Cybersecurity and IT process automation",
@@ -211,7 +208,7 @@ export const servicePackages: ServicePackage[] = [
     title: "Delivery sprint",
     cadence: "Scoped build",
     description:
-      "A defined security or AI use case moved into a defensible working system, then transferred to an internal owner.",
+      "Build one approved use case so it can ship, then hand it to someone on your side.",
     includes: [
       "Architecture and implementation of the agreed use case",
       "MCP servers, agent toolchains, or control automation",

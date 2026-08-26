@@ -1,10 +1,9 @@
 name: Site critique
 
-# Reviews the site as a buyer of cybersecurity and AI enablement consulting,
-# then applies the portfolio half of that advice as real edits and opens a
-# pull request with the diff. The site is a consultancy: packages are the
-# offer, the stevo.ai line is intake, and background plus portfolio
-# stay as proof. The critique must not recast the homepage as a job hunt.
+# Reviews the site as a buyer of cybersecurity and AI enablement consulting.
+# Scheduled runs are advisory only. They must not rewrite headlines, package
+# blurbs, contact, or the résumé header — those are human-owned Brand QA copy.
+# Portfolio apply stays behind an explicit workflow_dispatch flag.
 #
 # It proposes changes, it does not publish them. The critique disagrees with
 # itself between runs on judgement calls, and this site sells security services
@@ -37,9 +36,9 @@ on:
         required: false
         type: string
       apply_changes:
-        description: "Apply the portfolio changes and open a pull request"
+        description: "Apply portfolio-only changes and open a pull request. Does not rewrite headlines, packages, contact, or the resume header."
         required: false
-        default: true
+        default: false
         type: boolean
 
 concurrency:
@@ -109,16 +108,20 @@ jobs:
         id: optimize
         if: >-
           steps.preflight.outputs.configured == 'true' &&
-          (github.event_name != 'workflow_dispatch' || inputs.apply_changes)
+          github.event_name == 'workflow_dispatch' &&
+          inputs.apply_changes
         env:
           GROK_API_KEY: ${{ secrets.GROK_API_KEY }}
           GROK_MODEL: ${{ steps.critique.outputs.model || inputs.model || vars.GROK_MODEL || 'grok-4.5' }}
         run: npm run optimize:portfolio
 
 
+      # Résumé header, focus cards, and contact are Brand QA locked. The
+      # optimizer must not run on a schedule and cannot rewrite those surfaces
+      # even when a human applies portfolio changes.
       - name: Sharpen the resume wording
         id: resume
-        if: steps.optimize.outcome == 'success'
+        if: false
         env:
           GROK_API_KEY: ${{ secrets.GROK_API_KEY }}
           GROK_MODEL: ${{ steps.critique.outputs.model || inputs.model || vars.GROK_MODEL || 'grok-4.5' }}

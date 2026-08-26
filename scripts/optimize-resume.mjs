@@ -110,26 +110,14 @@ export function applyResumeEdits(current, edits, baseline = null) {
     }
   }
 
-  // --- Focus areas: reword only, count fixed. ------------------------------
-  const focusEdits = edits.focusAreas || {};
-  for (const [title, override] of Object.entries(focusEdits)) {
-    const area = next.focusAreas.find((a) => a.title === title);
-    assert(area, `no focus area titled "${title}"; areas cannot be added`);
-    for (const [field, value] of Object.entries(override)) {
-      assert(
-        ["title", "description"].includes(field),
-        `"${title}": ${field} is not editable`,
-      );
-      assert(
-        typeof value === "string" && value.trim().length > 10,
-        `"${title}": ${field} must be a real string`,
-      );
-      area[field] = value;
-    }
-  }
+  // --- Focus areas are Brand QA locked. ------------------------------------
   assert(
-    next.focusAreas.length === current.focusAreas.length,
-    "the number of focus areas must not change",
+    !edits.focusAreas,
+    "focus areas are locked Brand QA copy and cannot be rewritten",
+  );
+  assert(
+    JSON.stringify(next.focusAreas) === JSON.stringify(current.focusAreas),
+    "focus areas changed, which must never happen",
   );
 
   // --- Factual inventories are untouchable. --------------------------------
@@ -196,15 +184,16 @@ const systemPrompt = `You are a business advisor with full authority over this r
 You may rewrite:
 - each role's "scope" line
 - each role's achievement bullets
-- the focus-area titles and descriptions
 
 You may not:
 - add or remove a role, or change any date or job title
 - change the NUMBER of bullets in a role. Reword them; never drop one.
 - introduce any number, percentage, team size, or figure that is not already in the résumé. Inventing one on a security professional's résumé is a serious error.
-- touch technical breadth or commercial products at all.
+- touch technical breadth, commercial products, or focus areas at all
+- name an employer, or add an "employer names omitted" line
+- write voice-assistant, scheduling-line, or intake-mechanism copy
 
-Style: lead with outcome, then how. Cut hedging and filler. Prefer concrete verbs. Keep the employer anonymised — never name or guess a company.
+Style: lead with outcome, then how. Cut hedging and filler. Prefer concrete verbs. Never name or guess a company.
 
 CRITICAL: your rewrite must be the same length or SHORTER than the original overall. The résumé is typeset to exactly two printed pages. Tighten; do not expand.
 
@@ -213,9 +202,6 @@ Return ONLY valid JSON, no markdown fence:
   "rationale": "2-3 sentences on what you sharpened and why",
   "careerExperience": {
     "2024-2026": { "scope": "...", "highlights": ["...", "..."] }
-  },
-  "focusAreas": {
-    "Existing focus area title": { "title": "...", "description": "..." }
   }
 }
 
