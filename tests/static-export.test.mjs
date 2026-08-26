@@ -146,7 +146,7 @@ test("each homepage section has one distinct job", async () => {
   )?.[1];
   assert.ok(closingActions);
   assert.match(closingActions, /Email Stephen/);
-  assert.match(closingActions, /stevo\.ai line/);
+  assert.match(closingActions, /stevo\.ai scheduling line/);
   assert.match(closingActions, /href="tel:\+16238878905"/);
   assert.match(closingActions, /\+1 \(623\) 887-8905/);
   assert.doesNotMatch(closingActions, /mailto:/i);
@@ -426,11 +426,14 @@ test("the stevo.ai line is the published intake number and the retired number is
     readFile(new URL("../lib/contact.ts", import.meta.url), "utf8"),
   ]);
 
-  assert.match(contactSource, /label: "stevo.ai line"/);
+  assert.match(contactSource, /label: "stevo.ai scheduling line"/);
   assert.match(contactSource, /display: "\+1 \(623\) 887-8905"/);
   assert.match(contactSource, /href: "tel:\+16238878905"/);
   assert.match(contactSource, /e164: "\+16238878905"/);
   assert.match(contactSource, /never as Stephen/);
+  assert.match(contactSource, /books a follow-up with Stephen and the calling company/);
+  assert.match(html, /name, company, intent/);
+  assert.match(html, /consulting requests, interviews, and partnerships/);
   assert.match(contactSource, /answersAs: "stevo.ai"/);
   assert.match(contactSource, /timezone: "America\/Phoenix"/);
   assert.match(contactSource, /status: "planned"/);
@@ -439,7 +442,7 @@ test("the stevo.ai line is the published intake number and the retired number is
     ["homepage", html],
     ["resume", resumeHtml],
   ]) {
-    assert.match(page, /stevo\.ai line/, `${label} omits the stevo.ai line label`);
+    assert.match(page, /stevo\.ai scheduling line/, `${label} omits the scheduling-line label`);
     assert.match(page, /tel:\+16238878905/, `${label} omits the voice-assistant tel link`);
     assert.match(
       page,
@@ -509,7 +512,7 @@ test("social handles are published on the site and in structured data", async ()
   });
   assert.ok(organization, "Organization node is missing");
   assert.equal(organization.telephone, "+16238878905");
-  assert.equal(organization.contactPoint?.name, "stevo.ai line");
+  assert.equal(organization.contactPoint?.name, "stevo.ai scheduling line");
   assert.equal(organization.hasOfferCatalog?.itemListElement?.length, 4);
   const portfolio = graph.find((node) => node["@type"] === "ItemList");
   const projects = await publishedProjects();
@@ -748,7 +751,7 @@ test("professional resume is detailed, private, and print-ready", async () => {
   assert.ok(contact, "resume contact list not found");
   assert.doesNotMatch(contact, /MadeItHappen|twitch\.tv|discord\.com|x\.com/i);
   assert.equal((contact.match(/<li>/g) || []).length, 2, "email and voice assistant");
-  assert.match(contact, /stevo\.ai line/);
+  assert.match(contact, /stevo\.ai scheduling line/);
   assert.match(contact, /href="tel:\+16238878905"/);
   assert.match(contact, /\+1 \(623\) 887-8905/);
 

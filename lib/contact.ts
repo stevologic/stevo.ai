@@ -41,16 +41,16 @@ export const socialHandles: SocialHandle[] = [
 export const socialProfileUrls = socialHandles.map((profile) => profile.href);
 
 /**
- * Public intake line. The stevo.ai voice assistant answers as the practice,
- * never as Stephen. It fields consulting requests, interviews, and
- * partnerships, then books a follow-up.
+ * Public intake and scheduling line. The stevo.ai voice assistant answers as
+ * stevo.ai, never as Stephen. It fields consulting requests, interviews, and
+ * partnerships, then books a follow-up with Stephen and the calling company.
  */
 export const voiceLine = {
-  label: "stevo.ai line",
+  label: "stevo.ai scheduling line",
   display: "+1 (623) 887-8905",
   href: "tel:+16238878905",
   e164: "+16238878905",
-  note: "The stevo.ai voice assistant answers as the practice, never as Stephen. It fields consulting requests, interviews, and partnerships, then books a follow-up.",
+  note: "The stevo.ai voice assistant answers as stevo.ai, never as Stephen. It fields consulting requests, interviews, and partnerships, takes name, company, intent, and a callback or email, and books a follow-up with Stephen and the calling company.",
 } as const;
 
 /**
