@@ -152,13 +152,14 @@ test("each homepage section has one distinct job", async () => {
     /<div class="hero-actions">([\s\S]*?)<\/div>/,
   )?.[1];
   assert.ok(closingActions);
-  assert.match(closingActions, />Email</);
+  assert.match(closingActions, /stephenabbott20@gmail\.com/);
+  assert.match(closingActions, /mailto:stephenabbott20@gmail\.com/);
   assert.match(closingActions, /href="tel:\+16238878905"/);
   assert.match(closingActions, /\+1 \(623\) 887-8905/);
   assert.doesNotMatch(closingActions, /scheduling line|voice assistant|never as Stephen/i);
   assert.doesNotMatch(closing, /Bring the hard problem/);
   assert.match(closing, /<h2>Contact<\/h2>/);
-  assert.doesNotMatch(closingActions, /mailto:/i);
+  assert.doesNotMatch(closingActions, />Email</);
   assert.doesNotMatch(footer, /social-handles/);
   assert.equal((html.match(/<ul class="social-handles"/g) || []).length, 1);
 });
@@ -243,8 +244,9 @@ test("credentials are named rather than counted", async () => {
   assert.ok(strip, "index is missing the credential strip");
   const credentialOrder = [
     "Offensive Security Certified Professional",
-    "BA, Arizona State University",
+    "BA, Walter Cronkite School of Journalism, Arizona State University",
   ];
+  assert.doesNotMatch(strip, /BA, Arizona State University</);
 
   for (const credential of credentialOrder) {
     assert.ok(strip.includes(credential), `credential strip omits ${credential}`);
@@ -403,7 +405,7 @@ test("command palette and navigation hotkeys are removed", async () => {
   );
 });
 
-test("email contact is revealed interactively instead of exposed to basic scrapers", async () => {
+test("homepage contact prints the mailbox next to the phone", async () => {
   const [html, resumeHtml, contact, component] = await Promise.all([
     exportedPage("index.html"),
     exportedPage("resume/index.html"),
@@ -414,21 +416,20 @@ test("email contact is revealed interactively instead of exposed to basic scrape
     ),
   ]);
 
-  assert.match(html, />Email</);
-  assert.doesNotMatch(html, /mailto:/i);
-  assert.doesNotMatch(html, /[A-Za-z0-9._%+-]+@gmail\.com/i);
-  assert.doesNotMatch(resumeHtml, /mailto:/i);
-  assert.doesNotMatch(resumeHtml, /[A-Za-z0-9._%+-]+@gmail\.com/i);
+  const closingActions = html.match(
+    /<section class="closing-section section" id="contact">[\s\S]*?<div class="hero-actions">([\s\S]*?)<\/div>/,
+  )?.[1];
+  assert.ok(closingActions);
+  assert.match(closingActions, /stephenabbott20@gmail\.com/);
+  assert.match(closingActions, /mailto:stephenabbott20@gmail\.com/);
+  assert.doesNotMatch(closingActions, />Email</);
   assert.doesNotMatch(html, /Email available on request/);
   assert.doesNotMatch(resumeHtml, /Email available on request/);
-  assert.match(html, /Email/);
   assert.match(contact, /decodeProtectedEmail/);
   assert.match(contact, /protectedMailbox/);
   assert.match(component, /decodeProtectedEmail/);
   assert.doesNotMatch(contact, /[A-Za-z0-9._%+-]+@gmail\.com/i);
   assert.doesNotMatch(component, /[A-Za-z0-9._%+-]+@gmail\.com/i);
-  assert.doesNotMatch(html, /Email available on request/);
-  assert.doesNotMatch(resumeHtml, /Email available on request/);
 });
 
 test("obfuscated mailbox still decodes to the real contact address", async () => {
@@ -967,6 +968,8 @@ test("homepage contact is a heading plus phone and email only", async () => {
   assert.ok(closing);
   assert.match(closing, /<h2>Contact<\/h2>/);
   assert.match(closing, /\+1 \(623\) 887-8905/);
+  assert.match(closing, /stephenabbott20@gmail\.com/);
+  assert.doesNotMatch(closing, />Email</);
   assert.equal(
     (html.match(/href="tel:\+16238878905"/g) || []).length,
     2,
@@ -979,6 +982,19 @@ test("homepage contact is a heading plus phone and email only", async () => {
     html,
     /Build one approved use case so it can ship, then hand it to someone on your side/,
   );
+
+  const vCISOBestFor =
+    /A security program entering growth, transition, board scrutiny, or a reset/;
+  const packages = html.match(
+    /<div class="package-grid"[^>]*>[\s\S]*?<div class="section-heading/,
+  )?.[0];
+  const vCISOTrack = html.match(
+    /<article class="service-detail" id="service-detail-lead"[\s\S]*?<\/article>/,
+  )?.[0];
+  assert.ok(packages);
+  assert.ok(vCISOTrack);
+  assert.match(packages, vCISOBestFor);
+  assert.doesNotMatch(vCISOTrack, vCISOBestFor);
 });
 
 test("Arizona Now is published as a live product without a public source", async () => {

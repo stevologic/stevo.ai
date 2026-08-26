@@ -11,7 +11,7 @@ export interface ServiceTrack {
    * engagement is measured against — not certifications held.
    */
   standards: string[];
-  bestFor: string;
+  bestFor?: string;
 }
 
 export const serviceTracks: ServiceTrack[] = [
@@ -35,8 +35,6 @@ export const serviceTracks: ServiceTrack[] = [
       "FAIR risk quantification",
     ],
     mode: "Executive advisory",
-    bestFor:
-      "A security program entering growth, transition, board scrutiny, or a reset.",
   },
   {
     id: "enable",

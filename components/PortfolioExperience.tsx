@@ -9,8 +9,7 @@ import {
   useState,
   type PointerEvent as ReactPointerEvent,
 } from "react";
-import { ProtectedEmailButton } from "@/components/ProtectedEmail";
-import { socialHandles, voiceLine } from "@/lib/contact";
+import { decodeProtectedEmail, socialHandles, voiceLine } from "@/lib/contact";
 import { credentialHighlights } from "@/lib/credentials";
 import { careerPaths, heroMetrics } from "@/lib/career";
 import { practice } from "@/lib/practice";
@@ -514,10 +513,12 @@ export function PortfolioExperience({
                       ))}
                     </ul>
                   </div>
-                  <div className="best-for">
-                    <span className="detail-label">Best for</span>
-                    <p>{service.bestFor}</p>
-                  </div>
+                  {service.bestFor ? (
+                    <div className="best-for">
+                      <span className="detail-label">Best for</span>
+                      <p>{service.bestFor}</p>
+                    </div>
+                  ) : null}
                 </div>
                 <div className="service-standards">
                   <span className="detail-label">Measured against</span>
@@ -656,7 +657,12 @@ export function PortfolioExperience({
             <a className="button button-primary" href={voiceLine.href}>
               {voiceLine.display}
             </a>
-            <ProtectedEmailButton label="Email" variant="secondary" />
+            <a
+              className="button button-secondary"
+              href={`mailto:${decodeProtectedEmail()}`}
+            >
+              {decodeProtectedEmail()}
+            </a>
           </div>
 
           <div className="closing-connect">
