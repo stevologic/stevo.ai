@@ -54,9 +54,21 @@ export const voiceLine = {
 } as const;
 
 /**
- * Meeting scheduling is not published yet. When a calendar booking URL is
- * ready, set `href` and the homepage, résumé, and JSON-LD will pick it up
- * from this one object.
+ * How the live Grok Voice Think Fast 2.0 line already behaves. The site does
+ * not implement this — the voice agent does. Keep this as the hook for later
+ * marketing and meeting-scheduling work. Do not publish a personal cell, a
+ * paid scheduler, or a calendar booking URL until one exists.
+ */
+export const voiceIntake = {
+  answersAs: "stevo.ai",
+  timezone: "America/Phoenix",
+  calendar: "MadeItHappen",
+  fields: ["name", "company", "intent", "callback", "email"],
+} as const;
+
+/**
+ * A public calendar booking URL is not published yet. When one exists, set
+ * `href` here so the homepage, résumé, and JSON-LD pick it up from one place.
  */
 export const scheduling = {
   label: "Schedule a meeting",

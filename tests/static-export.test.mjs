@@ -109,7 +109,7 @@ test("packages lead into background and portfolio proof", async () => {
   assert.match(html, /class="section-number">Contact</);
   assert.doesNotMatch(html, /class="section-number">0\d \//);
   assert.match(html, /vCISO retainer/);
-  assert.match(html, /Decision advisory/);
+  assert.match(html, /AI-native modernization/);
   assert.match(html, /Delivery sprint/);
 });
 
@@ -292,24 +292,32 @@ test("consulting packages publish inclusions without invented prices", async () 
   for (const title of [
     "vCISO retainer",
     "AI enablement sprint",
-    "Decision advisory",
+    "AI-native modernization",
     "Delivery sprint",
   ]) {
     assert.ok(packages.includes(title), `packages omit ${title}`);
   }
-  for (const cadence of ["Monthly", "4–6 weeks", "2–3 weeks", "Scoped build"]) {
+  for (const cadence of ["Monthly", "4–6 weeks", "Scoped program", "Scoped build"]) {
     assert.ok(packages.includes(cadence), `packages omit cadence ${cadence}`);
   }
   assert.match(packages, /Book on the stevo\.ai line/);
   assert.doesNotMatch(packages, /\$\d/);
   assert.doesNotMatch(html, /class="operating-model"/);
+
+  const { servicePackages, serviceTracks } = await import("../lib/services.ts");
+  assert.equal(servicePackages.length, serviceTracks.length);
+  assert.deepEqual(
+    [...servicePackages.map((servicePackage) => servicePackage.trackId)].sort(),
+    [...serviceTracks.map((track) => track.id)].sort(),
+    "each existing service track must have exactly one package",
+  );
 });
 
 test("engagement formats, process, and safeguards stay distinct", async () => {
   const html = await exportedPage("index.html");
 
   assert.doesNotMatch(html, /class="engagement-deliverables"/);
-  for (const format of ["vCISO retainer", "Decision advisory", "Delivery sprint"]) {
+  for (const format of ["vCISO retainer", "AI-native modernization", "Delivery sprint"]) {
     assert.ok(html.includes(format), `packages omit ${format}`);
   }
   assert.match(html, /How an engagement runs/);
@@ -423,6 +431,8 @@ test("the stevo.ai line is the published intake number and the retired number is
   assert.match(contactSource, /href: "tel:\+16238878905"/);
   assert.match(contactSource, /e164: "\+16238878905"/);
   assert.match(contactSource, /never as Stephen/);
+  assert.match(contactSource, /answersAs: "stevo.ai"/);
+  assert.match(contactSource, /timezone: "America\/Phoenix"/);
   assert.match(contactSource, /status: "planned"/);
 
   for (const [label, page] of [

@@ -189,19 +189,20 @@ export const servicePackages: ServicePackage[] = [
     trackId: "enable",
   },
   {
-    id: "decide",
-    label: "Decide",
-    title: "Decision advisory",
-    cadence: "2–3 weeks",
+    id: "modernize",
+    label: "Modernize",
+    title: "AI-native modernization",
+    cadence: "Scoped program",
     description:
-      "One consequential security or AI decision, resolved with evidence, trade-offs, an accountable owner, and a practical roadmap.",
+      "Redesign the operating work—not just the tooling—so cybersecurity and IT teams make faster decisions with controls intact.",
     includes: [
-      "Baseline of controls, exposure, and ownership",
-      "Ranked options by risk reduced per unit of effort",
-      "An explicit list of what will not be done this quarter",
-      "A roadmap the internal team can execute",
+      "AI-native operating model and workflow redesign",
+      "Cybersecurity and IT process automation",
+      "Platform, data, integration, and resilience roadmaps",
+      "Technology rationalization and change enablement",
     ],
-    bestFor: "A decision that is already waiting on an answer.",
+    bestFor:
+      "Teams constrained by manual work, fragmented tooling, or legacy process.",
     trackId: "deliver",
   },
   {
