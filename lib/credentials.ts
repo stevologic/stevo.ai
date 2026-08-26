@@ -49,10 +49,8 @@ export const credentials: Credential[] = [
   },
 ];
 
-/** Named credentials for the homepage strip, in order of buyer relevance. */
+/** Named credentials for the homepage strip. Training stays on the résumé. */
 export const credentialHighlights = [
   "Offensive Security Certified Professional",
   "BA, Arizona State University",
-  "AWS Certified Cloud Practitioner",
-  "Harvard & Duke leadership programs",
 ];

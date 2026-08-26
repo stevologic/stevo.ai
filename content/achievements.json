@@ -17,7 +17,7 @@
   "identity": {
     "name": "Stephen M Abbott",
     "practice": "Cybersecurity and AI enablement consultancy",
-    "intake": "stevo.ai scheduling line",
+    "intake": "+1 (623) 887-8905",
     "targetRoles": [
       "Cybersecurity and AI Enablement Principal",
       "Virtual Chief Information Security Officer (vCISO)",
@@ -87,8 +87,8 @@
     },
     {
       "dates": "2010-2014",
-      "title": "Senior Infrastructure Engineer, Resilient Transaction Platforms",
-      "scope": "Backend services · Operational resilience · Automated delivery",
+      "title": "Senior Infrastructure Engineer",
+      "scope": "Transaction platforms · 99.99%",
       "highlights": [
         "Supported backend services for business-critical transaction systems in a highly regulated environment.",
         "Maintained performance monitoring for 99.99% availability and helped automate application deployments through CI/CD.",

@@ -97,20 +97,20 @@ colour token.
 
 Contact handles live in `lib/contact.ts` and feed the contact block, the
 résumé header, and the `sameAs` structured data from one list. The
-**stevo.ai line** (`+1 (623) 887-8905`) is the published intake number, so
-the homepage CTA, résumé header, and Person `telephone` cannot drift. The
-voice assistant answers as stevo.ai, never as Stephen, and books consults,
-interviews, and partnerships. A personal cell must never appear. Meeting
-scheduling via a public calendar URL stays unpublished until one exists.
-The email address is stored XOR-masked and decoded in the browser, so it
-never appears in the static export.
+**stevo.ai line** (`+1 (623) 887-8905`) and email are the published contact,
+so the homepage, résumé header, and Person `telephone` cannot drift. Contact
+copy is a heading plus those two facts. Do not describe a voice assistant.
+A personal cell must never appear. Meeting scheduling via a public calendar
+URL stays unpublished until one exists. The email address is stored
+XOR-masked and decoded in the browser, so it never appears in the static
+export.
 
 Company framing lives in `lib/practice.ts`. Service tracks, commercial
 packages, the engagement process, and working principles live in
 `lib/services.ts`; credentials live in `lib/credentials.ts`. They feed the
 page and the structured data, so the marketing copy and the machine-readable
 claims cannot drift apart. Packages do not publish dollar prices; a
-security engagement is scoped after the voice assistant qualifies the need.
+security engagement is scoped before a price is published.
 Credential wording is deliberate — completed training is described as
 training, never as certification — and the `standards` on each service
 track name frameworks the work is measured against, not certifications held.
@@ -146,8 +146,10 @@ A weekly GitHub Action asks Grok to review the site's copy, verbiage, and
 structure as a buyer of cybersecurity and AI enablement consulting, then
 applies the portfolio half of that advice and **opens a pull request** with
 the diff. The critique is instructed to keep the site a consultancy —
-packages as the offer, voice assistant as intake, background and portfolio
-as proof — and not to recast the homepage as a job hunt.
+packages as the offer, phone and email as contact, background and portfolio
+as proof — and not to recast the homepage as a job hunt. Scheduled runs
+are advisory only; they cannot rewrite headlines, package blurbs, contact,
+or the résumé header.
 
 It proposes; a person merges. The critique disagrees with itself between runs on
 judgement calls, and this site sells security services where a wrong claim is a

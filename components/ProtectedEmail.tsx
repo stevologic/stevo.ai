@@ -69,7 +69,7 @@ export function ProtectedEmailAddress({
   const hydrated = useHydrated();
 
   if (!hydrated) {
-    return <span className={className}>Email available on request</span>;
+    return <span className={className}>Email</span>;
   }
 
   const email = decodeProtectedEmail();

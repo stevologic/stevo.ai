@@ -47,8 +47,8 @@
     },
     {
       "dates": "2010-2014",
-      "title": "Senior Infrastructure Engineer, Resilient Transaction Platforms",
-      "scope": "Critical backends · Operational resilience · Automated delivery",
+      "title": "Senior Infrastructure Engineer",
+      "scope": "Transaction platforms · 99.99%",
       "highlights": [
         "Operated backend services for business-critical transaction systems in a regulated environment.",
         "Sustained 99.99% availability through performance monitoring and automated CI/CD deployments.",
@@ -58,20 +58,20 @@
   ],
   "focusAreas": [
     {
-      "title": "Executive security leadership and governance",
-      "description": "Turn enterprise risk, resilience, and board measures into an accountable cybersecurity operating model."
+      "title": "Security leadership",
+      "description": "Board risk, program cadence, and the security org."
     },
     {
-      "title": "Application and supply-chain security",
-      "description": "Govern vulnerability intelligence, dependencies, licenses, SBOMs, and accountable remediation."
+      "title": "AppSec and software supply chain",
+      "description": "SBOMs, dependencies, remediation that someone owns."
     },
     {
-      "title": "Governed enterprise AI enablement",
-      "description": "Design AI adoption around business value, bounded context, human approval, evidence, rollback, and ownership."
+      "title": "Governed AI",
+      "description": "AI the business can run: named owner, human approval, evidence, a way to roll it back."
     },
     {
-      "title": "Founder-led AI product delivery",
-      "description": "Launch AI products—web, desktop, API, and CLI—with clear users, delivery paths, and market position."
+      "title": "Product delivery",
+      "description": "I also ship the product, not just the slide."
     }
   ],
   "technicalBreadth": [
