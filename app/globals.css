@@ -1429,6 +1429,113 @@ img {
   content: none;
 }
 
+.package-grid {
+  display: grid;
+  max-width: 1480px;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 18px;
+  margin: 0 auto clamp(64px, 8vw, 110px);
+}
+
+.package-grid article {
+  display: flex;
+  min-height: 100%;
+  flex-direction: column;
+  padding: clamp(28px, 3vw, 42px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 18px;
+  background: rgba(255, 255, 255, 0.035);
+}
+
+.package-topline {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  color: var(--accent);
+  font-family: var(--mono);
+  font-size: 0.65rem;
+  text-transform: uppercase;
+}
+
+.package-cadence {
+  color: rgba(241, 239, 231, 0.48);
+}
+
+.package-grid h3 {
+  margin: 28px 0 0;
+  font-family: var(--serif);
+  font-size: clamp(2rem, 3vw, 2.7rem);
+  font-weight: 400;
+  letter-spacing: -0.05em;
+  line-height: 1.05;
+}
+
+.package-grid article > p {
+  margin: 16px 0 0;
+  color: rgba(241, 239, 231, 0.61);
+  font-size: 0.92rem;
+  line-height: 1.6;
+}
+
+.package-includes {
+  margin-top: 28px;
+  padding-top: 22px;
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.package-includes ul {
+  display: grid;
+  gap: 10px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.package-includes li {
+  position: relative;
+  padding-left: 16px;
+  color: rgba(241, 239, 231, 0.74);
+  font-size: 0.78rem;
+  line-height: 1.45;
+}
+
+.package-includes li::before {
+  position: absolute;
+  top: 0.58em;
+  left: 0;
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: var(--accent);
+  content: "";
+}
+
+.package-best-for {
+  margin-top: 22px;
+  color: var(--paper);
+  font-family: var(--serif);
+  font-size: 1.15rem;
+  font-style: italic;
+  line-height: 1.35;
+}
+
+.package-start {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  margin-top: auto;
+  padding-top: 22px;
+  color: var(--accent);
+  font-size: 0.82rem;
+  font-weight: 700;
+}
+
+.package-start:hover,
+.package-start:focus-visible {
+  color: var(--paper);
+}
+
 .operating-model {
   display: grid;
   max-width: 1480px;
@@ -2433,6 +2540,10 @@ img {
 
   .project-meta {
     margin-top: 28px;
+  }
+
+  .package-grid {
+    grid-template-columns: 1fr;
   }
 
   .service-workbench {

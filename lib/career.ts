@@ -13,24 +13,23 @@ export const career = {
 } as const;
 
 /**
- * The distinct paths this site supports. Keeping these together makes the
- * hero explicit for executive recruiters, advisory buyers, and venture
- * partners without blending permanent employment into client services.
+ * How a visitor should move through the site. The practice leads with
+ * packages; background and portfolio stay available as proof.
  */
 export const careerPaths = [
   {
-    label: "Full-time executive roles",
-    title: "CISO · VP Cybersecurity · VP AI Enablement",
+    label: "How to start",
+    title: "Packages",
+    href: "#packages",
+  },
+  {
+    label: "The principal",
+    title: "Background",
     href: "#profile",
   },
   {
-    label: "Advisory engagements",
-    title: "vCISO · Cybersecurity & IT",
-    href: "#services",
-  },
-  {
-    label: "Products & partnerships",
-    title: "Founder ventures",
+    label: "Proof of delivery",
+    title: "Portfolio",
     href: "#work",
   },
 ] as const;

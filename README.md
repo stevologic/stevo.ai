@@ -1,16 +1,17 @@
 # stevo.ai
 
-The professional portfolio of Stephen M Abbott: applied AI, cybersecurity,
-product engineering, shipped work, and focused advisory services.
+The cybersecurity and AI enablement consultancy of Stephen M Abbott:
+packages for vCISO leadership, AI governance, and secure delivery, with
+background and a founder portfolio still on the site as proof.
 
 ## What is included
 
-- An interactive, responsive portfolio with keyboard navigation and project filters
+- Consulting packages with a Grok voice assistant as the public intake line
+- Practice areas measured against named security and AI frameworks
 - Curated live products enriched with current GitHub activity, releases, and traffic
-- AI, security, product, and technical advisory service offerings
 - A semantic professional profile at `/resume/` that prints to exactly two pages
 - Social, search, sitemap, custom-domain, and reduced-motion support
-- Automated daily project refresh and deployment to the `gh-pages` branch
+- Automated daily project refresh, weekly site critique, and a weekly growth brief
 
 ## Local development
 
@@ -95,19 +96,22 @@ hairlines disappear into anti-aliasing at 16px. Re-run it after changing either
 colour token.
 
 Contact handles live in `lib/contact.ts` and feed the contact block, the
-résumé header, and the `sameAs` structured data from one list. The recruiter
-scheduling line is published in the same module so the homepage CTA, résumé
-header, and Person `telephone` cannot drift. The email address is stored
-XOR-masked and decoded in the browser, so it never appears in the static
-export.
+résumé header, and the `sameAs` structured data from one list. The Grok
+voice assistant is the published intake number, so the homepage CTA, résumé
+header, and Person `telephone` cannot drift. Meeting scheduling is planned
+in the same module (`scheduling`) and stays unpublished until a booking URL
+exists. The email address is stored XOR-masked and decoded in the browser,
+so it never appears in the static export.
 
-Service tracks, engagement models, the engagement process, and working
-principles live in `lib/services.ts`; credentials live in `lib/credentials.ts`.
-Both feed the page and the structured data, so the marketing copy and the
-machine-readable claims cannot drift apart. Credential wording is deliberate —
-completed training is described as training, never as certification — and the
-`standards` on each service track name frameworks the work is measured against,
-not certifications held.
+Company framing lives in `lib/practice.ts`. Service tracks, commercial
+packages, the engagement process, and working principles live in
+`lib/services.ts`; credentials live in `lib/credentials.ts`. They feed the
+page and the structured data, so the marketing copy and the machine-readable
+claims cannot drift apart. Packages do not publish dollar prices; a
+security engagement is scoped after the voice assistant qualifies the need.
+Credential wording is deliberate — completed training is described as
+training, never as certification — and the `standards` on each service
+track name frameworks the work is measured against, not certifications held.
 
 The `@media print` block in `app/globals.css` is tuned so `/resume/` exports to
 exactly two Letter pages. It sets print sizes explicitly rather than inheriting
@@ -137,9 +141,11 @@ specific binary. The layout currently measures ~1650px of content against a
 ## Site critique
 
 A weekly GitHub Action asks Grok to review the site's copy, verbiage, and
-structure as a business advisor who buys and sells cybersecurity and AI
-enablement work, then applies the portfolio half of that advice and **opens a
-pull request** with the diff.
+structure as a buyer of cybersecurity and AI enablement consulting, then
+applies the portfolio half of that advice and **opens a pull request** with
+the diff. The critique is instructed to keep the site a consultancy —
+packages as the offer, voice assistant as intake, background and portfolio
+as proof — and not to recast the homepage as a job hunt.
 
 It proposes; a person merges. The critique disagrees with itself between runs on
 judgement calls, and this site sells security services where a wrong claim is a
@@ -204,6 +210,18 @@ GROK_API_KEY=... npm run critique
 
 Model ids use a dot: `grok-4.5` is valid, `grok-4-5` returns model-not-found.
 
+## Practice growth brief
+
+A second weekly Action asks Grok for marketing, lead, and meeting-prep
+drafts. It writes `critique/growth-brief.md` as a 90-day artifact. It does
+**not** send mail, post publicly, book a calendar, open a pull request, or
+change the live site. That is deliberate: AI marketing and meeting
+scheduling are the next wiring, not something an unattended job should
+execute.
+
+```sh
+GROK_API_KEY=... npm run growth
+```
 
 ## Publishing
 

@@ -20,11 +20,15 @@ function useHydrated() {
  */
 export function ProtectedEmailButton({
   label = "Email Stephen",
+  variant = "primary",
 }: {
   label?: string;
+  variant?: "primary" | "secondary";
 }) {
   const [email, setEmail] = useState<string>();
   const emailLinkRef = useRef<HTMLAnchorElement>(null);
+  const buttonClass =
+    variant === "secondary" ? "button button-secondary" : "button button-primary";
 
   useEffect(() => {
     if (email) emailLinkRef.current?.focus();
@@ -33,7 +37,7 @@ export function ProtectedEmailButton({
   if (email) {
     return (
       <a
-        className="button button-primary protected-email-link"
+        className={`${buttonClass} protected-email-link`}
         href={`mailto:${email}`}
         ref={emailLinkRef}
       >
@@ -44,7 +48,7 @@ export function ProtectedEmailButton({
 
   return (
     <button
-      className="button button-primary protected-email-trigger"
+      className={`${buttonClass} protected-email-trigger`}
       type="button"
       onClick={() => setEmail(decodeProtectedEmail())}
     >

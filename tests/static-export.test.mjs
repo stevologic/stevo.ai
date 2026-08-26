@@ -43,7 +43,7 @@ test("exports the site, install icons, and social assets", async () => {
   ]);
 });
 
-test("site presents executive, advisory, and founder paths with social metadata", async () => {
+test("site presents the consultancy, packages, and proof with social metadata", async () => {
   const [html, resumeHtml] = await Promise.all([
     exportedPage("index.html"),
     exportedPage("resume/index.html"),
@@ -52,14 +52,16 @@ test("site presents executive, advisory, and founder paths with social metadata"
 
   assert.match(html, /Secure the enterprise\./i);
   assert.match(html, /Enable what comes next\./i);
-  assert.match(html, /CISO · VP Cybersecurity · VP AI Enablement/);
-  assert.match(html, /vCISO · Cybersecurity &amp; IT/);
-  assert.match(html, /Founder ventures/);
-  assert.match(html, /Full-time executive roles/);
-  assert.match(html, /Advisory engagements/);
+  assert.match(html, /Cybersecurity and AI enablement consultancy/);
+  assert.match(html, />Packages</);
+  assert.match(html, />Background</);
+  assert.match(html, />Portfolio</);
+  assert.match(html, /vCISO retainer/);
+  assert.match(html, /AI enablement sprint/i);
   assert.match(html, /vCISO &amp; security leadership/);
   assert.match(html, /AI enablement &amp; governance/i);
   assert.doesNotMatch(html, /Available for select vCISO and consulting engagements/i);
+  assert.doesNotMatch(html, /Open to full-time CISO/);
   assert.match(html, /Shiba Studio/);
   assert.match(html, /security-recipes\.ai/);
   assert.match(html, /Stephen M Abbott/);
@@ -68,7 +70,7 @@ test("site presents executive, advisory, and founder paths with social metadata"
   assert.match(html, /twitter:image/);
   assert.match(html, /twitter:image:alt/);
   assert.match(html, /og:image:width/);
-  assert.match(html, /Open to full-time CISO, VP Cybersecurity, and VP AI Enablement opportunities/);
+  assert.match(html, /Call the Grok voice assistant to start/);
   assert.match(html, /rel="canonical" href="https:\/\/stevo\.ai\/?"/);
   assert.match(html, /rel="apple-touch-icon"/);
   assert.match(html, /href="\/apple-touch-icon\.png"/);
@@ -81,7 +83,7 @@ test("site presents executive, advisory, and founder paths with social metadata"
   assert.doesNotMatch(resumeHtml, new RegExp(retiredEmploymentQualifier, "i"));
 });
 
-test("advisory services lead into executive proof and founder portfolio", async () => {
+test("packages lead into background and portfolio proof", async () => {
   const html = await exportedPage("index.html");
   const servicesIndex = html.indexOf(
     '<section class="services-section section" id="services">',
@@ -92,17 +94,19 @@ test("advisory services lead into executive proof and founder portfolio", async 
   const profileIndex = html.indexOf(
     '<section class="profile-section section" id="profile">',
   );
+  const packagesIndex = html.indexOf('id="packages"');
 
   assert.ok(servicesIndex > 0);
-  assert.ok(profileIndex > servicesIndex);
+  assert.ok(packagesIndex > servicesIndex);
+  assert.ok(profileIndex > packagesIndex);
   assert.ok(workIndex > profileIndex);
   // Sections are labelled, not numbered.
-  assert.match(html, /class="section-number">Advisory services</);
-  assert.match(html, /class="section-number">Executive record</);
-  assert.match(html, /class="section-number">Founder portfolio</);
+  assert.match(html, /class="section-number">Packages</);
+  assert.match(html, /class="section-number">Background</);
+  assert.match(html, /class="section-number">Portfolio</);
   assert.match(html, /class="section-number">Contact</);
   assert.doesNotMatch(html, /class="section-number">0\d \//);
-  assert.match(html, /Retained leadership/);
+  assert.match(html, /vCISO retainer/);
   assert.match(html, /Decision advisory/);
   assert.match(html, /Delivery sprint/);
 });
@@ -133,14 +137,14 @@ test("each homepage section has one distinct job", async () => {
   assert.doesNotMatch(profile, /\b(?:vCISO|VP Cybersecurity|VP AI Enablement)\b/i);
   assert.match(profile, /Read the full career record/);
 
-  // The close has two decisions: email Stephen, or call the recruiter line.
+  // The close has two decisions: call the Grok voice assistant, or email.
   // Social profiles live here, not again in the adjacent footer.
   const closingActions = closing.match(
     /<div class="hero-actions">([\s\S]*?)<\/div>/,
   )?.[1];
   assert.ok(closingActions);
   assert.match(closingActions, /Email Stephen/);
-  assert.match(closingActions, /Recruiter line/);
+  assert.match(closingActions, /Grok voice assistant/);
   assert.match(closingActions, /href="tel:\+16238878905"/);
   assert.match(closingActions, /\+1 \(623\) 887-8905/);
   assert.doesNotMatch(closingActions, /mailto:/i);
@@ -276,12 +280,35 @@ test("service tracks name the frameworks they are measured against", async () =>
   assert.match(html, /Measured against/);
 });
 
+test("consulting packages publish inclusions without invented prices", async () => {
+  const html = await exportedPage("index.html");
+  const packages = html.match(
+    /<div class="package-grid"[^>]*>[\s\S]*?<div class="section-heading/,
+  )?.[0];
+
+  assert.ok(packages, "package grid is missing");
+  for (const title of [
+    "vCISO retainer",
+    "AI enablement sprint",
+    "Decision advisory",
+    "Delivery sprint",
+  ]) {
+    assert.ok(packages.includes(title), `packages omit ${title}`);
+  }
+  for (const cadence of ["Monthly", "4–6 weeks", "2–3 weeks", "Scoped build"]) {
+    assert.ok(packages.includes(cadence), `packages omit cadence ${cadence}`);
+  }
+  assert.match(packages, /Start with the voice assistant/);
+  assert.doesNotMatch(packages, /\$\d/);
+  assert.doesNotMatch(html, /class="operating-model"/);
+});
+
 test("engagement formats, process, and safeguards stay distinct", async () => {
   const html = await exportedPage("index.html");
 
   assert.doesNotMatch(html, /class="engagement-deliverables"/);
-  for (const format of ["Retained leadership", "Decision advisory", "Delivery sprint"]) {
-    assert.ok(html.includes(format), `engagement formats omit ${format}`);
+  for (const format of ["vCISO retainer", "Decision advisory", "Delivery sprint"]) {
+    assert.ok(html.includes(format), `packages omit ${format}`);
   }
   assert.match(html, /How an engagement runs/);
   for (const phase of ["Baseline", "Prioritize", "Operate", "Transfer"]) {
@@ -324,6 +351,7 @@ test("site manifest uses installable Stevo.AI icons", async () => {
 
   assert.equal(manifest.short_name, "Abbott");
   assert.match(manifest.name, /Stephen M Abbott/);
+  assert.match(manifest.description, /consultancy/);
   assert.match(manifest.description, /vCISO/);
   assert.match(manifest.description, /cybersecurity and IT consulting/);
   assert.equal(manifest.display, "standalone");
@@ -381,29 +409,31 @@ test("obfuscated mailbox still decodes to the real contact address", async () =>
   assert.equal(decodeProtectedEmail(), "stephenabbott20@gmail.com");
 });
 
-test("recruiter scheduling line is published and the retired number is gone", async () => {
+test("Grok voice assistant is the published intake line and the retired number is gone", async () => {
   const [html, resumeHtml, contactSource] = await Promise.all([
     exportedPage("index.html"),
     exportedPage("resume/index.html"),
     readFile(new URL("../lib/contact.ts", import.meta.url), "utf8"),
   ]);
 
-  assert.match(contactSource, /label: "Recruiter line"/);
+  assert.match(contactSource, /label: "Grok voice assistant"/);
   assert.match(contactSource, /display: "\+1 \(623\) 887-8905"/);
   assert.match(contactSource, /href: "tel:\+16238878905"/);
   assert.match(contactSource, /e164: "\+16238878905"/);
+  assert.match(contactSource, /status: "planned"/);
 
   for (const [label, page] of [
     ["homepage", html],
     ["resume", resumeHtml],
   ]) {
-    assert.match(page, /Recruiter line/, `${label} omits the recruiter-line label`);
-    assert.match(page, /tel:\+16238878905/, `${label} omits the recruiter tel link`);
+    assert.match(page, /Grok voice assistant/, `${label} omits the voice-assistant label`);
+    assert.match(page, /tel:\+16238878905/, `${label} omits the voice-assistant tel link`);
     assert.match(
       page,
       /\+1 \(623\) 887-8905/,
-      `${label} omits the formatted recruiter number`,
+      `${label} omits the formatted voice-assistant number`,
     );
+    assert.doesNotMatch(page, /Recruiter line/, `${label} still labels the line for recruiters`);
     assert.doesNotMatch(
       page,
       /623[-.\s]?363[-.\s]?4985|6233634985|\+1[-.\s]?623[-.\s]?363[-.\s]?4985/,
@@ -453,15 +483,25 @@ test("social handles are published on the site and in structured data", async ()
     assert.deepEqual(node.sameAs, profiles);
   }
   const person = graph.find((node) => node["@type"] === "Person");
-  assert.equal(person.jobTitle, "Cybersecurity Executive and AI Enablement Leader");
+  assert.equal(person.jobTitle, "Principal, Cybersecurity and AI Enablement");
   assert.equal(person.telephone, "+16238878905");
+  const organization = graph.find((node) => {
+    const type = node["@type"];
+    return Array.isArray(type)
+      ? type.includes("ProfessionalService")
+      : type === "Organization";
+  });
+  assert.ok(organization, "Organization node is missing");
+  assert.equal(organization.telephone, "+16238878905");
+  assert.equal(organization.contactPoint?.name, "Grok voice assistant");
+  assert.equal(organization.hasOfferCatalog?.itemListElement?.length, 4);
   const portfolio = graph.find((node) => node["@type"] === "ItemList");
   const projects = await publishedProjects();
   assert.equal(portfolio.numberOfItems, projects.length);
   assert.equal(portfolio.itemListElement.length, projects.length);
 });
 
-test("executive candidacy, advisory services, and employment history stay distinct", async () => {
+test("consultancy offer, background, and employment history stay distinct", async () => {
   const [html, resumeHtml] = await Promise.all([
     exportedPage("index.html"),
     exportedPage("resume/index.html"),
@@ -469,11 +509,12 @@ test("executive candidacy, advisory services, and employment history stay distin
 
   assert.doesNotMatch(html, /\bCEO\b/);
   assert.doesNotMatch(resumeHtml, /\bCEO\b/);
-  assert.match(html, /CISO/);
-  assert.match(html, /VP Cybersecurity/);
-  assert.match(html, /VP AI Enablement/);
   assert.match(html, /vCISO/);
-  assert.match(html, /Founder portfolio/);
+  assert.match(html, /AI enablement/);
+  assert.match(html, /class="section-number">Portfolio</);
+  assert.match(resumeHtml, /CISO/);
+  assert.match(resumeHtml, /VP Cybersecurity/);
+  assert.match(resumeHtml, /VP AI Enablement/);
 
   const resumeDocument = resumeHtml.match(
     /<article class="resume-document">([\s\S]*?)<\/article>/,
@@ -680,7 +721,7 @@ test("professional resume is detailed, private, and print-ready", async () => {
   assert.doesNotMatch(html, /American Express/i);
   assert.doesNotMatch(html, /Full career r(?:é|&eacute;|&#xE9;)sum(?:é|&eacute;|&#xE9;) available on request/i);
 
-  // Contact is email plus the recruiter scheduling line. Assert on the contact
+  // Contact is email plus the Grok voice assistant. Assert on the contact
   // list itself: the site-wide JSON-LD in the page head legitimately carries
   // the social profiles, and the resume document cannot be matched with a lazy
   // regex because career roles are nested <article> elements that terminate it
@@ -690,8 +731,8 @@ test("professional resume is detailed, private, and print-ready", async () => {
   )?.[0];
   assert.ok(contact, "resume contact list not found");
   assert.doesNotMatch(contact, /MadeItHappen|twitch\.tv|discord\.com|x\.com/i);
-  assert.equal((contact.match(/<li>/g) || []).length, 2, "email and recruiter line");
-  assert.match(contact, /Recruiter line/);
+  assert.equal((contact.match(/<li>/g) || []).length, 2, "email and voice assistant");
+  assert.match(contact, /Grok voice assistant/);
   assert.match(contact, /href="tel:\+16238878905"/);
   assert.match(contact, /\+1 \(623\) 887-8905/);
 
@@ -1086,9 +1127,9 @@ test("the site critique action is wired to Grok correctly", async () => {
   // The key must never be committed, only read from the environment.
   assert.doesNotMatch(script, /xai-[A-Za-z0-9]{8}/, "no API key literal");
   assert.match(script, /process\.env\.GROK_API_KEY/);
-  assert.match(script, /full-time CISO, VP Cybersecurity, and VP AI Enablement/);
-  assert.match(script, /vCISO plus cybersecurity and IT consulting/);
-  assert.match(script, /founder-built companies and products/);
+  assert.match(script, /cybersecurity and AI enablement consultancy/);
+  assert.match(script, /Grok voice assistant is the intake line/);
+  assert.match(script, /Background and portfolio remain available as proof/);
 
   // It proposes changes on a branch; a person merges. It must never publish to
   // the live site on its own.
@@ -1121,6 +1162,30 @@ test("the site critique action is wired to Grok correctly", async () => {
   const prIndex = workflow.indexOf("gh pr create");
   const testIndex = workflow.indexOf("node --test tests/static-export.test.mjs");
   assert.ok(testIndex > 0 && testIndex < prIndex, "tests must run before the PR");
+});
+
+test("the practice growth action drafts marketing without publishing or sending", async () => {
+  const [workflow, script, pkg] = await Promise.all([
+    readFile(new URL(".github/workflows/practice-growth.yml", root), "utf8"),
+    readFile(new URL("scripts/practice-growth.mjs", root), "utf8"),
+    readFile(new URL("package.json", root), "utf8"),
+  ]);
+
+  assert.match(workflow, /secrets\.GROK_API_KEY/);
+  assert.match(workflow, /'grok-4\.5'/);
+  assert.match(workflow, /npm run growth/);
+  assert.match(JSON.parse(pkg).scripts.growth, /practice-growth\.mjs/);
+  assert.match(script, /Grok voice assistant/);
+  assert.match(script, /servicePackages/);
+  assert.match(script, /does not send/i);
+  assert.doesNotMatch(workflow, /gh pr create|git push origin main/);
+  assert.doesNotMatch(script, /nodemailer|sendgrid|resend|smtp/i);
+  assert.doesNotMatch(script, /calendar\.events|events\.insert/);
+  assert.doesNotMatch(
+    workflow,
+    /git add|git commit|gh pr create/,
+    "the growth brief must never change the site",
+  );
 });
 
 test("the portfolio optimizer cannot lose or fabricate project data", async () => {
@@ -1248,7 +1313,7 @@ test("the critique brief carries readable copy, not build artifacts", async () =
 
   // Real copy from both pages, so the advisor reviews what a visitor reads.
   assert.match(brief, /Secure the enterprise/);
-  assert.match(brief, /Discuss an opportunity/);
+  assert.match(brief, /Call the voice assistant|View packages/);
   assert.match(brief, /Enterprise platforms/);
 
   // None of the export plumbing.

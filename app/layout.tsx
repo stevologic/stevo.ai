@@ -1,29 +1,24 @@
 import type { Metadata, Viewport } from "next";
-import { recruiterLine, socialProfileUrls } from "@/lib/contact";
+import { socialProfileUrls, voiceLine } from "@/lib/contact";
 import { credentials } from "@/lib/credentials";
+import { practice } from "@/lib/practice";
 import { projects } from "@/lib/project-data";
-import { serviceTracks } from "@/lib/services";
+import { servicePackages } from "@/lib/services";
 import "./globals.css";
 
 const siteUrl = "https://stevo.ai";
-const socialTitle = "Stephen M Abbott — Cybersecurity & AI Executive";
-const socialDescription =
-  "Open to full-time CISO, VP Cybersecurity, and VP AI Enablement opportunities; providing vCISO and AI-native cybersecurity and IT consulting; building founder-led products.";
-const socialImageAlt =
-  "Stephen M Abbott: cybersecurity and AI executive, vCISO and consultant, and founder.";
 
 export const metadata: Metadata = {
   metadataBase: new URL(siteUrl),
   title: {
-    default: "Stephen M Abbott — Cybersecurity & AI Executive",
+    default: practice.socialTitle,
     template: "%s · stevo.ai",
   },
-  description:
-    "Open to full-time CISO, VP Cybersecurity, and VP AI Enablement opportunities; providing vCISO and AI-native cybersecurity and IT consulting; building founder-led products.",
+  description: practice.socialDescription,
   applicationName: "stevo.ai",
   category: "technology",
-  authors: [{ name: "Stephen M Abbott", url: siteUrl }],
-  creator: "Stephen M Abbott",
+  authors: [{ name: practice.name, url: siteUrl }],
+  creator: practice.name,
   manifest: "/site.webmanifest",
   icons: {
     icon: [
@@ -51,52 +46,32 @@ export const metadata: Metadata = {
   other: {
     "apple-mobile-web-app-capable": "yes",
   },
-  keywords: [
-    "cybersecurity consultant",
-    "AI enablement consultant",
-    "full-time security leadership",
-    "Chief Information Security Officer",
-    "CISO",
-    "VP Cybersecurity",
-    "VP AI Enablement",
-    "vCISO services",
-    "cybersecurity and IT consulting",
-    "AI-native enterprise",
-    "technology founder",
-    "AI governance",
-    "AI security",
-    "cybersecurity",
-    "AI agents",
-    "MCP",
-    "application security",
-    "supply chain security",
-    "product engineering",
-  ],
+  keywords: [...practice.keywords],
   openGraph: {
     type: "website",
     locale: "en_US",
     url: siteUrl,
     siteName: "stevo.ai",
-    title: socialTitle,
-    description: socialDescription,
+    title: practice.socialTitle,
+    description: practice.socialDescription,
     images: [
       {
         url: `${siteUrl}/og-executive.png`,
         width: 1734,
         height: 907,
         type: "image/png",
-        alt: socialImageAlt,
+        alt: practice.socialImageAlt,
       },
     ],
   },
   twitter: {
     card: "summary_large_image",
-    title: socialTitle,
-    description: socialDescription,
+    title: practice.socialTitle,
+    description: practice.socialDescription,
     images: [
       {
         url: `${siteUrl}/og-executive.png`,
-        alt: socialImageAlt,
+        alt: practice.socialImageAlt,
         width: 1734,
         height: 907,
       },
@@ -117,36 +92,35 @@ const structuredData = {
   "@context": "https://schema.org",
   "@graph": [
     {
-      "@type": "Organization",
+      "@type": ["Organization", "ProfessionalService"],
       "@id": `${siteUrl}/#organization`,
-      name: "Stephen M Abbott",
+      name: practice.name,
       url: siteUrl,
       logo: `${siteUrl}/icon-512.png`,
-      description: socialDescription,
+      description: practice.description,
+      telephone: voiceLine.e164,
       employee: { "@id": `${siteUrl}/#stephen-abbott` },
       founder: { "@id": `${siteUrl}/#stephen-abbott` },
       sameAs: socialProfileUrls,
       areaServed: "Worldwide",
-      knowsAbout: [
-        "Security program leadership",
-        "Cybersecurity leadership",
-        "Virtual CISO services",
-        "Cybersecurity and IT consulting",
-        "AI enablement",
-        "AI governance",
-        "Application security",
-        "Software supply chain security",
-      ],
+      knowsAbout: [...practice.knowsAbout],
+      contactPoint: {
+        "@type": "ContactPoint",
+        telephone: voiceLine.e164,
+        contactType: "customer service",
+        name: voiceLine.label,
+        availableLanguage: "English",
+      },
       hasOfferCatalog: {
         "@type": "OfferCatalog",
-        name: "Professional services",
-        itemListElement: serviceTracks.map((service) => ({
+        name: "Consulting packages",
+        itemListElement: servicePackages.map((servicePackage) => ({
           "@type": "Offer",
           itemOffered: {
             "@type": "Service",
-            name: service.title,
-            description: service.description,
-            serviceType: service.label,
+            name: servicePackage.title,
+            description: servicePackage.description,
+            serviceType: servicePackage.label,
             provider: { "@id": `${siteUrl}/#organization` },
           },
         })),
@@ -155,11 +129,11 @@ const structuredData = {
     {
       "@type": "Person",
       "@id": `${siteUrl}/#stephen-abbott`,
-      name: "Stephen M Abbott",
+      name: practice.name,
       url: `${siteUrl}/resume/`,
       image: `${siteUrl}/stephen-abbott-profile.png`,
-      jobTitle: "Cybersecurity Executive and AI Enablement Leader",
-      telephone: recruiterLine.e164,
+      jobTitle: practice.jobTitle,
+      telephone: voiceLine.e164,
       worksFor: { "@id": `${siteUrl}/#organization` },
       sameAs: socialProfileUrls,
       alumniOf: {
@@ -177,16 +151,7 @@ const structuredData = {
             name: certification.issuer,
           },
         })),
-      knowsAbout: [
-        "Artificial intelligence",
-        "Cybersecurity",
-        "Executive cybersecurity leadership",
-        "AI enablement strategy",
-        "AI-native IT operations",
-        "AI agents",
-        "Software supply chain security",
-        "Product engineering",
-      ],
+      knowsAbout: [...practice.knowsAbout],
     },
     {
       "@type": "ItemList",

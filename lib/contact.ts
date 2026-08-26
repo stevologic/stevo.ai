@@ -40,13 +40,28 @@ export const socialHandles: SocialHandle[] = [
 
 export const socialProfileUrls = socialHandles.map((profile) => profile.href);
 
-/** Public scheduling line for recruiters and hiring managers. */
-export const recruiterLine = {
-  label: "Recruiter line",
+/**
+ * Public intake line. A Grok voice assistant answers for the practice,
+ * qualifies the need, and can schedule a meeting.
+ */
+export const voiceLine = {
+  label: "Grok voice assistant",
   display: "+1 (623) 887-8905",
   href: "tel:+16238878905",
   e164: "+16238878905",
+  note: "Call the practice. A Grok voice assistant answers, qualifies the need, and can schedule a meeting.",
 } as const;
+
+/**
+ * Meeting scheduling is not published yet. When a calendar booking URL is
+ * ready, set `href` and the homepage, résumé, and JSON-LD will pick it up
+ * from this one object.
+ */
+export const scheduling = {
+  label: "Schedule a meeting",
+  href: "" as string,
+  status: "planned" as const,
+};
 
 const protectedMailbox = [
   100, 99, 114, 103, 127, 114, 121, 118, 117, 117, 120, 99, 99, 37, 39,

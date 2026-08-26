@@ -3,7 +3,7 @@ import Link from "next/link";
 
 import { PrintButton } from "../../components/PrintButton";
 import { ProtectedEmailAddress } from "../../components/ProtectedEmail";
-import { recruiterLine } from "@/lib/contact";
+import { voiceLine } from "@/lib/contact";
 import { credentials } from "@/lib/credentials";
 import {
   additionalProducts,
@@ -70,11 +70,11 @@ export default function ResumePage() {
               <ProtectedEmailAddress />
             </li>
             <li>
-              <a href={recruiterLine.href}>
+              <a href={voiceLine.href}>
                 <span className="resume-contact-network">
-                  {recruiterLine.label}
+                  {voiceLine.label}
                 </span>
-                {recruiterLine.display}
+                {voiceLine.display}
               </a>
             </li>
           </ul>

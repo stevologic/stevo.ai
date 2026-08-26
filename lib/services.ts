@@ -135,6 +135,94 @@ export const engagementModels: EngagementModel[] = [
   },
 ];
 
+export interface ServicePackage {
+  id: string;
+  label: string;
+  title: string;
+  cadence: string;
+  description: string;
+  includes: string[];
+  bestFor: string;
+  /** Service track this package typically draws from. */
+  trackId: ServiceTrack["id"];
+}
+
+/**
+ * Commercial packages the practice sells. Scope and inclusions live here so
+ * the homepage, JSON-LD offer catalog, and weekly growth brief cannot drift.
+ * Dollar prices are not published: a security engagement is scoped after the
+ * voice assistant qualifies the need.
+ */
+export const servicePackages: ServicePackage[] = [
+  {
+    id: "retain",
+    label: "Retain",
+    title: "vCISO retainer",
+    cadence: "Monthly",
+    description:
+      "An accountable security executive relationship for organizations that need direction, governance, and board confidence without standing up a full-time CISO.",
+    includes: [
+      "Security strategy, roadmap, and operating cadence",
+      "Board-ready risk measures and decision support",
+      "Program governance, resilience, and incident readiness",
+      "Capability development for the internal team",
+    ],
+    bestFor:
+      "A security program entering growth, transition, board scrutiny, or a reset.",
+    trackId: "lead",
+  },
+  {
+    id: "enable",
+    label: "Enable",
+    title: "AI enablement sprint",
+    cadence: "4–6 weeks",
+    description:
+      "A controlled path from scattered experimentation to business-owned AI capability, with policy and controls the team can operate.",
+    includes: [
+      "Use-case portfolio and adoption roadmap",
+      "AI policy and control architecture",
+      "Human approval, evidence, and rollback design",
+      "Agent governance and operating model",
+    ],
+    bestFor:
+      "Teams with promising use cases but unclear ownership, controls, or measures.",
+    trackId: "enable",
+  },
+  {
+    id: "decide",
+    label: "Decide",
+    title: "Decision advisory",
+    cadence: "2–3 weeks",
+    description:
+      "One consequential security or AI decision, resolved with evidence, trade-offs, an accountable owner, and a practical roadmap.",
+    includes: [
+      "Baseline of controls, exposure, and ownership",
+      "Ranked options by risk reduced per unit of effort",
+      "An explicit list of what will not be done this quarter",
+      "A roadmap the internal team can execute",
+    ],
+    bestFor: "A decision that is already waiting on an answer.",
+    trackId: "deliver",
+  },
+  {
+    id: "build",
+    label: "Build",
+    title: "Delivery sprint",
+    cadence: "Scoped build",
+    description:
+      "A defined security or AI use case moved into a defensible working system, then transferred to an internal owner.",
+    includes: [
+      "Architecture and implementation of the agreed use case",
+      "MCP servers, agent toolchains, or control automation",
+      "Evidence-driven remediation and operating documentation",
+      "Internal owner and adoption path",
+    ],
+    bestFor:
+      "Teams with an approved use case that now needs architecture and implementation.",
+    trackId: "assure",
+  },
+];
+
 export const engagementProcess = [
   {
     title: "Baseline",
