@@ -475,8 +475,10 @@ test("social handles are published on the site and in structured data", async ()
   )?.[1];
   assert.ok(structuredData);
   const graph = JSON.parse(structuredData)["@graph"];
+  const typeOf = (node) =>
+    Array.isArray(node["@type"]) ? node["@type"] : [node["@type"]];
   const socialNodes = graph.filter((node) =>
-    ["Organization", "Person"].includes(node["@type"]),
+    typeOf(node).some((type) => ["Organization", "Person", "ProfessionalService"].includes(type)),
   );
   assert.equal(socialNodes.length, 2);
   for (const node of socialNodes) {
