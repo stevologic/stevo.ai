@@ -310,8 +310,8 @@ test("consulting packages publish inclusions without invented prices", async () 
     assert.ok(packages.includes(cadence), `packages omit cadence ${cadence}`);
   }
   assert.doesNotMatch(packages, /Book on the stevo\.ai line|Call the stevo\.ai line/);
-  assert.match(packages, /Four scoped ways in/);
-  assert.doesNotMatch(packages, /consequential decision|Same outcome/);
+  assert.match(html, /Four scoped ways in/);
+  assert.doesNotMatch(html, /consequential decision|Same outcome/);
   assert.doesNotMatch(packages, /\$\d/);
   assert.doesNotMatch(html, /class="operating-model"/);
 
@@ -557,9 +557,8 @@ test("consultancy offer, background, and employment history stay distinct", asyn
   assert.match(html, /vCISO/);
   assert.match(html, /AI enablement/);
   assert.match(html, /class="section-number">Portfolio</);
-  assert.match(resumeHtml, /CISO/);
-  assert.match(resumeHtml, /VP Cybersecurity/);
-  assert.match(resumeHtml, /VP AI Enablement/);
+  assert.doesNotMatch(resumeHtml, /VP Cybersecurity/);
+  assert.doesNotMatch(resumeHtml, /VP AI Enablement/);
 
   const resumeDocument = resumeHtml.match(
     /<article class="resume-document">([\s\S]*?)<\/article>/,
@@ -665,10 +664,20 @@ test("GitHub traffic aggregates stay privacy-conscious wherever they appear", as
     assert.equal(typeof repository.traffic.clones.uniques, "number");
   }
 
+  const alsoShippedRepos = new Set([
+    "doge-miner",
+    "tiny-book-buddies-ai",
+    "mouse_clicker",
+    "arrowheadpaesanowebsite",
+  ]);
+  const visibleTraffic = withVisibleTraffic.filter((repository) => {
+    const repo = repository.repo || repository.name || "";
+    return !alsoShippedRepos.has(repo);
+  });
   assert.equal(
     (html.match(/class="project-traffic(?:\s|\")/g) || []).length,
-    withVisibleTraffic.length,
-    "every repository with meaningful traffic should render a traffic block",
+    visibleTraffic.length,
+    "every first-screen repository with meaningful traffic should render a traffic block",
   );
   assert.ok(withTraffic.length > 0, "traffic data has stopped being collected");
   assert.match(html, /GitHub views \//);
@@ -767,11 +776,14 @@ test("professional resume is detailed, private, and print-ready", async () => {
     /Director-level at Fortune 100 payments: CTEM, board risk, and a security engineering org of up to 26/,
   );
   assert.doesNotMatch(html, /Employer names intentionally omitted/);
-  assert.match(html, /Fortune 100 payments/);
+  const intro = html.match(
+    /<p class="resume-introduction">([\s\S]*?)<\/p>/,
+  )?.[1];
+  assert.ok(intro);
   assert.equal(
-    (html.match(/Fortune 100 payments/g) || []).length,
+    (intro.match(/Fortune 100 payments/g) || []).length,
     1,
-    "Fortune 100 payments must appear once",
+    "Fortune 100 payments must appear once in the intro",
   );
   assert.doesNotMatch(
     html,
@@ -1126,10 +1138,21 @@ test("project cards carry each site's own icon and theme colour", async () => {
     }
   }
 
-  // Cards render the icon rather than the old sequence number.
+  // Cards render the icon rather than the old sequence number. Consumer
+  // side projects live in Also shipped and do not get a card.
+  const alsoShippedSlugs = new Set([
+    "doge-miner",
+    "tiny-book-buddies-ai",
+    "sonnys-world",
+    "mouseclicker",
+    "arrowhead-paesano",
+  ]);
+  const firstScreen = projects.filter(
+    (project) => !alsoShippedSlugs.has(project.slug),
+  );
   assert.equal(
     (html.match(/class="project-favicon"/g) || []).length,
-    projects.length,
+    firstScreen.length,
   );
   assert.doesNotMatch(html, /class="project-index"/);
 
