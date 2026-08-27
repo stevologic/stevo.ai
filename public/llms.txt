@@ -36,6 +36,14 @@ engagement closes with a transfer to an internal owner.
 
 - [Homepage](https://stevo.ai/): packages, practice areas, background, and a
   portfolio of live founder-built products.
+- [vCISO services](https://stevo.ai/services/vciso/): the security executive
+  relationship in full.
+- [AI governance & enablement](https://stevo.ai/services/ai-governance/):
+  policy, controls, and agent governance.
+- [AI-native consulting](https://stevo.ai/services/ai-native-consulting/):
+  operating model and workflow redesign.
+- [Secure AI delivery](https://stevo.ai/services/secure-ai-delivery/):
+  hands-on architecture and implementation.
 - [Résumé](https://stevo.ai/resume/): the full professional record, printable
   to two pages.
 - [Security policy](https://stevo.ai/.well-known/security.txt): coordinated
