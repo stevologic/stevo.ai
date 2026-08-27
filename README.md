@@ -100,7 +100,7 @@ colour token.
 
 Contact handles live in `lib/contact.ts` and feed the contact block, the
 résumé header, and the `sameAs` structured data from one list. The
-**stevo.ai line** (`+1 (623) 887-8905`) and email are the published contact,
+**stevo.ai line** (`+1 (775) 599-7046`) and email are the published contact,
 so the homepage, résumé header, and Person `telephone` cannot drift. Contact
 copy is a heading plus those two facts. Do not describe a voice assistant.
 A personal cell must never appear. Meeting scheduling via a public calendar
