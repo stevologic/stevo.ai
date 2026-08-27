@@ -668,20 +668,10 @@ test("GitHub traffic aggregates stay privacy-conscious wherever they appear", as
     assert.equal(typeof repository.traffic.clones.uniques, "number");
   }
 
-  const alsoShippedRepos = new Set([
-    "doge-miner",
-    "tiny-book-buddies-ai",
-    "mouse_clicker",
-    "arrowheadpaesanowebsite",
-  ]);
-  const visibleTraffic = withVisibleTraffic.filter((repository) => {
-    const repo = repository.repo || repository.name || "";
-    return !alsoShippedRepos.has(repo);
-  });
   assert.equal(
     (html.match(/class="project-traffic(?:\s|\")/g) || []).length,
-    visibleTraffic.length,
-    "every first-screen repository with meaningful traffic should render a traffic block",
+    withVisibleTraffic.length,
+    "every card with meaningful traffic should render a traffic block",
   );
   assert.ok(withTraffic.length > 0, "traffic data has stopped being collected");
   assert.match(html, /GitHub views \//);
@@ -935,31 +925,49 @@ test("Arrowhead Paesano is published as a project", async () => {
   assert.match(html, /arrowheadpaesanowebsite/);
 });
 
-test("consumer side projects sit in Also shipped, not the first portfolio screen", async () => {
+test("shipped consumer products render as project-card headings", async () => {
   const html = await exportedPage("index.html");
-  const cards = html.match(/<article class="project-card[\s\S]*?<\/article>/g) || [];
-  const alsoShipped = html.match(
-    /<div class="also-shipped"[\s\S]*?<\/div>/,
-  )?.[0];
+  const work = html.match(
+    /<section class="work-section section" id="work">([\s\S]*?)<\/section>/,
+  )?.[1];
+  assert.ok(work, "portfolio section is missing");
 
-  assert.ok(alsoShipped, "also-shipped section is missing");
+  const cards = work.match(/<article class="project-card[\s\S]*?<\/article>/g) || [];
+  const projects = await publishedProjects();
+
+  assert.equal(
+    cards.length,
+    projects.length,
+    "every published project should render as a card",
+  );
+  assert.match(
+    work,
+    new RegExp(`${projects.length}(?:<!-- -->)? projects · refreshed`),
+  );
+  assert.doesNotMatch(work, /Also shipped/);
+  assert.doesNotMatch(work, /class="also-shipped"/);
+
   for (const name of [
-    "DOGE MINER",
     "Tiny Book Buddies AI",
-    "Sonny",
+    "Sonny’s World",
     "mouseclicker.app",
     "Arrowhead Paesano",
+    "DOGE MINER",
   ]) {
-    assert.ok(alsoShipped.includes(name), `also shipped omits ${name}`);
-    assert.ok(
-      !cards.some((card) => card.includes(name)),
-      `${name} is still a first-screen card`,
-    );
+    const card = cards.find((markup) => markup.includes(`<h3>${name}</h3>`));
+    assert.ok(card, `${name} should render as a project-card heading`);
+    assert.match(card, /class="project-card-topline"/);
+    assert.match(card, /Products &amp; ventures/);
+    assert.match(card, /Visit live product/);
+    assert.match(card, /class="project-favicon"/);
+    assert.match(card, /class="project-metrics"/);
   }
 
-  assert.ok(cards.some((card) => card.includes("security-recipes.ai")));
-  assert.ok(cards.some((card) => card.includes("OSS Dependency Explorer")));
-  assert.ok(cards.some((card) => card.includes("Shiba Studio")));
+  assert.ok(cards.some((card) => card.includes("<h3>security-recipes.ai</h3>")));
+  assert.ok(
+    cards.some((card) => card.includes("<h3>OSS Dependency Explorer</h3>")),
+  );
+  assert.ok(cards.some((card) => card.includes("<h3>Shiba Studio</h3>")));
 });
 
 test("homepage contact is a heading plus phone and email only", async () => {
@@ -1157,21 +1165,10 @@ test("project cards carry each site's own icon and theme colour", async () => {
     }
   }
 
-  // Cards render the icon rather than the old sequence number. Consumer
-  // side projects live in Also shipped and do not get a card.
-  const alsoShippedSlugs = new Set([
-    "doge-miner",
-    "tiny-book-buddies-ai",
-    "sonnys-world",
-    "mouseclicker",
-    "arrowhead-paesano",
-  ]);
-  const firstScreen = projects.filter(
-    (project) => !alsoShippedSlugs.has(project.slug),
-  );
+  // Cards render the icon rather than the old sequence number.
   assert.equal(
     (html.match(/class="project-favicon"/g) || []).length,
-    firstScreen.length,
+    projects.length,
   );
   assert.doesNotMatch(html, /class="project-index"/);
 
