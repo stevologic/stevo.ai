@@ -7,7 +7,10 @@ background and a founder portfolio still on the site as proof.
 ## What is included
 
 - Consulting packages with the stevo.ai line as the public intake and scheduling number
-- Practice areas measured against named security and AI frameworks
+- Practice areas measured against named security and AI frameworks, each with
+  a landing page at `/services/<slug>/` rendered from the same data
+- A homepage FAQ backed by FAQPage structured data, and an `/llms.txt` brief
+  for AI answer engines, both sourced from the libraries the pages render
 - Curated live products enriched with current GitHub activity, releases, and traffic
 - A semantic professional profile at `/resume/` that prints to exactly two pages
 - Social, search, sitemap, custom-domain, and reduced-motion support

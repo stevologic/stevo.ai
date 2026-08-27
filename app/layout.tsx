@@ -1,9 +1,13 @@
 import type { Metadata, Viewport } from "next";
-import { socialProfileUrls, voiceLine } from "@/lib/contact";
+import {
+  decodeProtectedEmail,
+  socialProfileUrls,
+  voiceLine,
+} from "@/lib/contact";
 import { credentials } from "@/lib/credentials";
 import { practice } from "@/lib/practice";
 import { projects } from "@/lib/project-data";
-import { servicePackages } from "@/lib/services";
+import { servicePackages, serviceTracks } from "@/lib/services";
 import "./globals.css";
 
 const siteUrl = "https://stevo.ai";
@@ -107,6 +111,9 @@ const structuredData = {
       contactPoint: {
         "@type": "ContactPoint",
         telephone: voiceLine.e164,
+        // Decoded at build time so the source stays masked; the rendered
+        // contact section already prints this address in the clear.
+        email: decodeProtectedEmail(),
         contactType: "customer service",
         name: voiceLine.label,
         availableLanguage: "English",
@@ -121,6 +128,11 @@ const structuredData = {
             name: servicePackage.title,
             description: servicePackage.description,
             serviceType: servicePackage.label,
+            // Each offer points at its track's landing page.
+            url: `${siteUrl}/services/${
+              serviceTracks.find((track) => track.id === servicePackage.trackId)
+                ?.page.slug
+            }/`,
             provider: { "@id": `${siteUrl}/#organization` },
           },
         })),

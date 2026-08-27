@@ -12,6 +12,16 @@ export interface ServiceTrack {
    */
   standards: string[];
   bestFor?: string;
+  /**
+   * The track's dedicated landing page at /services/<slug>/. Meta copy is
+   * search-facing; everything a visitor reads on the page itself comes from
+   * the fields above, so the pages cannot say more than the homepage does.
+   */
+  page: {
+    slug: string;
+    metaTitle: string;
+    metaDescription: string;
+  };
 }
 
 export const serviceTracks: ServiceTrack[] = [
@@ -35,6 +45,12 @@ export const serviceTracks: ServiceTrack[] = [
       "FAIR risk quantification",
     ],
     mode: "Executive advisory",
+    page: {
+      slug: "vciso",
+      metaTitle: "vCISO services",
+      metaDescription:
+        "An accountable security executive relationship: strategy, board-ready risk, governance, and incident readiness, measured against NIST CSF 2.0, ISO/IEC 27001, and SOC 2.",
+    },
   },
   {
     id: "enable",
@@ -57,6 +73,12 @@ export const serviceTracks: ServiceTrack[] = [
     mode: "Enterprise adoption",
     bestFor:
       "Teams with promising use cases but unclear ownership, controls, or measures.",
+    page: {
+      slug: "ai-governance",
+      metaTitle: "AI governance & enablement consulting",
+      metaDescription:
+        "A controlled path from scattered AI experimentation to business-owned capability: policy and controls, approval and rollback design, and agent governance, mapped to NIST AI RMF 1.0, ISO/IEC 42001, and the EU AI Act.",
+    },
   },
   {
     id: "deliver",
@@ -80,6 +102,12 @@ export const serviceTracks: ServiceTrack[] = [
     mode: "AI-native transformation",
     bestFor:
       "Teams constrained by manual work, fragmented tooling, or legacy process.",
+    page: {
+      slug: "ai-native-consulting",
+      metaTitle: "AI-native cybersecurity & IT consulting",
+      metaDescription:
+        "Redesign the operating work, not just the tooling: AI-native operating models, cybersecurity and IT process automation, and platform, data, and resilience roadmaps.",
+    },
   },
   {
     id: "assure",
@@ -103,6 +131,12 @@ export const serviceTracks: ServiceTrack[] = [
     mode: "Hands-on delivery",
     bestFor:
       "Teams with an approved use case that now needs architecture and implementation.",
+    page: {
+      slug: "secure-ai-delivery",
+      metaTitle: "Secure AI & product delivery",
+      metaDescription:
+        "Move a defined security or AI use case into a defensible working system: MCP servers, agent toolchains, secure architecture, and evidence-driven remediation.",
+    },
   },
 ];
 

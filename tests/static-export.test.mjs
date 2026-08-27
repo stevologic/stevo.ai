@@ -27,6 +27,21 @@ async function exportedPage(path) {
   return readFile(new URL(`../out/${path}`, import.meta.url), "utf8");
 }
 
+/**
+ * Every JSON-LD node on a page, flattened across script tags. Page-specific
+ * markup (the homepage FAQPage, each service page's Service graph) renders in
+ * its own script ahead of the site-wide graph from the layout, so tests must
+ * never assume the first script is the one they want.
+ */
+function jsonLdNodes(html) {
+  const scripts = [
+    ...html.matchAll(
+      /<script type="application\/ld\+json">([\s\S]*?)<\/script>/g,
+    ),
+  ].map((match) => JSON.parse(match[1]));
+  return scripts.flatMap((script) => script["@graph"] ?? [script]);
+}
+
 test("exports the site, install icons, and social assets", async () => {
   await Promise.all([
     access(new URL("../out/index.html", import.meta.url)),
@@ -517,11 +532,7 @@ test("social handles are published on the site and in structured data", async ()
   assert.match(html, /@MadeItHappenX/);
   assert.match(html, /madeithappen3/);
 
-  const structuredData = html.match(
-    /<script type="application\/ld\+json">([\s\S]*?)<\/script>/,
-  )?.[1];
-  assert.ok(structuredData);
-  const graph = JSON.parse(structuredData)["@graph"];
+  const graph = jsonLdNodes(html);
   const typeOf = (node) =>
     Array.isArray(node["@type"]) ? node["@type"] : [node["@type"]];
   const socialNodes = graph.filter((node) =>
@@ -1752,4 +1763,206 @@ test("the achievements file anchors the automation to verified facts", async () 
 test("custom domain is configured", async () => {
   const cname = await readFile(new URL("public/CNAME", root), "utf8");
   assert.equal(cname.trim(), "stevo.ai");
+});
+
+test("each package card carries its own email CTA", async () => {
+  const html = await exportedPage("index.html");
+  const packages = html.match(
+    /<div class="package-grid"[^>]*>[\s\S]*?<div class="section-heading/,
+  )?.[0];
+  assert.ok(packages, "package grid is missing");
+
+  const { servicePackages } = await import("../lib/services.ts");
+  const ctas = packages.match(/class="package-start"/g) || [];
+  assert.equal(
+    ctas.length,
+    servicePackages.length,
+    "every package needs a way in on the card itself",
+  );
+
+  // The CTA is email with the package title prefilled — never the tel link,
+  // which appears exactly twice site-wide (hero and contact).
+  for (const servicePackage of servicePackages) {
+    const subject = encodeURIComponent(servicePackage.title).replace(
+      /&/g,
+      "&amp;",
+    );
+    assert.ok(
+      packages.includes(`?subject=${subject}`),
+      `package CTA is missing the ${servicePackage.title} subject`,
+    );
+  }
+  assert.doesNotMatch(packages, /tel:\+16238878905/);
+  assert.match(packages, /mailto:stephenabbott20@gmail\.com\?subject=/);
+});
+
+test("the FAQ answers prospects on the page and in structured data", async () => {
+  const html = await exportedPage("index.html");
+  const faq = html.match(
+    /<section class="faq-section section" id="faq">([\s\S]*?)<\/section>/,
+  )?.[1];
+  assert.ok(faq, "FAQ section is missing");
+  assert.match(faq, /class="section-number">FAQ</);
+
+  const { faqItems } = await import("../lib/faq.ts");
+  assert.ok(faqItems.length >= 4, "the FAQ should answer real questions");
+  const escape = (text) =>
+    text.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+  for (const item of faqItems) {
+    assert.ok(faq.includes(escape(item.question)), `FAQ omits: ${item.question}`);
+    assert.ok(
+      faq.includes(escape(item.answer)),
+      `FAQ omits the answer to: ${item.question}`,
+    );
+  }
+
+  // The FAQ sits between portfolio proof and the contact close.
+  const workIndex = html.indexOf('<section class="work-section section" id="work">');
+  const faqIndex = html.indexOf('<section class="faq-section section" id="faq">');
+  const contactIndex = html.indexOf(
+    '<section class="closing-section section" id="contact">',
+  );
+  assert.ok(workIndex > 0 && faqIndex > workIndex && contactIndex > faqIndex);
+
+  // The FAQPage node mirrors the visible items exactly. It must ship on the
+  // homepage — the page that renders the FAQ — and nowhere else: search
+  // engines require the marked-up questions to be visible on the same page.
+  const faqNode = jsonLdNodes(html).find((node) => node["@type"] === "FAQPage");
+  assert.ok(faqNode, "FAQPage structured data is missing");
+  const resumeHtml = await exportedPage("resume/index.html");
+  assert.ok(
+    !jsonLdNodes(resumeHtml).some((node) => node["@type"] === "FAQPage"),
+    "FAQPage markup must not ship on pages that do not render the FAQ",
+  );
+  assert.deepEqual(
+    faqNode.mainEntity.map((entity) => entity.name),
+    faqItems.map((item) => item.question),
+  );
+  assert.deepEqual(
+    faqNode.mainEntity.map((entity) => entity.acceptedAnswer.text),
+    faqItems.map((item) => item.answer),
+  );
+
+  // Pricing language stays honest: scoped, never hidden-on-request.
+  assert.doesNotMatch(faq, /\$\d/);
+  assert.doesNotMatch(faq, /available on request|intentionally omitted/i);
+});
+
+test("llms.txt describes the practice for answer engines", async () => {
+  const llms = await readFile(new URL("../out/llms.txt", import.meta.url), "utf8");
+
+  assert.match(llms, /^# stevo\.ai/m);
+  assert.match(llms, /Cybersecurity and AI enablement consultancy/);
+  for (const offering of [
+    "vCISO retainer",
+    "AI enablement sprint",
+    "AI-native modernization",
+    "Delivery sprint",
+  ]) {
+    assert.ok(llms.includes(offering), `llms.txt omits ${offering}`);
+  }
+  assert.match(llms, /\+1 \(623\) 887-8905/);
+  assert.match(llms, /https:\/\/stevo\.ai\/resume\//);
+  // The same guards the rest of the site honours.
+  assert.doesNotMatch(llms, /\$\d/);
+  assert.doesNotMatch(llms, new RegExp(["frac", "tional"].join(""), "i"));
+  assert.doesNotMatch(llms, /623[-.\s]?363[-.\s]?4985/);
+  assert.doesNotMatch(llms, /American Express/i);
+});
+
+test("each service track exports a landing page with honest, sourced copy", async () => {
+  const { serviceTracks, servicePackages } = await import("../lib/services.ts");
+  const retiredEmploymentQualifier = ["frac", "tional"].join("");
+
+  for (const track of serviceTracks) {
+    const html = await exportedPage(`services/${track.page.slug}/index.html`);
+    const servicePackage = servicePackages.find(
+      (candidate) => candidate.trackId === track.id,
+    );
+    const escape = (text) => text.replace(/&/g, "&amp;");
+
+    // The page says what the homepage says — title, outcomes, standards,
+    // package — never more.
+    assert.ok(html.includes(escape(track.title)), `${track.page.slug} h1`);
+    assert.ok(html.includes(escape(track.description)));
+    for (const outcome of track.outcomes) {
+      assert.ok(html.includes(escape(outcome)), `${track.page.slug}: ${outcome}`);
+    }
+    for (const standard of track.standards) {
+      assert.ok(html.includes(escape(standard)), `${track.page.slug}: ${standard}`);
+    }
+    assert.ok(html.includes(escape(servicePackage.title)));
+    assert.match(html, /How an engagement runs/);
+
+    // Route-specific metadata and structured data.
+    assert.ok(
+      html.includes(
+        `rel="canonical" href="https://stevo.ai/services/${track.page.slug}/"`,
+      ),
+      `${track.page.slug} canonical`,
+    );
+    assert.ok(html.includes(escape(track.page.metaDescription)));
+    assert.match(html, /https:\/\/stevo\.ai\/og-services\.png/);
+    const graph = jsonLdNodes(html);
+    const service = graph.find((node) => node["@type"] === "Service");
+    assert.equal(service?.name, track.title);
+    assert.deepEqual(service?.provider, {
+      "@id": "https://stevo.ai/#organization",
+    });
+    assert.ok(graph.some((node) => node["@type"] === "BreadcrumbList"));
+    // FAQ markup belongs only to the page that renders the FAQ.
+    assert.ok(!graph.some((node) => node["@type"] === "FAQPage"));
+
+    // Both ways in, and the same guards the rest of the site honours. The
+    // price check reads the rendered document only: the Next flight payload
+    // legitimately contains $-digit reference tokens.
+    assert.match(html, /tel:\+16238878905/);
+    assert.match(html, /mailto:stephenabbott20@gmail\.com\?subject=/);
+    const document = html.match(
+      /<article class="service-page-document">[\s\S]*?<\/article>/,
+    )?.[0];
+    assert.ok(document, `${track.page.slug} rendered document not found`);
+    assert.doesNotMatch(document, /\$\d/);
+    assert.doesNotMatch(html, new RegExp(retiredEmploymentQualifier, "i"));
+    assert.doesNotMatch(html, /623[-.\s]?363[-.\s]?4985/);
+    assert.doesNotMatch(html, /American Express/i);
+    assert.doesNotMatch(html, /\bCEO\b/);
+    assert.doesNotMatch(html, /available on request|intentionally omitted/i);
+  }
+
+  // The homepage links every page, and the sitemap lists every page.
+  const [index, sitemap] = await Promise.all([
+    exportedPage("index.html"),
+    exportedPage("sitemap.xml"),
+  ]);
+  for (const track of serviceTracks) {
+    assert.ok(
+      index.includes(`href="/services/${track.page.slug}/"`),
+      `homepage never links /services/${track.page.slug}/`,
+    );
+    assert.ok(
+      sitemap.includes(`https://stevo.ai/services/${track.page.slug}/`),
+      `sitemap omits /services/${track.page.slug}/`,
+    );
+  }
+});
+
+test("a published booking URL reaches the hero and contact automatically", async () => {
+  const [component, contact] = await Promise.all([
+    readFile(
+      new URL("../components/PortfolioExperience.tsx", import.meta.url),
+      "utf8",
+    ),
+    readFile(new URL("../lib/contact.ts", import.meta.url), "utf8"),
+  ]);
+
+  // lib/contact.ts stays the single place a booking link gets published, and
+  // the component renders it wherever a visitor decides — no code change day-of.
+  assert.match(contact, /export const scheduling/);
+  assert.match(component, /scheduling\.href \?/);
+  assert.equal(
+    (component.match(/scheduling\.href \?/g) || []).length,
+    2,
+    "the booking link belongs in the hero and the contact close",
+  );
 });
