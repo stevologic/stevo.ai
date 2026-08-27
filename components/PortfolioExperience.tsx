@@ -27,16 +27,6 @@ const filters: Array<"All work" | ProjectCategory> = [
   "Products & ventures",
 ];
 
-/** Consumer / side products kept on the site, off the first portfolio screen. */
-const alsoShippedSlugs = new Set([
-  "doge-miner",
-  "tiny-book-buddies-ai",
-  "sonnys-world",
-  "mouseclicker",
-  "arrowhead-paesano",
-]);
-
-
 function formatDate(value?: string) {
   if (!value) return "Active now";
   const date = new Date(value);
@@ -240,16 +230,10 @@ export function PortfolioExperience({
   const [mobileOpen, setMobileOpen] = useState(false);
   const rootRef = useRef<HTMLDivElement>(null);
 
-  const primaryProjects = projects.filter(
-    (project) => !alsoShippedSlugs.has(project.slug),
-  );
-  const alsoShipped = projects.filter((project) =>
-    alsoShippedSlugs.has(project.slug),
-  );
   const visibleProjects =
     activeFilter === "All work"
-      ? primaryProjects
-      : primaryProjects.filter((project) => project.category === activeFilter);
+      ? projects
+      : projects.filter((project) => project.category === activeFilter);
 
   useEffect(() => {
     const onKeyDown = (event: KeyboardEvent) => {
@@ -622,31 +606,6 @@ export function PortfolioExperience({
               <ProjectCard project={project} index={index} key={project.slug} />
             ))}
           </div>
-
-          {alsoShipped.length > 0 ? (
-            <div className="also-shipped" data-reveal>
-              <p className="detail-label">Also shipped</p>
-              <ul>
-                {alsoShipped.map((project) => (
-                  <li key={project.slug}>
-                    <a href={project.siteUrl} target="_blank" rel="noreferrer">
-                      {project.name}
-                    </a>
-                    {project.sourceUrl ? (
-                      <a
-                        className="also-shipped-source"
-                        href={project.sourceUrl}
-                        target="_blank"
-                        rel="noreferrer"
-                      >
-                        Source
-                      </a>
-                    ) : null}
-                  </li>
-                ))}
-              </ul>
-            </div>
-          ) : null}
         </section>
 
         <section className="closing-section section" id="contact">
