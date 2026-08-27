@@ -9,8 +9,14 @@ import {
   useState,
   type PointerEvent as ReactPointerEvent,
 } from "react";
-import { decodeProtectedEmail, socialHandles, voiceLine } from "@/lib/contact";
+import {
+  decodeProtectedEmail,
+  scheduling,
+  socialHandles,
+  voiceLine,
+} from "@/lib/contact";
 import { credentialHighlights } from "@/lib/credentials";
+import { faqItems } from "@/lib/faq";
 import { careerPaths, heroMetrics } from "@/lib/career";
 import { practice } from "@/lib/practice";
 import {
@@ -361,6 +367,12 @@ export function PortfolioExperience({
               <a className="button button-secondary" href="#packages">
                 View packages
               </a>
+              {/* Renders the moment lib/contact.ts publishes a booking URL. */}
+              {scheduling.href ? (
+                <a className="button button-secondary" href={scheduling.href}>
+                  {scheduling.label} <Arrow />
+                </a>
+              ) : null}
             </div>
           </div>
 
@@ -447,6 +459,17 @@ export function PortfolioExperience({
                   </ul>
                 </div>
                 <p className="package-best-for">{servicePackage.bestFor}</p>
+                {/* The card is the decision point, so the way in lives on the
+                    card. Email only: the tel link appears exactly twice
+                    site-wide (hero and contact), and that stays true. */}
+                <a
+                  className="package-start"
+                  href={`mailto:${decodeProtectedEmail()}?subject=${encodeURIComponent(
+                    servicePackage.title,
+                  )}`}
+                >
+                  Email to scope this <Arrow />
+                </a>
               </article>
             ))}
           </div>
@@ -608,6 +631,23 @@ export function PortfolioExperience({
           </div>
         </section>
 
+        <section className="faq-section section" id="faq">
+          <div className="section-heading" data-reveal>
+            <p className="section-number">FAQ</p>
+            <h2>Asked before the first call.</h2>
+          </div>
+          {/* The same items feed the FAQPage structured data in app/layout.tsx,
+              so the visible answers and the machine-readable ones match. */}
+          <dl className="faq-list">
+            {faqItems.map((item) => (
+              <div className="faq-item" data-reveal key={item.question}>
+                <dt>{item.question}</dt>
+                <dd>{item.answer}</dd>
+              </div>
+            ))}
+          </dl>
+        </section>
+
         <section className="closing-section section" id="contact">
           <p className="section-number">Contact</p>
           <h2>Contact</h2>
@@ -621,6 +661,12 @@ export function PortfolioExperience({
             >
               {decodeProtectedEmail()}
             </a>
+            {/* Renders the moment lib/contact.ts publishes a booking URL. */}
+            {scheduling.href ? (
+              <a className="button button-secondary" href={scheduling.href}>
+                {scheduling.label}
+              </a>
+            ) : null}
           </div>
 
           <div className="closing-connect">

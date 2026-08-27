@@ -1,6 +1,11 @@
 import type { Metadata, Viewport } from "next";
-import { socialProfileUrls, voiceLine } from "@/lib/contact";
+import {
+  decodeProtectedEmail,
+  socialProfileUrls,
+  voiceLine,
+} from "@/lib/contact";
 import { credentials } from "@/lib/credentials";
+import { faqItems } from "@/lib/faq";
 import { practice } from "@/lib/practice";
 import { projects } from "@/lib/project-data";
 import { servicePackages } from "@/lib/services";
@@ -107,6 +112,9 @@ const structuredData = {
       contactPoint: {
         "@type": "ContactPoint",
         telephone: voiceLine.e164,
+        // Decoded at build time so the source stays masked; the rendered
+        // contact section already prints this address in the clear.
+        email: decodeProtectedEmail(),
         contactType: "customer service",
         name: voiceLine.label,
         availableLanguage: "English",
@@ -152,6 +160,20 @@ const structuredData = {
           },
         })),
       knowsAbout: [...practice.knowsAbout],
+    },
+    {
+      // Mirrors the visible FAQ section; both read lib/faq.ts so the marked-up
+      // answers can never disagree with what a visitor reads.
+      "@type": "FAQPage",
+      "@id": `${siteUrl}/#faq`,
+      mainEntity: faqItems.map((item) => ({
+        "@type": "Question",
+        name: item.question,
+        acceptedAnswer: {
+          "@type": "Answer",
+          text: item.answer,
+        },
+      })),
     },
     {
       "@type": "ItemList",

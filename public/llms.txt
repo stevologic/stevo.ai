@@ -1,0 +1,42 @@
+# stevo.ai — Stephen M Abbott
+
+> Cybersecurity and AI enablement consultancy. vCISO work, AI controls, and
+> the occasional build. One seat for cybersecurity and AI: the person on the
+> first call is the person who runs the engagement.
+
+Stephen M Abbott is a cybersecurity and AI executive with 16 years in
+enterprise technology and 11 in cybersecurity, including director-level work
+at Fortune 100 scale leading a security engineering organization of up to 26
+engineers. The practice runs on Arizona time and serves clients worldwide.
+
+## Consulting packages
+
+- vCISO retainer (monthly): part-time security executive — strategy, roadmap,
+  board-ready risk, program governance, and incident readiness.
+- AI enablement sprint (4–6 weeks): use-case portfolio, AI policy and control
+  architecture, human approval and rollback design, agent governance.
+- AI-native modernization (scoped program): operating model and workflow
+  redesign, cybersecurity and IT process automation, platform roadmaps.
+- Delivery sprint (scoped build): architecture and implementation of one
+  approved use case — MCP servers, agent toolchains, control automation —
+  handed to an internal owner.
+
+Engagements are measured against NIST CSF 2.0, ISO/IEC 27001, SOC 2, CIS
+Controls v8, NIST AI RMF 1.0, ISO/IEC 42001, the EU AI Act, OWASP ASVS, and
+NIST SSDF. Scope and price are agreed after a first conversation; every
+engagement closes with a transfer to an internal owner.
+
+## Contact
+
+- Phone: +1 (623) 887-8905
+- Email: stephenabbott20@gmail.com
+- Site: https://stevo.ai
+
+## Pages
+
+- [Homepage](https://stevo.ai/): packages, practice areas, background, and a
+  portfolio of live founder-built products.
+- [Résumé](https://stevo.ai/resume/): the full professional record, printable
+  to two pages.
+- [Security policy](https://stevo.ai/.well-known/security.txt): coordinated
+  disclosure policy.

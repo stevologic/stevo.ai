@@ -1753,3 +1753,126 @@ test("custom domain is configured", async () => {
   const cname = await readFile(new URL("public/CNAME", root), "utf8");
   assert.equal(cname.trim(), "stevo.ai");
 });
+
+test("each package card carries its own email CTA", async () => {
+  const html = await exportedPage("index.html");
+  const packages = html.match(
+    /<div class="package-grid"[^>]*>[\s\S]*?<div class="section-heading/,
+  )?.[0];
+  assert.ok(packages, "package grid is missing");
+
+  const { servicePackages } = await import("../lib/services.ts");
+  const ctas = packages.match(/class="package-start"/g) || [];
+  assert.equal(
+    ctas.length,
+    servicePackages.length,
+    "every package needs a way in on the card itself",
+  );
+
+  // The CTA is email with the package title prefilled — never the tel link,
+  // which appears exactly twice site-wide (hero and contact).
+  for (const servicePackage of servicePackages) {
+    const subject = encodeURIComponent(servicePackage.title).replace(
+      /&/g,
+      "&amp;",
+    );
+    assert.ok(
+      packages.includes(`?subject=${subject}`),
+      `package CTA is missing the ${servicePackage.title} subject`,
+    );
+  }
+  assert.doesNotMatch(packages, /tel:\+16238878905/);
+  assert.match(packages, /mailto:stephenabbott20@gmail\.com\?subject=/);
+});
+
+test("the FAQ answers prospects on the page and in structured data", async () => {
+  const html = await exportedPage("index.html");
+  const faq = html.match(
+    /<section class="faq-section section" id="faq">([\s\S]*?)<\/section>/,
+  )?.[1];
+  assert.ok(faq, "FAQ section is missing");
+  assert.match(faq, /class="section-number">FAQ</);
+
+  const { faqItems } = await import("../lib/faq.ts");
+  assert.ok(faqItems.length >= 4, "the FAQ should answer real questions");
+  const escape = (text) =>
+    text.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+  for (const item of faqItems) {
+    assert.ok(faq.includes(escape(item.question)), `FAQ omits: ${item.question}`);
+    assert.ok(
+      faq.includes(escape(item.answer)),
+      `FAQ omits the answer to: ${item.question}`,
+    );
+  }
+
+  // The FAQ sits between portfolio proof and the contact close.
+  const workIndex = html.indexOf('<section class="work-section section" id="work">');
+  const faqIndex = html.indexOf('<section class="faq-section section" id="faq">');
+  const contactIndex = html.indexOf(
+    '<section class="closing-section section" id="contact">',
+  );
+  assert.ok(workIndex > 0 && faqIndex > workIndex && contactIndex > faqIndex);
+
+  // The FAQPage node mirrors the visible items exactly.
+  const structuredData = html.match(
+    /<script type="application\/ld\+json">([\s\S]*?)<\/script>/,
+  )?.[1];
+  assert.ok(structuredData);
+  const graph = JSON.parse(structuredData)["@graph"];
+  const faqNode = graph.find((node) => node["@type"] === "FAQPage");
+  assert.ok(faqNode, "FAQPage structured data is missing");
+  assert.deepEqual(
+    faqNode.mainEntity.map((entity) => entity.name),
+    faqItems.map((item) => item.question),
+  );
+  assert.deepEqual(
+    faqNode.mainEntity.map((entity) => entity.acceptedAnswer.text),
+    faqItems.map((item) => item.answer),
+  );
+
+  // Pricing language stays honest: scoped, never hidden-on-request.
+  assert.doesNotMatch(faq, /\$\d/);
+  assert.doesNotMatch(faq, /available on request|intentionally omitted/i);
+});
+
+test("llms.txt describes the practice for answer engines", async () => {
+  const llms = await readFile(new URL("../out/llms.txt", import.meta.url), "utf8");
+
+  assert.match(llms, /^# stevo\.ai/m);
+  assert.match(llms, /Cybersecurity and AI enablement consultancy/);
+  for (const offering of [
+    "vCISO retainer",
+    "AI enablement sprint",
+    "AI-native modernization",
+    "Delivery sprint",
+  ]) {
+    assert.ok(llms.includes(offering), `llms.txt omits ${offering}`);
+  }
+  assert.match(llms, /\+1 \(623\) 887-8905/);
+  assert.match(llms, /https:\/\/stevo\.ai\/resume\//);
+  // The same guards the rest of the site honours.
+  assert.doesNotMatch(llms, /\$\d/);
+  assert.doesNotMatch(llms, new RegExp(["frac", "tional"].join(""), "i"));
+  assert.doesNotMatch(llms, /623[-.\s]?363[-.\s]?4985/);
+  assert.doesNotMatch(llms, /American Express/i);
+});
+
+test("a published booking URL reaches the hero and contact automatically", async () => {
+  const [component, contact] = await Promise.all([
+    readFile(
+      new URL("../components/PortfolioExperience.tsx", import.meta.url),
+      "utf8",
+    ),
+    readFile(new URL("../lib/contact.ts", import.meta.url), "utf8"),
+  ]);
+
+  // lib/contact.ts stays the single place a booking link gets published, and
+  // the component renders it wherever a visitor decides — no code change day-of.
+  assert.match(contact, /export const scheduling/);
+  assert.match(component, /scheduling\.href \?/);
+  assert.equal(
+    (component.match(/scheduling\.href \?/g) || []).length,
+    2,
+    "the booking link belongs in the hero and the contact close",
+  );
+});

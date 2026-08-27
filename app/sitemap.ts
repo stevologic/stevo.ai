@@ -6,7 +6,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
   return [
     {
       url: "https://stevo.ai",
-      lastModified: new Date("2026-07-23"),
+      lastModified: new Date("2026-08-26"),
       changeFrequency: "weekly",
       priority: 1,
     },
