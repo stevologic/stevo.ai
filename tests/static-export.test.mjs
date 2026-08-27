@@ -942,7 +942,7 @@ test("shipped consumer products render as project-card headings", async () => {
   );
   assert.match(
     work,
-    new RegExp(`${projects.length} projects · refreshed`),
+    new RegExp(`${projects.length}(?:<!-- -->)? projects · refreshed`),
   );
   assert.doesNotMatch(work, /Also shipped/);
   assert.doesNotMatch(work, /class="also-shipped"/);
