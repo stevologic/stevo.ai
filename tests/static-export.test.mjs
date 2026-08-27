@@ -27,6 +27,21 @@ async function exportedPage(path) {
   return readFile(new URL(`../out/${path}`, import.meta.url), "utf8");
 }
 
+/**
+ * Every JSON-LD node on a page, flattened across script tags. Page-specific
+ * markup (the homepage FAQPage, each service page's Service graph) renders in
+ * its own script ahead of the site-wide graph from the layout, so tests must
+ * never assume the first script is the one they want.
+ */
+function jsonLdNodes(html) {
+  const scripts = [
+    ...html.matchAll(
+      /<script type="application\/ld\+json">([\s\S]*?)<\/script>/g,
+    ),
+  ].map((match) => JSON.parse(match[1]));
+  return scripts.flatMap((script) => script["@graph"] ?? [script]);
+}
+
 test("exports the site, install icons, and social assets", async () => {
   await Promise.all([
     access(new URL("../out/index.html", import.meta.url)),
@@ -517,11 +532,7 @@ test("social handles are published on the site and in structured data", async ()
   assert.match(html, /@MadeItHappenX/);
   assert.match(html, /madeithappen3/);
 
-  const structuredData = html.match(
-    /<script type="application\/ld\+json">([\s\S]*?)<\/script>/,
-  )?.[1];
-  assert.ok(structuredData);
-  const graph = JSON.parse(structuredData)["@graph"];
+  const graph = jsonLdNodes(html);
   const typeOf = (node) =>
     Array.isArray(node["@type"]) ? node["@type"] : [node["@type"]];
   const socialNodes = graph.filter((node) =>
@@ -1813,14 +1824,16 @@ test("the FAQ answers prospects on the page and in structured data", async () =>
   );
   assert.ok(workIndex > 0 && faqIndex > workIndex && contactIndex > faqIndex);
 
-  // The FAQPage node mirrors the visible items exactly.
-  const structuredData = html.match(
-    /<script type="application\/ld\+json">([\s\S]*?)<\/script>/,
-  )?.[1];
-  assert.ok(structuredData);
-  const graph = JSON.parse(structuredData)["@graph"];
-  const faqNode = graph.find((node) => node["@type"] === "FAQPage");
+  // The FAQPage node mirrors the visible items exactly. It must ship on the
+  // homepage — the page that renders the FAQ — and nowhere else: search
+  // engines require the marked-up questions to be visible on the same page.
+  const faqNode = jsonLdNodes(html).find((node) => node["@type"] === "FAQPage");
   assert.ok(faqNode, "FAQPage structured data is missing");
+  const resumeHtml = await exportedPage("resume/index.html");
+  assert.ok(
+    !jsonLdNodes(resumeHtml).some((node) => node["@type"] === "FAQPage"),
+    "FAQPage markup must not ship on pages that do not render the FAQ",
+  );
   assert.deepEqual(
     faqNode.mainEntity.map((entity) => entity.name),
     faqItems.map((item) => item.question),
@@ -1890,17 +1903,15 @@ test("each service track exports a landing page with honest, sourced copy", asyn
     );
     assert.ok(html.includes(escape(track.page.metaDescription)));
     assert.match(html, /https:\/\/stevo\.ai\/og-services\.png/);
-    const structuredData = html.match(
-      /<script type="application\/ld\+json">([\s\S]*?)<\/script>/,
-    )?.[1];
-    assert.ok(structuredData, `${track.page.slug} is missing structured data`);
-    const graph = JSON.parse(structuredData)["@graph"];
+    const graph = jsonLdNodes(html);
     const service = graph.find((node) => node["@type"] === "Service");
     assert.equal(service?.name, track.title);
     assert.deepEqual(service?.provider, {
       "@id": "https://stevo.ai/#organization",
     });
     assert.ok(graph.some((node) => node["@type"] === "BreadcrumbList"));
+    // FAQ markup belongs only to the page that renders the FAQ.
+    assert.ok(!graph.some((node) => node["@type"] === "FAQPage"));
 
     // Both ways in, and the same guards the rest of the site honours. The
     // price check reads the rendered document only: the Next flight payload
