@@ -43,9 +43,9 @@ export const socialProfileUrls = socialHandles.map((profile) => profile.href);
 /** Public stevo.ai line. Do not publish a personal cell. */
 export const voiceLine = {
   label: "Phone",
-  display: "+1 (623) 887-8905",
-  href: "tel:+16238878905",
-  e164: "+16238878905",
+  display: "+1 (775) 599-7046",
+  href: "tel:+17755997046",
+  e164: "+17755997046",
 } as const;
 
 /**

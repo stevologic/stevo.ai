@@ -172,8 +172,8 @@ test("each homepage section has one distinct job", async () => {
   assert.ok(closingActions);
   assert.match(closingActions, /stephenabbott20@gmail\.com/);
   assert.match(closingActions, /mailto:stephenabbott20@gmail\.com/);
-  assert.match(closingActions, /href="tel:\+16238878905"/);
-  assert.match(closingActions, /\+1 \(623\) 887-8905/);
+  assert.match(closingActions, /href="tel:\+17755997046"/);
+  assert.match(closingActions, /\+1 \(775\) 599-7046/);
   assert.doesNotMatch(closingActions, /scheduling line|voice assistant|never as Stephen/i);
   assert.doesNotMatch(closing, /Bring the hard problem/);
   assert.match(closing, /<h2>Contact<\/h2>/);
@@ -463,9 +463,9 @@ test("the stevo.ai line is the published intake number and the retired number is
   ]);
 
   assert.match(contactSource, /label: "Phone"/);
-  assert.match(contactSource, /display: "\+1 \(623\) 887-8905"/);
-  assert.match(contactSource, /href: "tel:\+16238878905"/);
-  assert.match(contactSource, /e164: "\+16238878905"/);
+  assert.match(contactSource, /display: "\+1 \(775\) 599-7046"/);
+  assert.match(contactSource, /href: "tel:\+17755997046"/);
+  assert.match(contactSource, /e164: "\+17755997046"/);
   assert.doesNotMatch(contactSource, /never as Stephen/);
   assert.doesNotMatch(
     contactSource,
@@ -482,14 +482,19 @@ test("the stevo.ai line is the published intake number and the retired number is
     ["resume", resumeHtml],
   ]) {
     assert.doesNotMatch(page, /scheduling line/, `${label} still explains a scheduling line`);
-    assert.match(page, /tel:\+16238878905/, `${label} omits the tel link`);
+    assert.match(page, /tel:\+17755997046/, `${label} omits the tel link`);
     assert.match(
       page,
-      /\+1 \(623\) 887-8905/,
+      /\+1 \(775\) 599-7046/,
       `${label} omits the formatted number`,
     );
     assert.doesNotMatch(page, /Recruiter line/, `${label} still labels the line for recruiters`);
     assert.doesNotMatch(page, /Call Stephen/, `${label} presents the line as Stephen personally`);
+    assert.doesNotMatch(
+      page,
+      /623[-.\s]?887[-.\s]?8905|6238878905|\+1[-.\s]?623[-.\s]?887[-.\s]?8905/,
+      `${label} still publishes the previous stevo.ai line`,
+    );
     assert.doesNotMatch(
       page,
       /623[-.\s]?363[-.\s]?4985|6233634985|\+1[-.\s]?623[-.\s]?363[-.\s]?4985/,
@@ -503,6 +508,10 @@ test("the stevo.ai line is the published intake number and the retired number is
     );
   }
 
+  assert.doesNotMatch(
+    contactSource,
+    /623[-.\s]?887[-.\s]?8905|6238878905/,
+  );
   assert.doesNotMatch(
     contactSource,
     /623[-.\s]?363[-.\s]?4985|6233634985/,
@@ -544,7 +553,7 @@ test("social handles are published on the site and in structured data", async ()
   }
   const person = graph.find((node) => node["@type"] === "Person");
   assert.equal(person.jobTitle, "Cybersecurity and AI Executive");
-  assert.equal(person.telephone, "+16238878905");
+  assert.equal(person.telephone, "+17755997046");
   const organization = graph.find((node) => {
     const type = node["@type"];
     return Array.isArray(type)
@@ -552,7 +561,7 @@ test("social handles are published on the site and in structured data", async ()
       : type === "Organization";
   });
   assert.ok(organization, "Organization node is missing");
-  assert.equal(organization.telephone, "+16238878905");
+  assert.equal(organization.telephone, "+17755997046");
   assert.equal(organization.contactPoint?.name, "Phone");
   assert.equal(organization.hasOfferCatalog?.itemListElement?.length, 4);
   const portfolio = graph.find((node) => node["@type"] === "ItemList");
@@ -811,8 +820,8 @@ test("professional resume is detailed, private, and print-ready", async () => {
   assert.doesNotMatch(contact, /MadeItHappen|twitch\.tv|discord\.com|x\.com/i);
   assert.equal((contact.match(/<li>/g) || []).length, 2, "email and phone");
   assert.doesNotMatch(contact, /scheduling line/);
-  assert.match(contact, /href="tel:\+16238878905"/);
-  assert.match(contact, /\+1 \(623\) 887-8905/);
+  assert.match(contact, /href="tel:\+17755997046"/);
+  assert.match(contact, /\+1 \(775\) 599-7046/);
 
   // Sections are unnumbered.
   assert.doesNotMatch(html, /resume-section-index/);
@@ -989,11 +998,11 @@ test("homepage contact is a heading plus phone and email only", async () => {
 
   assert.ok(closing);
   assert.match(closing, /<h2>Contact<\/h2>/);
-  assert.match(closing, /\+1 \(623\) 887-8905/);
+  assert.match(closing, /\+1 \(775\) 599-7046/);
   assert.match(closing, /stephenabbott20@gmail\.com/);
   assert.doesNotMatch(closing, />Email</);
   assert.equal(
-    (html.match(/href="tel:\+16238878905"/g) || []).length,
+    (html.match(/href="tel:\+17755997046"/g) || []).length,
     2,
     "phone appears in the hero and contact only",
   );
@@ -1488,7 +1497,7 @@ test("the critique brief carries readable copy, not build artifacts", async () =
 
   // Real copy from both pages, so the advisor reviews what a visitor reads.
   assert.match(brief, /Cybersecurity and AI enablement/);
-  assert.match(brief, /View packages|\+1 \(623\) 887-8905/);
+  assert.match(brief, /View packages|\+1 \(775\) 599-7046/);
   assert.match(brief, /Enterprise platforms/);
 
   // None of the export plumbing.
@@ -1855,7 +1864,7 @@ test("each package card carries its own email CTA", async () => {
       `package CTA is missing the ${servicePackage.title} subject`,
     );
   }
-  assert.doesNotMatch(packages, /tel:\+16238878905/);
+  assert.doesNotMatch(packages, /tel:\+17755997046/);
   assert.match(packages, /mailto:stephenabbott20@gmail\.com\?subject=/);
 });
 
@@ -1924,11 +1933,12 @@ test("llms.txt describes the practice for answer engines", async () => {
   ]) {
     assert.ok(llms.includes(offering), `llms.txt omits ${offering}`);
   }
-  assert.match(llms, /\+1 \(623\) 887-8905/);
+  assert.match(llms, /\+1 \(775\) 599-7046/);
   assert.match(llms, /https:\/\/stevo\.ai\/resume\//);
   // The same guards the rest of the site honours.
   assert.doesNotMatch(llms, /\$\d/);
   assert.doesNotMatch(llms, new RegExp(["frac", "tional"].join(""), "i"));
+  assert.doesNotMatch(llms, /623[-.\s]?887[-.\s]?8905|6238878905/);
   assert.doesNotMatch(llms, /623[-.\s]?363[-.\s]?4985/);
   assert.doesNotMatch(llms, /American Express/i);
 });
@@ -1979,7 +1989,8 @@ test("each service track exports a landing page with honest, sourced copy", asyn
     // Both ways in, and the same guards the rest of the site honours. The
     // price check reads the rendered document only: the Next flight payload
     // legitimately contains $-digit reference tokens.
-    assert.match(html, /tel:\+16238878905/);
+    assert.match(html, /tel:\+17755997046/);
+    assert.doesNotMatch(html, /623[-.\s]?887[-.\s]?8905|6238878905/);
     assert.match(html, /mailto:stephenabbott20@gmail\.com\?subject=/);
     const document = html.match(
       /<article class="service-page-document">[\s\S]*?<\/article>/,
