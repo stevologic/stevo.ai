@@ -466,6 +466,10 @@ test("the stevo.ai line is the published intake number and the retired number is
   assert.match(contactSource, /display: "\+1 \(775\) 599-7046"/);
   assert.match(contactSource, /href: "tel:\+17755997046"/);
   assert.match(contactSource, /e164: "\+17755997046"/);
+  assert.doesNotMatch(
+    contactSource,
+    /887-8905|16238878905|623[-.\s]?887/,
+  );
   assert.doesNotMatch(contactSource, /never as Stephen/);
   assert.doesNotMatch(
     contactSource,
@@ -499,6 +503,11 @@ test("the stevo.ai line is the published intake number and the retired number is
       page,
       /623[-.\s]?363[-.\s]?4985|6233634985|\+1[-.\s]?623[-.\s]?363[-.\s]?4985/,
       `${label} still publishes the retired number`,
+    );
+    assert.doesNotMatch(
+      page,
+      /887-8905|16238878905|623[-.\s]?887/,
+      `${label} still publishes the Arizona Now number`,
     );
     assert.doesNotMatch(page, /American Express/i, `${label} names an employer`);
     assert.doesNotMatch(
@@ -1940,6 +1949,7 @@ test("llms.txt describes the practice for answer engines", async () => {
   assert.doesNotMatch(llms, new RegExp(["frac", "tional"].join(""), "i"));
   assert.doesNotMatch(llms, /623[-.\s]?887[-.\s]?8905|6238878905/);
   assert.doesNotMatch(llms, /623[-.\s]?363[-.\s]?4985/);
+  assert.doesNotMatch(llms, /887-8905|16238878905|623[-.\s]?887/);
   assert.doesNotMatch(llms, /American Express/i);
 });
 
