@@ -85,7 +85,31 @@ export const metadata: Metadata = {
     index: true,
     follow: true,
   },
+  referrer: "strict-origin-when-cross-origin",
 };
+
+/**
+ * GitHub Pages cannot send response headers, so the content security policy
+ * ships as a meta tag — the only delivery a static host allows. It exists as
+ * defense in depth: the site is fully self-contained, so anything reaching
+ * for another origin (an injected script, pixel, or exfiltration call) is a
+ * compromise and gets blocked. script-src needs 'unsafe-inline' because the
+ * framework inlines its bootstrap payload; frame-ancestors is omitted because
+ * browsers ignore it in meta delivery. Production-only: the dev server's hot
+ * reload needs eval, which this policy deliberately refuses.
+ */
+const contentSecurityPolicy = [
+  "default-src 'none'",
+  "script-src 'self' 'unsafe-inline'",
+  "style-src 'self' 'unsafe-inline'",
+  "img-src 'self' data:",
+  "font-src 'self'",
+  "connect-src 'self'",
+  "manifest-src 'self'",
+  "form-action 'none'",
+  "base-uri 'none'",
+  "upgrade-insecure-requests",
+].join("; ");
 
 export const viewport: Viewport = {
   themeColor: "#0f1014",
@@ -194,6 +218,13 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body>
+        {/* React hoists meta tags into <head>. */}
+        {process.env.NODE_ENV === "production" ? (
+          <meta
+            httpEquiv="Content-Security-Policy"
+            content={contentSecurityPolicy}
+          />
+        ) : null}
         {children}
         <script
           type="application/ld+json"
