@@ -1864,7 +1864,7 @@ test("each package card carries its own email CTA", async () => {
       `package CTA is missing the ${servicePackage.title} subject`,
     );
   }
-  assert.doesNotMatch(packages, /tel:\+16238878905/);
+  assert.doesNotMatch(packages, /tel:\+17755997046/);
   assert.match(packages, /mailto:stephenabbott20@gmail\.com\?subject=/);
 });
 
@@ -1933,11 +1933,12 @@ test("llms.txt describes the practice for answer engines", async () => {
   ]) {
     assert.ok(llms.includes(offering), `llms.txt omits ${offering}`);
   }
-  assert.match(llms, /\+1 \(623\) 887-8905/);
+  assert.match(llms, /\+1 \(775\) 599-7046/);
   assert.match(llms, /https:\/\/stevo\.ai\/resume\//);
   // The same guards the rest of the site honours.
   assert.doesNotMatch(llms, /\$\d/);
   assert.doesNotMatch(llms, new RegExp(["frac", "tional"].join(""), "i"));
+  assert.doesNotMatch(llms, /623[-.\s]?887[-.\s]?8905|6238878905/);
   assert.doesNotMatch(llms, /623[-.\s]?363[-.\s]?4985/);
   assert.doesNotMatch(llms, /American Express/i);
 });
@@ -1988,7 +1989,8 @@ test("each service track exports a landing page with honest, sourced copy", asyn
     // Both ways in, and the same guards the rest of the site honours. The
     // price check reads the rendered document only: the Next flight payload
     // legitimately contains $-digit reference tokens.
-    assert.match(html, /tel:\+16238878905/);
+    assert.match(html, /tel:\+17755997046/);
+    assert.doesNotMatch(html, /623[-.\s]?887[-.\s]?8905|6238878905/);
     assert.match(html, /mailto:stephenabbott20@gmail\.com\?subject=/);
     const document = html.match(
       /<article class="service-page-document">[\s\S]*?<\/article>/,
