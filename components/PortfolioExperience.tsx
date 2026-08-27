@@ -534,6 +534,14 @@ export function PortfolioExperience({
                     ))}
                   </ul>
                 </div>
+                <p className="service-detail-more">
+                  <Link
+                    className="text-link"
+                    href={`/services/${service.page.slug}/`}
+                  >
+                    The full brief <Arrow />
+                  </Link>
+                </p>
               </article>
             ))}
           </div>

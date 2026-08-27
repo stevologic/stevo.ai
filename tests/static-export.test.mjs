@@ -1857,6 +1857,85 @@ test("llms.txt describes the practice for answer engines", async () => {
   assert.doesNotMatch(llms, /American Express/i);
 });
 
+test("each service track exports a landing page with honest, sourced copy", async () => {
+  const { serviceTracks, servicePackages } = await import("../lib/services.ts");
+  const retiredEmploymentQualifier = ["frac", "tional"].join("");
+
+  for (const track of serviceTracks) {
+    const html = await exportedPage(`services/${track.page.slug}/index.html`);
+    const servicePackage = servicePackages.find(
+      (candidate) => candidate.trackId === track.id,
+    );
+    const escape = (text) => text.replace(/&/g, "&amp;");
+
+    // The page says what the homepage says — title, outcomes, standards,
+    // package — never more.
+    assert.ok(html.includes(escape(track.title)), `${track.page.slug} h1`);
+    assert.ok(html.includes(escape(track.description)));
+    for (const outcome of track.outcomes) {
+      assert.ok(html.includes(escape(outcome)), `${track.page.slug}: ${outcome}`);
+    }
+    for (const standard of track.standards) {
+      assert.ok(html.includes(escape(standard)), `${track.page.slug}: ${standard}`);
+    }
+    assert.ok(html.includes(escape(servicePackage.title)));
+    assert.match(html, /How an engagement runs/);
+
+    // Route-specific metadata and structured data.
+    assert.ok(
+      html.includes(
+        `rel="canonical" href="https://stevo.ai/services/${track.page.slug}/"`,
+      ),
+      `${track.page.slug} canonical`,
+    );
+    assert.ok(html.includes(escape(track.page.metaDescription)));
+    assert.match(html, /https:\/\/stevo\.ai\/og-services\.png/);
+    const structuredData = html.match(
+      /<script type="application\/ld\+json">([\s\S]*?)<\/script>/,
+    )?.[1];
+    assert.ok(structuredData, `${track.page.slug} is missing structured data`);
+    const graph = JSON.parse(structuredData)["@graph"];
+    const service = graph.find((node) => node["@type"] === "Service");
+    assert.equal(service?.name, track.title);
+    assert.deepEqual(service?.provider, {
+      "@id": "https://stevo.ai/#organization",
+    });
+    assert.ok(graph.some((node) => node["@type"] === "BreadcrumbList"));
+
+    // Both ways in, and the same guards the rest of the site honours. The
+    // price check reads the rendered document only: the Next flight payload
+    // legitimately contains $-digit reference tokens.
+    assert.match(html, /tel:\+16238878905/);
+    assert.match(html, /mailto:stephenabbott20@gmail\.com\?subject=/);
+    const document = html.match(
+      /<article class="service-page-document">[\s\S]*?<\/article>/,
+    )?.[0];
+    assert.ok(document, `${track.page.slug} rendered document not found`);
+    assert.doesNotMatch(document, /\$\d/);
+    assert.doesNotMatch(html, new RegExp(retiredEmploymentQualifier, "i"));
+    assert.doesNotMatch(html, /623[-.\s]?363[-.\s]?4985/);
+    assert.doesNotMatch(html, /American Express/i);
+    assert.doesNotMatch(html, /\bCEO\b/);
+    assert.doesNotMatch(html, /available on request|intentionally omitted/i);
+  }
+
+  // The homepage links every page, and the sitemap lists every page.
+  const [index, sitemap] = await Promise.all([
+    exportedPage("index.html"),
+    exportedPage("sitemap.xml"),
+  ]);
+  for (const track of serviceTracks) {
+    assert.ok(
+      index.includes(`href="/services/${track.page.slug}/"`),
+      `homepage never links /services/${track.page.slug}/`,
+    );
+    assert.ok(
+      sitemap.includes(`https://stevo.ai/services/${track.page.slug}/`),
+      `sitemap omits /services/${track.page.slug}/`,
+    );
+  }
+});
+
 test("a published booking URL reaches the hero and contact automatically", async () => {
   const [component, contact] = await Promise.all([
     readFile(

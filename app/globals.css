@@ -1775,6 +1775,242 @@ img {
   color: var(--accent-deep);
 }
 
+/* Service landing pages: the services-section design language on its own
+   route, one column, no client-side effects. */
+.service-page {
+  min-height: 100vh;
+  padding: clamp(28px, 4vw, 56px) max(5vw, calc((100vw - 980px) / 2))
+    clamp(72px, 9vw, 128px);
+  background:
+    linear-gradient(rgba(255, 255, 255, 0.025) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255, 255, 255, 0.025) 1px, transparent 1px),
+    var(--ink);
+  background-size: 76px 76px, 76px 76px, auto;
+  color: var(--paper);
+}
+
+.service-page-toolbar {
+  display: flex;
+  justify-content: space-between;
+  gap: 16px;
+  margin-bottom: clamp(48px, 8vw, 92px);
+}
+
+.service-page-back {
+  color: rgba(241, 239, 231, 0.68);
+  font-family: var(--mono);
+  font-size: 0.72rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.service-page-back:hover,
+.service-page-back:focus-visible {
+  color: var(--paper);
+}
+
+.service-page-eyebrow {
+  margin: 0;
+  color: rgba(241, 239, 231, 0.52);
+  font-family: var(--mono);
+  font-size: 0.69rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+.service-page h1 {
+  margin: 18px 0 0;
+  font-family: var(--serif);
+  font-size: clamp(2.7rem, 6vw, 4.8rem);
+  font-weight: 400;
+  letter-spacing: -0.05em;
+  line-height: 0.98;
+}
+
+.service-page-lede {
+  max-width: 720px;
+  margin: 26px 0 0;
+  color: rgba(241, 239, 231, 0.66);
+  font-size: clamp(1.04rem, 1.5vw, 1.28rem);
+  line-height: 1.65;
+}
+
+.service-page-mode {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin: 26px 0 0;
+  color: var(--accent);
+  font-family: var(--mono);
+  font-size: 0.63rem;
+  text-transform: uppercase;
+}
+
+.service-page-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 14px;
+  margin-top: 30px;
+}
+
+.service-page-section {
+  margin-top: clamp(56px, 8vw, 92px);
+  padding-top: 26px;
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.service-page-section h2,
+.service-page-footer h2 {
+  margin: 0 0 22px;
+  color: rgba(241, 239, 231, 0.52);
+  font-family: var(--mono);
+  font-size: 0.69rem;
+  font-weight: 400;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+.service-page-outcomes {
+  display: grid;
+  gap: 12px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.service-page-outcomes li {
+  position: relative;
+  max-width: 720px;
+  padding-left: 18px;
+  color: rgba(241, 239, 231, 0.78);
+  font-size: 0.95rem;
+  line-height: 1.55;
+}
+
+.service-page-outcomes li::before {
+  position: absolute;
+  top: 0.58em;
+  left: 0;
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: var(--accent);
+  content: "";
+}
+
+.service-page-package {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  max-width: 720px;
+  padding: clamp(24px, 3vw, 38px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 18px;
+  background: rgba(255, 255, 255, 0.035);
+}
+
+.service-page-package h3 {
+  margin: 0;
+  font-family: var(--serif);
+  font-size: clamp(1.7rem, 2.6vw, 2.3rem);
+  font-weight: 400;
+  letter-spacing: -0.04em;
+  line-height: 1.05;
+}
+
+.service-page-package > p {
+  margin: 0;
+  color: rgba(241, 239, 231, 0.61);
+  font-size: 0.92rem;
+  line-height: 1.6;
+}
+
+.service-page-package .package-best-for {
+  margin: 4px 0 0;
+}
+
+.service-page-process {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 20px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  counter-reset: service-phase;
+}
+
+.service-page-process li {
+  padding: 20px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 14px;
+}
+
+.service-page-process h3 {
+  margin: 0;
+  font-family: var(--serif);
+  font-size: 1.3rem;
+  font-weight: 400;
+  letter-spacing: -0.03em;
+}
+
+.service-page-process p {
+  margin: 10px 0 0;
+  color: rgba(241, 239, 231, 0.61);
+  font-size: 0.85rem;
+  line-height: 1.55;
+}
+
+.service-page-standards {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.service-page-standards li {
+  padding: 7px 14px;
+  border: 1px solid rgba(176, 174, 194, 0.4);
+  border-radius: 999px;
+  color: rgba(241, 239, 231, 0.86);
+  font-family: var(--mono);
+  font-size: 0.63rem;
+  letter-spacing: 0.01em;
+}
+
+.service-page-footer {
+  margin-top: clamp(56px, 8vw, 92px);
+  padding-top: 26px;
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.service-page-footer > p {
+  margin: 26px 0 0;
+}
+
+.service-page-footer .text-link {
+  color: rgba(241, 239, 231, 0.72);
+}
+
+.service-page-footer .text-link:hover,
+.service-page-footer .text-link:focus-visible {
+  color: var(--paper);
+}
+
+.service-detail-more {
+  margin: 34px 0 0;
+}
+
+.service-detail-more .text-link {
+  color: rgba(241, 239, 231, 0.72);
+}
+
+.service-detail-more .text-link:hover,
+.service-detail-more .text-link:focus-visible {
+  color: var(--paper);
+}
+
 .faq-section {
   background: var(--paper-deep);
 }
@@ -2473,6 +2709,10 @@ img {
   }
 
   .faq-list {
+    grid-template-columns: 1fr;
+  }
+
+  .service-page-process {
     grid-template-columns: 1fr;
   }
 
