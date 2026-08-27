@@ -1,0 +1,30 @@
+# Automated dependency monitoring. Security updates open pull requests as
+# soon as an advisory lands; version updates arrive weekly and grouped, so
+# the repository sees one reviewable PR instead of a stream. CI validates
+# every PR before a human (or the merge-on-green convention) lands it.
+version: 2
+updates:
+  - package-ecosystem: npm
+    directory: /
+    schedule:
+      interval: weekly
+      day: monday
+      time: "08:00"
+      timezone: America/Phoenix
+    groups:
+      production:
+        dependency-type: production
+      development:
+        dependency-type: development
+    open-pull-requests-limit: 5
+
+  # The workflows pin actions to commit SHAs for supply-chain integrity;
+  # this keeps those pins moving instead of freezing them forever.
+  - package-ecosystem: github-actions
+    directory: /
+    schedule:
+      interval: weekly
+      day: monday
+      time: "08:00"
+      timezone: America/Phoenix
+    open-pull-requests-limit: 5

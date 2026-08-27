@@ -1765,6 +1765,69 @@ test("custom domain is configured", async () => {
   assert.equal(cname.trim(), "stevo.ai");
 });
 
+test("every exported page ships the content security policy and referrer policy", async () => {
+  // GitHub Pages cannot send headers, so both policies travel as meta tags
+  // and must land inside <head> — a CSP meta in the body is ignored.
+  for (const path of [
+    "index.html",
+    "resume/index.html",
+    "services/vciso/index.html",
+  ]) {
+    const html = await exportedPage(path);
+    const head = html.match(/<head>[\s\S]*?<\/head>/)?.[0];
+    assert.ok(head, `${path} has no head`);
+    // React entity-escapes quotes inside attributes; browsers decode them
+    // before enforcing the policy, so the test decodes them too.
+    const csp = head
+      .match(/<meta http-equiv="Content-Security-Policy" content="([^"]+)"/)?.[1]
+      ?.replace(/&#x27;/g, "'")
+      .replace(/&amp;/g, "&");
+    assert.ok(csp, `${path} is missing the content security policy`);
+    // Self-contained by policy: nothing may reach another origin.
+    assert.match(csp, /default-src 'none'/);
+    assert.match(csp, /script-src 'self' 'unsafe-inline'/);
+    assert.match(csp, /connect-src 'self'/);
+    assert.match(csp, /base-uri 'none'/);
+    assert.match(csp, /form-action 'none'/);
+    // frame-ancestors is ignored in meta delivery and would only add console
+    // noise; it must not creep in.
+    assert.doesNotMatch(csp, /frame-ancestors/);
+    // No directive may allow a third-party origin.
+    assert.doesNotMatch(csp, /https?:\/\//);
+
+    assert.match(
+      head,
+      /<meta name="referrer" content="strict-origin-when-cross-origin"/,
+      `${path} is missing the referrer policy`,
+    );
+  }
+});
+
+test("dependency monitoring is configured for both ecosystems", async () => {
+  const dependabot = await readFile(
+    new URL(".github/dependabot.yml", root),
+    "utf8",
+  );
+  assert.match(dependabot, /package-ecosystem: npm/);
+  assert.match(dependabot, /package-ecosystem: github-actions/);
+  assert.match(dependabot, /interval: weekly/);
+
+  // The dependency that prompted this: the framework must never again sit in
+  // a version range with published fixes while nothing watches. Exact pins,
+  // no ranges, per the repository convention.
+  const pkg = JSON.parse(await readFile(new URL("package.json", root), "utf8"));
+  for (const [name, version] of [
+    ...Object.entries(pkg.dependencies),
+    ...Object.entries(pkg.devDependencies),
+  ]) {
+    assert.match(
+      version,
+      /^\d/,
+      `${name} must be pinned exactly, not "${version}"`,
+    );
+  }
+});
+
 test("each package card carries its own email CTA", async () => {
   const html = await exportedPage("index.html");
   const packages = html.match(
