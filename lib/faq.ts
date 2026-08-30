@@ -23,7 +23,7 @@ export const faqItems: FaqItem[] = [
   {
     question: "Who does the work?",
     answer:
-      "Stephen M Abbott. One seat, not a bench — the person on the first call is the person who runs the engagement.",
+      "Stephen M Abbott, through Wire Hold. One seat, not a bench — the person on the first call is the person who runs the engagement.",
   },
   {
     question: "Do you work remotely?",

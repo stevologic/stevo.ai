@@ -589,6 +589,9 @@ export function PortfolioExperience({
               transaction platforms.
             </p>
             <p>
+              He owns Wire Hold, an Arizona AI cybersecurity consultancy.
+            </p>
+            <p>
               Board-facing risk, CTEM, application and software supply-chain
               security, security data platforms, resilience, and governed AI,
               with hands-on product and engineering work.

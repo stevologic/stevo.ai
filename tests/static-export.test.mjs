@@ -70,7 +70,7 @@ test("site presents the consultancy, packages, and proof with social metadata", 
   assert.doesNotMatch(html, /I run cybersecurity and AI programs\./i);
   assert.doesNotMatch(html, /Secure the enterprise\./i);
   assert.doesNotMatch(html, /Enable what comes next\./i);
-  assert.match(html, /Cybersecurity and AI enablement consultancy/);
+  assert.match(html, /Owner of Wire Hold, an AI cybersecurity consultancy/);
   assert.match(html, />Packages</);
   assert.match(html, />Background</);
   assert.match(html, />Portfolio</);
@@ -1933,7 +1933,7 @@ test("llms.txt describes the practice for answer engines", async () => {
   const llms = await readFile(new URL("../out/llms.txt", import.meta.url), "utf8");
 
   assert.match(llms, /^# stevo\.ai/m);
-  assert.match(llms, /Cybersecurity and AI enablement consultancy/);
+  assert.match(llms, /Owner of Wire Hold, an AI cybersecurity consultancy/);
   for (const offering of [
     "vCISO retainer",
     "AI enablement sprint",
