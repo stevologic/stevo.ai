@@ -1,8 +1,8 @@
 # stevo.ai — Stephen M Abbott
 
-> Cybersecurity and AI enablement consultancy. vCISO work, AI controls, and
-> the occasional build. One seat for cybersecurity and AI: the person on the
-> first call is the person who runs the engagement.
+> Owner of Wire Hold. Cybersecurity and AI enablement consultancy. vCISO work,
+> AI controls, and the occasional build. One seat for cybersecurity and AI:
+> the person on the first call is the person who runs the engagement.
 
 Stephen M Abbott is a cybersecurity and AI executive with 16 years in
 enterprise technology and 11 in cybersecurity, including director-level work

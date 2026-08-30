@@ -1,12 +1,35 @@
 [
   {
+    "slug": "wire-hold",
+    "name": "Wire Hold",
+    "category": "Security",
+    "featured": true,
+    "tagline": "vCISO and AI controls.",
+    "description": "The firm I own. Site is going up at wirehold.com.",
+    "siteUrl": "https://wirehold.com",
+    "metrics": [
+      "AI governance",
+      "Secure delivery"
+    ],
+    "tech": [
+      "NIST CSF 2.0",
+      "NIST AI RMF",
+      "ISO 42001"
+    ],
+    "capabilities": [
+      "AI governance",
+      "Secure delivery"
+    ],
+    "statusLabel": "In progress"
+  },
+  {
     "repo": "security-recipes.ai",
     "slug": "security-recipes",
     "name": "security-recipes.ai",
     "category": "Security",
     "featured": true,
     "tagline": "Turn CVE intelligence into verified, evidence-backed remediation teams can trust.",
-    "description": "Open, self-hostable knowledge layer linking source-backed CVE research to bounded remediation recipes, required evidence, rollback guidance, and human-reviewed outcomes—built for security leaders who need traceable action, not another alert stream.",
+    "description": "Open, self-hostable knowledge layer linking source-backed CVE research to bounded remediation recipes, required evidence, rollback guidance, and human-reviewed outcomes\u2014built for security leaders who need traceable action, not another alert stream.",
     "siteUrl": "https://security-recipes.ai",
     "sourceUrl": "https://github.com/stevologic/security-recipes.ai",
     "metrics": [
@@ -26,7 +49,7 @@
       "Bounded remediation recipes",
       "Read-first MCP and JSON"
     ],
-    "statusLabel": "Live · Active development"
+    "statusLabel": "Live \u00b7 Active development"
   },
   {
     "repo": "oss-deps-explorer",
@@ -64,12 +87,12 @@
     "category": "AI systems",
     "featured": true,
     "tagline": "Local-first studio to build, govern, and audit production-ready AI agents.",
-    "description": "Unifies agent orchestration, workspace-aware coding, browser control, scheduling, integrations, memory, and auditable local workflows—so organizations automate with AI without surrendering data control or auditability.",
+    "description": "Unifies agent orchestration, workspace-aware coding, browser control, scheduling, integrations, memory, and auditable local workflows\u2014so organizations automate with AI without surrendering data control or auditability.",
     "siteUrl": "https://shiba-studio.io",
     "sourceUrl": "https://github.com/stevologic/shiba-studio",
     "metrics": [
       "40+ built-in tools",
-      "Windows · macOS · Linux",
+      "Windows \u00b7 macOS \u00b7 Linux",
       "Zero telemetry"
     ],
     "tech": [
@@ -84,7 +107,7 @@
       "Workspace-aware coding",
       "Automations and integrations"
     ],
-    "statusLabel": "Live · Active development"
+    "statusLabel": "Live \u00b7 Active development"
   },
   {
     "repo": "stevo.ai",
@@ -93,7 +116,7 @@
     "category": "AI systems",
     "featured": false,
     "tagline": "Governed AI operations that critique, revise, and ship only under CI controls.",
-    "description": "Live proof of agentic content operations with control at every step: an AI advisor reframes copy under code-enforced factual guards, opens a pull request, passes CI, merges, and deploys—evidence for leaders evaluating governed AI enablement.",
+    "description": "Live proof of agentic content operations with control at every step: an AI advisor reframes copy under code-enforced factual guards, opens a pull request, passes CI, merges, and deploys\u2014evidence for leaders evaluating governed AI enablement.",
     "siteUrl": "https://stevo.ai",
     "sourceUrl": "https://github.com/stevologic/stevo.ai",
     "metrics": [
@@ -112,7 +135,7 @@
       "Guarded AI rewrites",
       "Automated deployment"
     ],
-    "statusLabel": "Live · Self-maintaining"
+    "statusLabel": "Live \u00b7 Self-maintaining"
   },
   {
     "repo": "pro-response",
@@ -120,13 +143,13 @@
     "name": "Pro Response",
     "category": "AI systems",
     "featured": false,
-    "tagline": "Improve enterprise writing quality inside Slack—without adding another workplace surface.",
+    "tagline": "Improve enterprise writing quality inside Slack\u2014without adding another workplace surface.",
     "description": "Routes each request across multiple model providers so quality, cost, and policy can be balanced, giving staff rewrite, translation, summary, and format help where they already work.",
     "siteUrl": "https://stevologic.github.io/pro-response/",
     "sourceUrl": "https://github.com/stevologic/pro-response",
     "metrics": [
       "14 writing modes",
-      "Slack · API · CLI",
+      "Slack \u00b7 API \u00b7 CLI",
       "Multi-provider routing"
     ],
     "tech": [
@@ -149,7 +172,7 @@
     "name": "Spare Cycles",
     "category": "AI systems",
     "featured": false,
-    "tagline": "Orchestrate multi-provider inference through one front door—without vendor lock-in.",
+    "tagline": "Orchestrate multi-provider inference through one front door\u2014without vendor lock-in.",
     "description": "Contributors attach Claude, GPT, Grok, or local Ollama capacity behind an OpenAI-compatible interface, so teams can inspect routing, failover, and provider mixing without standing up their own mesh.",
     "siteUrl": "https://sparecycles.io/",
     "sourceUrl": "https://github.com/stevologic/spare-cycles",
@@ -176,7 +199,7 @@
     "name": "Tiny Book Buddies AI",
     "category": "Products & ventures",
     "featured": false,
-    "tagline": "Idea to illustrated, narrated children's storybook—entirely in the browser.",
+    "tagline": "Idea to illustrated, narrated children's storybook\u2014entirely in the browser.",
     "description": "A parent chooses a model provider; the studio writes the story, generates illustrations, narrates with word-level highlighting, and exports a finished video book. End-to-end consumer product, nothing to host.",
     "siteUrl": "https://tinybookbuddies.ai",
     "sourceUrl": "https://github.com/stevologic/tiny-book-buddies-ai",
@@ -201,15 +224,15 @@
   },
   {
     "slug": "sonnys-world",
-    "name": "Sonny’s World",
+    "name": "Sonny\u2019s World",
     "category": "Products & ventures",
     "featured": false,
-    "tagline": "A bilingual English–Spanish learning playground for a small child, with living picture-book videos.",
+    "tagline": "A bilingual English\u2013Spanish learning playground for a small child, with living picture-book videos.",
     "description": "Letters, numbers, words, songs, and sign language are organized for a grandparent and a young child to sit and learn together.",
     "siteUrl": "https://sonnys.world",
     "metrics": [
-      "English · Spanish",
-      "Ages 2–5",
+      "English \u00b7 Spanish",
+      "Ages 2\u20135",
       "Living picture-book videos"
     ],
     "tech": [
@@ -264,7 +287,7 @@
     "metrics": [
       "Shopify storefront",
       "24+ products",
-      "Apparel · Outdoor · Pet"
+      "Apparel \u00b7 Outdoor \u00b7 Pet"
     ],
     "tech": [
       "Shopify",
@@ -318,7 +341,7 @@
     "metrics": [
       "Arizona events",
       "Business listings",
-      "City · calendar · map"
+      "City \u00b7 calendar \u00b7 map"
     ],
     "tech": [
       "Python",
@@ -374,7 +397,7 @@
     "sourceUrl": "https://github.com/stevologic/doge-miner",
     "metrics": [
       "CPU + OpenCL GPU",
-      "Windows · macOS · Linux",
+      "Windows \u00b7 macOS \u00b7 Linux",
       "No registration"
     ],
     "tech": [
