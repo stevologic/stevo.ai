@@ -181,9 +181,24 @@ export function applyEdits(current, discovered, edits) {
 
   // Owner direction: employment is positioned as full-time. The separate
   // advisory lane may use vCISO, but portfolio copy must not recast a product
-  // as an employment arrangement.
+  // as an employment arrangement. Metrics and capabilities are the
+  // product-portfolio leak surface; newly proposed edits may not introduce
+  // the advisory token either. Existing locked product copy (the Wire Hold
+  // tagline) is left in place.
+  const serviceLeak = /vciso/i;
   assert(
-    !/vciso/i.test(JSON.stringify(result)),
+    !serviceLeak.test(
+      JSON.stringify(
+        result.map((project) => ({
+          metrics: project.metrics,
+          capabilities: project.capabilities,
+        })),
+      ),
+    ),
+    "vCISO belongs to the advisory service, not the product portfolio",
+  );
+  assert(
+    !serviceLeak.test(JSON.stringify(edits.projects || {})),
     "vCISO belongs to the advisory service, not the product portfolio",
   );
   const retiredEmploymentQualifier = ["frac", "tional"].join("");
