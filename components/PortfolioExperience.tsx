@@ -589,7 +589,7 @@ export function PortfolioExperience({
               transaction platforms.
             </p>
             <p>
-              He owns Wire Hold, an Arizona AI cybersecurity consultancy.
+              He owns Wire Hold.
             </p>
             <p>
               Board-facing risk, CTEM, application and software supply-chain

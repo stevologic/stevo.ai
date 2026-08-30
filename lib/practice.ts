@@ -7,14 +7,14 @@ export const practice = {
   name: "Stephen M Abbott",
   title: "Cybersecurity & AI Enablement",
   role: "Cybersecurity & AI executive",
-  headline: "Owner of Wire Hold, an AI cybersecurity consultancy",
+  headline: "Owner of Wire Hold",
   description:
     "Stephen owns Wire Hold. vCISO work, AI controls, and the occasional build.",
   socialTitle: "Stephen M Abbott — Cybersecurity & AI Enablement",
   socialDescription:
     "Stephen owns Wire Hold. vCISO work, AI controls, and the occasional build.",
   socialImageAlt:
-    "Stephen M Abbott, owner of Wire Hold, an AI cybersecurity consultancy.",
+    "Stephen M Abbott, owner of Wire Hold.",
   jobTitle: "Cybersecurity and AI Executive",
   knowsAbout: [
     "Cybersecurity consulting",
