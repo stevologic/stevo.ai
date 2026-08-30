@@ -1207,6 +1207,70 @@ test("project cards carry each site's own icon and theme colour", async () => {
   assert.ok(backgrounds > 0, "no project declared a theme colour");
 });
 
+test("a failed project-icon fetch keeps the last committed icon", async () => {
+  const {
+    previousIconsFrom,
+    dropRetiredProjectIcons,
+    unreferencedIconFiles,
+  } = await import("../scripts/fetch-project-icons.mjs");
+
+  const snapshot = {
+    icons: {
+      "wire-hold": {
+        src: "/project-icons/wire-hold.png",
+        background: "#0f1014",
+        source: "local brand mark",
+      },
+      "security-recipes": {
+        src: "/project-icons/security-recipes.png",
+        background: "#000000",
+      },
+      "retired-app": {
+        src: "/project-icons/retired-app.png",
+      },
+    },
+  };
+
+  const icons = previousIconsFrom(snapshot);
+  assert.notEqual(icons, snapshot.icons, "the working map must be a copy");
+  assert.equal(icons["wire-hold"].src, "/project-icons/wire-hold.png");
+  assert.deepEqual(previousIconsFrom(null), {});
+  assert.deepEqual(previousIconsFrom({ icons: [] }), {});
+
+  // Live run: security-recipes succeeds with a new file; wire-hold fails and
+  // must keep its previous entry; retired-app is gone from the project list.
+  icons["security-recipes"] = {
+    src: "/project-icons/security-recipes.jpg",
+    background: "#111111",
+    source: "https://security-recipes.ai/icon.jpg",
+  };
+
+  const live = dropRetiredProjectIcons(icons, [
+    { slug: "wire-hold" },
+    { slug: "security-recipes" },
+  ]);
+
+  assert.equal(live["wire-hold"].src, "/project-icons/wire-hold.png");
+  assert.equal(
+    live["security-recipes"].src,
+    "/project-icons/security-recipes.jpg",
+  );
+  assert.equal(live["retired-app"], undefined);
+
+  assert.deepEqual(
+    unreferencedIconFiles(
+      [
+        "wire-hold.png",
+        "security-recipes.png",
+        "security-recipes.jpg",
+        "retired-app.png",
+      ],
+      live,
+    ).sort(),
+    ["retired-app.png", "security-recipes.png"],
+  );
+});
+
 test("the printed resume breaks between career history and focus areas", async () => {
   const [html, styles] = await Promise.all([
     exportedPage("resume/index.html"),
