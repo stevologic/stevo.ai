@@ -16,6 +16,12 @@ updates:
         dependency-type: production
       development:
         dependency-type: development
+    # typescript-eslint (pulled in by eslint-config-next) does not support
+    # TypeScript 7 yet, so the TS 7 major breaks `validate`. Hold TypeScript
+    # majors until typescript-eslint ships TS 7 support, then drop this rule.
+    ignore:
+      - dependency-name: typescript
+        update-types: ["version-update:semver-major"]
     open-pull-requests-limit: 5
 
   # The workflows pin actions to commit SHAs for supply-chain integrity;
