@@ -9,6 +9,7 @@ import {
   useState,
   type PointerEvent as ReactPointerEvent,
 } from "react";
+import { SupportCreativity } from "@/components/SupportCreativity";
 import {
   decodeProtectedEmail,
   scheduling,
@@ -411,6 +412,8 @@ export function PortfolioExperience({
           </aside>
         </section>
 
+        <SupportCreativity />
+
         <section className="signal-strip" aria-label="Career highlights">
           {heroMetrics.map((metric) => (
             <div key={metric.label}>
@@ -572,10 +575,11 @@ export function PortfolioExperience({
         <section className="profile-section section" id="profile">
           <div className="profile-photo-wrap" data-reveal>
             <Image
-              src="/stephen-abbott-profile.png"
-              alt="Portrait of Stephen M Abbott"
-              width={311}
-              height={296}
+              src="/stephen-abbott-field-notes.webp"
+              alt="Stephen Abbott in a camouflage hoodie outdoors"
+              width={1717}
+              height={1288}
+              sizes="(max-width: 760px) 82vw, (max-width: 1050px) 72vw, 440px"
               loading="lazy"
             />
           </div>

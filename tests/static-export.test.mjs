@@ -205,7 +205,7 @@ test("hero career strip summarizes professional experience", async () => {
   assert.doesNotMatch(careerStrip, /CVE records indexed|Package ecosystems/);
 });
 
-test("portrait imagery is swapped between the hero and executive profile", async () => {
+test("the executive profile uses the hoodie portrait, not the suit photo", async () => {
   const [html, component, styles] = await Promise.all([
     exportedPage("index.html"),
     readFile(
@@ -214,20 +214,53 @@ test("portrait imagery is swapped between the hero and executive profile", async
     ),
     readFile(new URL("../app/globals.css", import.meta.url), "utf8"),
   ]);
+  const profile = html.match(
+    /<section class="profile-section section" id="profile">([\s\S]*?)<\/section>/,
+  )?.[1];
 
-  const fieldNotesIndex = component.indexOf(
-    'src="/stephen-abbott-field-notes.webp"',
-  );
-  const formalPortraitIndex = component.indexOf(
-    'src="/stephen-abbott-profile.png"',
-  );
-
-  assert.ok(fieldNotesIndex >= 0);
-  assert.ok(formalPortraitIndex > fieldNotesIndex);
+  assert.ok(profile, "executive profile section is missing");
+  assert.match(component, /src="\/stephen-abbott-field-notes\.webp"/);
+  assert.doesNotMatch(component, /stephen-abbott-profile\.png/);
   assert.match(html, /Stephen Abbott outdoors above a mountain lake/);
-  assert.match(html, /Portrait of Stephen M Abbott/);
+  assert.match(profile, /stephen-abbott-field-notes\.webp/);
+  assert.match(profile, /Stephen Abbott in a camouflage hoodie outdoors/);
+  assert.doesNotMatch(html, /stephen-abbott-profile\.png/);
+  assert.doesNotMatch(html, /Portrait of Stephen M Abbott/);
   assert.match(styles, /min-height: 84svh/);
   assert.match(styles, /padding: 104px 20px 58px/);
+
+  await assert.rejects(
+    () => access(new URL("../out/stephen-abbott-profile.png", import.meta.url)),
+    { code: "ENOENT" },
+  );
+});
+
+test("the homepage offers a small personal tip strip under the hero", async () => {
+  const html = await exportedPage("index.html");
+  const { creativitySupport } = await import("../lib/contact.ts");
+  const support = html.match(
+    /<section class="support-strip"[^>]*>([\s\S]*?)<\/section>/,
+  )?.[0];
+  const heroIndex = html.indexOf('class="hero"');
+  const supportIndex = html.indexOf('class="support-strip"');
+  const signalIndex = html.indexOf('class="signal-strip"');
+
+  assert.ok(support, "support strip is missing");
+  assert.ok(heroIndex >= 0 && supportIndex > heroIndex);
+  assert.ok(signalIndex > supportIndex);
+  assert.match(support, /Support my creativity/);
+  assert.match(support, /Like what I/);
+  assert.match(support, /making\?/);
+  assert.match(support, /href="https:\/\/x\.com\/MadeItHappenX"/);
+  assert.match(support, />Tip on X Money/);
+  assert.match(support, /Dogecoin/);
+  assert.match(
+    support,
+    new RegExp(`href="dogecoin:${creativitySupport.dogecoin.address}"`),
+  );
+  assert.match(support, new RegExp(creativitySupport.dogecoin.address));
+  assert.match(support, /Copy Dogecoin address/);
+  assert.doesNotMatch(support, /Wire Hold|vCISO|retainer|engagement/i);
 });
 
 test("the lower portrait is a restrained, static editorial frame", async () => {
@@ -563,6 +596,7 @@ test("social handles are published on the site and in structured data", async ()
   const person = graph.find((node) => node["@type"] === "Person");
   assert.equal(person.jobTitle, "Cybersecurity and AI Executive");
   assert.equal(person.telephone, "+17755997046");
+  assert.equal(person.image, "https://stevo.ai/stephen-abbott-field-notes.webp");
   const organization = graph.find((node) => {
     const type = node["@type"];
     return Array.isArray(type)

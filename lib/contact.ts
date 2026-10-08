@@ -40,6 +40,17 @@ export const socialHandles: SocialHandle[] = [
 
 export const socialProfileUrls = socialHandles.map((profile) => profile.href);
 
+/** Personal tips on the homepage. Not a Wire Hold / services offer. */
+export const creativitySupport = {
+  xMoney: {
+    label: "Tip on X Money",
+    href: "https://x.com/MadeItHappenX",
+  },
+  dogecoin: {
+    address: "DTW2M5oEW97WbmYJRM71qD7uE6xfJs1MUK",
+  },
+} as const;
+
 /** Public stevo.ai line. Do not publish a personal cell. */
 export const voiceLine = {
   label: "Phone",

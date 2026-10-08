@@ -167,7 +167,7 @@ const structuredData = {
       "@id": `${siteUrl}/#stephen-abbott`,
       name: practice.name,
       url: `${siteUrl}/resume/`,
-      image: `${siteUrl}/stephen-abbott-profile.png`,
+      image: `${siteUrl}/stephen-abbott-field-notes.webp`,
       jobTitle: practice.jobTitle,
       telephone: voiceLine.e164,
       worksFor: { "@id": `${siteUrl}/#organization` },
