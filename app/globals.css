@@ -2903,6 +2903,11 @@ img {
     padding: 16px 20px;
   }
 
+  .support-doge {
+    width: 100%;
+    border-radius: 14px;
+  }
+
   .signal-strip {
     grid-template-columns: repeat(2, 1fr);
   }
