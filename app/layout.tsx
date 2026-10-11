@@ -115,27 +115,23 @@ export const viewport: Viewport = {
 /**
  * Wire Hold lives on its own domain. stevo.ai only names the employer so
  * Person is the primary entity here and the two brands stay separate.
+ * founder belongs on Organization, not Person.
  */
-const wireHoldOrganization = {
-  "@type": "Organization",
-  name: "Wire Hold",
-  legalName: "Wirehold LLC",
-  url: "https://www.wirehold.com",
-};
+const personId = `${siteUrl}/#stephen-abbott`;
+const wireHoldId = "https://www.wirehold.com/#organization";
 
 const structuredData = {
   "@context": "https://schema.org",
   "@graph": [
     {
       "@type": "Person",
-      "@id": `${siteUrl}/#stephen-abbott`,
+      "@id": personId,
       name: practice.name,
       url: `${siteUrl}/resume/`,
       image: `${siteUrl}/stephen-abbott-field-notes.webp`,
       jobTitle: practice.jobTitle,
       telephone: voiceLine.e164,
-      worksFor: wireHoldOrganization,
-      founder: wireHoldOrganization,
+      worksFor: { "@id": wireHoldId },
       sameAs: socialProfileUrls,
       alumniOf: {
         "@type": "CollegeOrUniversity",
@@ -155,6 +151,14 @@ const structuredData = {
       knowsAbout: [...practice.knowsAbout],
     },
     {
+      "@type": "Organization",
+      "@id": wireHoldId,
+      name: "Wire Hold",
+      legalName: "Wirehold LLC",
+      url: "https://www.wirehold.com",
+      founder: { "@id": personId },
+    },
+    {
       "@type": "ProfessionalService",
       "@id": `${siteUrl}/#organization`,
       name: "stevo.ai",
@@ -162,7 +166,7 @@ const structuredData = {
       logo: `${siteUrl}/icon-512.png`,
       description: practice.description,
       telephone: voiceLine.e164,
-      founder: { "@id": `${siteUrl}/#stephen-abbott` },
+      founder: { "@id": personId },
       areaServed: "Worldwide",
       knowsAbout: [...practice.knowsAbout],
       // Phone is already the published stevo.ai line. Do not invent an email

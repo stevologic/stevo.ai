@@ -42,6 +42,32 @@ function jsonLdNodes(html) {
   return scripts.flatMap((script) => script["@graph"] ?? [script]);
 }
 
+function walkJsonLd(value, visit) {
+  if (Array.isArray(value)) {
+    for (const item of value) walkJsonLd(item, visit);
+    return;
+  }
+  if (value && typeof value === "object") {
+    visit(value);
+    for (const item of Object.values(value)) walkJsonLd(item, visit);
+  }
+}
+
+/** @id-only objects are references; they must point at a typed node. */
+function danglingJsonLdIds(html) {
+  const defined = new Set();
+  const referenced = new Set();
+  for (const node of jsonLdNodes(html)) {
+    walkJsonLd(node, (object) => {
+      const id = object["@id"];
+      if (typeof id !== "string") return;
+      if (object["@type"]) defined.add(id);
+      if (Object.keys(object).length === 1) referenced.add(id);
+    });
+  }
+  return [...referenced].filter((id) => !defined.has(id));
+}
+
 test("exports the site, install icons, and social assets", async () => {
   await Promise.all([
     access(new URL("../out/index.html", import.meta.url)),
@@ -596,12 +622,22 @@ test("social handles are published on the site and in structured data", async ()
   assert.equal(person.jobTitle, "Cybersecurity and AI Executive");
   assert.equal(person.telephone, "+17755997046");
   assert.equal(person.image, "https://stevo.ai/stephen-abbott-field-notes.webp");
-  assert.equal(person.worksFor?.name, "Wire Hold");
-  assert.equal(person.worksFor?.legalName, "Wirehold LLC");
-  assert.equal(person.worksFor?.url, "https://www.wirehold.com");
-  assert.equal(person.founder?.name, "Wire Hold");
-  assert.equal(person.founder?.legalName, "Wirehold LLC");
-  assert.equal(person.founder?.url, "https://www.wirehold.com");
+  assert.deepEqual(person.worksFor, {
+    "@id": "https://www.wirehold.com/#organization",
+  });
+  assert.equal(person.founder, undefined);
+
+  const wireHoldOrg = graph.find(
+    (node) => node["@id"] === "https://www.wirehold.com/#organization",
+  );
+  assert.ok(wireHoldOrg, "Wire Hold Organization node is missing");
+  assert.equal(wireHoldOrg["@type"], "Organization");
+  assert.equal(wireHoldOrg.name, "Wire Hold");
+  assert.equal(wireHoldOrg.legalName, "Wirehold LLC");
+  assert.equal(wireHoldOrg.url, "https://www.wirehold.com");
+  assert.deepEqual(wireHoldOrg.founder, {
+    "@id": "https://stevo.ai/#stephen-abbott",
+  });
 
   const professionalService = graph.find((node) =>
     typeOf(node).includes("ProfessionalService"),
@@ -613,6 +649,7 @@ test("social handles are published on the site and in structured data", async ()
   assert.equal(professionalService.telephone, "+17755997046");
   assert.equal(professionalService.contactPoint?.name, "Phone");
   assert.equal(professionalService.contactPoint?.telephone, "+17755997046");
+  assert.equal(professionalService.contactPoint?.url, "https://stevo.ai/#contact");
   assert.equal(professionalService.contactPoint?.email, undefined);
   assert.equal(professionalService.hasOfferCatalog?.itemListElement?.length, 4);
   assert.equal(professionalService.sameAs, undefined);
@@ -1032,8 +1069,11 @@ test("Wire Hold is live and Person is the primary JSON-LD entity", async () => {
     .match(/<article class="project-card[\s\S]*?<\/article>/g)
     ?.find((markup) => markup.includes("<h3>Wire Hold</h3>"));
   assert.ok(card, "Wire Hold card not found");
-  assert.match(card, /href="https:\/\/wirehold\.com"/);
+  assert.equal(wireHold.siteUrl, "https://www.wirehold.com");
+  assert.match(card, /href="https:\/\/www\.wirehold\.com"/);
+  assert.doesNotMatch(card, /href="https:\/\/wirehold\.com"/);
   assert.match(card, />Live</);
+  assert.match(card, /vCISO and AI controls/);
   assert.doesNotMatch(card, /In progress|going up at/);
 
   const jsonLdScripts = [
@@ -1045,13 +1085,31 @@ test("Wire Hold is live and Person is the primary JSON-LD entity", async () => {
     .join("\n");
   assert.doesNotMatch(jsonLdScripts, /gmail\.com/i);
   assert.doesNotMatch(jsonLdScripts, /stephenabbott20/i);
+  assert.doesNotMatch(jsonLdScripts, /https:\/\/wirehold\.com(?:\/|"|'|$)/);
 
   const graph = jsonLdNodes(html);
   const typeOf = (node) =>
     Array.isArray(node["@type"]) ? node["@type"] : [node["@type"]];
   const people = graph.filter((node) => typeOf(node).includes("Person"));
   assert.equal(people.length, 1, "exactly one Person entity");
-  assert.ok(people[0].worksFor, "Person must name the employer");
+  for (const node of people) {
+    assert.equal(node.founder, undefined, "Person must not carry founder");
+  }
+  assert.deepEqual(people[0].worksFor, {
+    "@id": "https://www.wirehold.com/#organization",
+  });
+  const wireHoldOrg = graph.find(
+    (node) => node["@id"] === "https://www.wirehold.com/#organization",
+  );
+  assert.ok(wireHoldOrg, "Wire Hold Organization node is missing");
+  assert.deepEqual(wireHoldOrg.founder, {
+    "@id": "https://stevo.ai/#stephen-abbott",
+  });
+  const portfolio = graph.find((node) => node["@type"] === "ItemList");
+  const listed = portfolio.itemListElement.find(
+    (entry) => entry.item?.name === "Wire Hold",
+  );
+  assert.equal(listed?.item?.url, "https://www.wirehold.com");
   assert.ok(
     !graph.some((node) => {
       const types = typeOf(node);
@@ -1061,6 +1119,24 @@ test("Wire Hold is live and Person is the primary JSON-LD entity", async () => {
     }),
     "the person must not be typed as Organization + ProfessionalService",
   );
+});
+
+test("every JSON-LD @id reference resolves to a typed node", async () => {
+  const { serviceTracks } = await import("../lib/services.ts");
+  const paths = [
+    "index.html",
+    "resume/index.html",
+    ...serviceTracks.map((track) => `services/${track.page.slug}/index.html`),
+  ];
+
+  for (const path of paths) {
+    const dangling = danglingJsonLdIds(await exportedPage(path));
+    assert.deepEqual(
+      dangling,
+      [],
+      `${path} has dangling JSON-LD @id refs: ${dangling.join(", ")}`,
+    );
+  }
 });
 
 test("Arrowhead Paesano is published as a project", async () => {
