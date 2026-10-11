@@ -2332,6 +2332,8 @@ img {
 }
 
 .resume-toolbar {
+  flex-wrap: wrap;
+  gap: 12px;
   display: flex;
   max-width: 1160px;
   align-items: center;
@@ -2340,6 +2342,7 @@ img {
 }
 
 .resume-back-link,
+.resume-download-link,
 .resume-print-button {
   display: inline-flex;
   min-height: 42px;
@@ -2356,7 +2359,15 @@ img {
     color 180ms ease;
 }
 
+.resume-download-actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 12px;
+}
+
 .resume-back-link:hover,
+.resume-download-link:hover,
 .resume-print-button:hover {
   background: var(--ink);
   color: var(--paper);
@@ -2501,6 +2512,17 @@ img {
   font-size: 1.6rem;
   font-weight: 400;
   letter-spacing: -0.035em;
+}
+
+.resume-employer {
+  margin: 8px 0 0;
+  color: var(--muted);
+  font-size: 0.85rem;
+}
+
+.resume-product-name {
+  font-size: 0.85rem;
+  font-weight: 600;
 }
 
 .resume-career-list {
@@ -3384,8 +3406,7 @@ img {
   }
 
   .resume-project-capabilities {
-    gap: 4px;
-    margin-top: 6px;
+    display: none;
   }
 
   .resume-project-capability {
@@ -3442,6 +3463,7 @@ img {
 
   .resume-project-link,
   .resume-product-link,
+  .resume-product-name,
   .resume-github-link {
     padding-bottom: 0;
     border-bottom: 0;

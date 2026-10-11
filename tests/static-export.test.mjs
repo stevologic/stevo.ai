@@ -542,7 +542,11 @@ test("the stevo.ai line is the published intake number and the retired number is
       /887-8905|16238878905|623[-.\s]?887/,
       `${label} still publishes the Arizona Now number`,
     );
-    assert.doesNotMatch(page, /American Express/i, `${label} names an employer`);
+    if (label === "resume") {
+      assert.match(page, /American Express · 2010-2026/);
+    } else {
+      assert.doesNotMatch(page, /American Express/i, `${label} names an employer`);
+    }
     assert.doesNotMatch(
       page,
       /intentionally omitted|available on request/i,
@@ -638,7 +642,7 @@ test("consultancy offer, background, and employment history stay distinct", asyn
   );
 
   // Target roles and services can be named in the résumé, but the historical
-  // title elements must remain the verified employer-anonymized titles.
+  // title elements must remain the verified historical titles.
   const careerTitles = [
     ...resumeHtml.matchAll(/class="resume-career-title">([^<]+)</g),
   ].map((match) => match[1]);
@@ -830,7 +834,7 @@ test("professional resume is detailed, private, and print-ready", async () => {
   assert.doesNotMatch(html, /Resilient Transaction Platforms/);
   assert.match(
     html,
-    /Director-level at Fortune 100 payments: CTEM, board risk, and a security engineering org of up to 26/,
+    /Led enterprise CTEM, executive and board risk reporting, and security engineering organizations of up to 26/,
   );
   assert.doesNotMatch(html, /Employer names intentionally omitted/);
   const intro = html.match(
@@ -838,9 +842,9 @@ test("professional resume is detailed, private, and print-ready", async () => {
   )?.[1];
   assert.ok(intro);
   assert.equal(
-    (intro.match(/Fortune 100 payments/g) || []).length,
+    (intro.match(/16 years/g) || []).length,
     1,
-    "Fortune 100 payments must appear once in the intro",
+    "the approved career summary states the enterprise tenure once",
   );
   assert.doesNotMatch(
     html,
@@ -848,7 +852,7 @@ test("professional resume is detailed, private, and print-ready", async () => {
     "the header summary already performs this job",
   );
   assert.match(html, /Print \/ save as PDF/);
-  assert.doesNotMatch(html, /American Express/i);
+  assert.match(html, /American Express · 2010-2026/);
   assert.doesNotMatch(html, /Full career r(?:é|&eacute;|&#xE9;)sum(?:é|&eacute;|&#xE9;) available on request/i);
 
   // Contact is email plus the stevo.ai line. Assert on the contact
@@ -885,6 +889,34 @@ test("resume publishes route-specific canonical and social metadata", async () =
   );
   assert.match(html, /https:\/\/stevo\.ai\/og-executive\.png/);
   assert.match(html, /summary_large_image/);
+});
+
+test("resume downloads export the verified regenerated master files", async () => {
+  const { createHash } = await import("node:crypto");
+  const html = await exportedPage("resume/index.html");
+  const manifest = JSON.parse(await readFile(new URL("content/resume-downloads.generated.json", root), "utf8"));
+  assert.equal(manifest.regenerated, true);
+  assert.equal(manifest.pages, 2);
+  assert.ok(manifest.verifiedTextBlocks >= 35);
+  for (const [file, expected] of Object.entries(manifest.sources)) {
+    const bytes = await readFile(new URL(file, root));
+    const text = bytes.toString("utf8").replace(/\r\n?/g, "\n");
+    assert.equal(createHash("sha256").update(text).digest("hex"), expected,
+      `${file} changed after download verification; regenerate and verify the downloads`);
+  }
+  for (const [name, expected] of Object.entries(manifest.files)) {
+    assert.match(html, new RegExp(`href="/resume-files/${name.replace(/\./g, "\\.")}" download=""`));
+    const [source, exported] = await Promise.all([
+      readFile(new URL(`public/resume-files/${name}`, root)),
+      readFile(new URL(`out/resume-files/${name}`, root)),
+    ]);
+    assert.deepEqual(exported, source, `${name} changed during static export`);
+    assert.equal(source.length, expected.sizeBytes);
+    assert.equal(createHash("sha256").update(source).digest("hex"), expected.sha256);
+    assert.ok(source.length > 10_000, `${name} is unexpectedly small`);
+    assert.ok(source.subarray(0, name.endsWith('.pdf') ? 5 : 2)
+      .equals(Buffer.from(name.endsWith('.pdf') ? '%PDF-' : 'PK')));
+  }
 });
 
 test("resume reflects the current skills, tooling, and credentials", async () => {
@@ -1623,20 +1655,21 @@ test("the resume curates the site's strongest founder-built projects", async () 
   const projects = await publishedProjects();
   const body = html.slice(html.indexOf("resume-document"));
 
-  // The résumé is derived from the portfolio but intentionally capped so daily
-  // project discovery cannot push the print export onto a third page.
+  // The approved résumé keeps its own curated selection, while names and URLs
+  // follow the portfolio. Discovery order cannot silently omit a venture.
   const featured = [
     ...body.matchAll(/class="resume-project-title">([^<]*)/g),
   ].map((m) => m[1]);
   const other = [
-    ...body.matchAll(/class="resume-product-link"[^>]*>([^<]*)/g),
+    ...body.matchAll(/class="resume-product-(?:link|name)"[^>]*>([^<]*)/g),
   ].map((m) => m[1]);
   const listed = new Set([...featured, ...other]);
 
-  const expected = [
-    ...projects.filter((project) => project.featured).slice(0, 3),
-    ...projects.filter((project) => !project.featured).slice(0, 6),
-  ];
+  const selection = JSON.parse(
+    await readFile(new URL("content/resume-projects.json", root), "utf8"),
+  );
+  const expected = [...selection.representativeWork, ...selection.additionalProducts]
+    .map((brief) => projects.find((project) => project.slug === brief.slug));
   for (const project of expected) {
     assert.ok(
       listed.has(project.name),
@@ -1645,9 +1678,15 @@ test("the resume curates the site's strongest founder-built projects", async () 
   }
   assert.equal(
     listed.size,
-    expected.length,
+    expected.length + 1,
     "the resume project list exceeded its curated print budget",
   );
+  assert.match(body, /Live web platform and published iOS app/);
+  assert.match(body, /vacation rentals/);
+  assert.match(body, /Stripe-enabled web payments/);
+  assert.match(body, /WinterHunt/);
+  assert.match(body, /Multiplayer hunting-game prototype in development\./);
+  assert.doesNotMatch(body, /released Steam game|Site is going up|…/);
 
   // Career figures are quoted on both pages and must come from one source.
   // Read lib/career.ts as text: it uses the "@/" alias, which only the Next

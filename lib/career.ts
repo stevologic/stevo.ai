@@ -1,4 +1,5 @@
 import { projects } from "@/lib/project-data";
+import resumeProjects from "@/content/resume-projects.json";
 
 /**
  * Career facts stated in more than one place. The home page metric strip and
@@ -61,45 +62,40 @@ export const resumeMetrics = [
 ] as const;
 
 /**
- * The résumé's project sections, derived from the same data the portfolio
- * renders. Adding a project to the site — by hand or through daily discovery —
- * puts it on the résumé too, and a rename can never leave the two disagreeing.
+ * The approved résumé selects its own products and complete, concise prose.
+ * Names and URLs still follow the portfolio, while daily discovery and weekly
+ * portfolio rewrites cannot omit a venture or change the résumé's claims.
  */
-/**
- * Portfolio copy is rewritten weekly by the critique workflow, so anything it
- * feeds into the résumé has to be bounded here. Without these caps a longer
- * project description silently pushes the printed résumé onto a third page,
- * which is exactly what happened once.
- */
-function clamp(text: string, limit: number) {
-  const value = text.trim();
-  if (value.length <= limit) return value;
-  const cut = value.slice(0, limit - 1);
-  return `${cut.slice(0, cut.lastIndexOf(" "))}…`;
+function resumeProject(slug: string) {
+  const project = projects.find((candidate) => candidate.slug === slug);
+  if (!project) throw new Error(`Résumé project is missing: ${slug}`);
+  return project;
 }
 
-/** At most this many projects lead the résumé, however many are featured. */
-const REPRESENTATIVE_LIMIT = 3;
-/** Keep the printable résumé curated even as daily discovery grows the site. */
-const ADDITIONAL_PRODUCT_LIMIT = 6;
-
-export const representativeWork = projects
-  .filter((project) => project.featured)
-  .slice(0, REPRESENTATIVE_LIMIT)
-  .map((project) => ({
+export const representativeWork = resumeProjects.representativeWork.map((brief) => {
+  const project = resumeProject(brief.slug);
+  return {
     title: project.name,
-    category: clamp(project.tagline, 70),
-    description: clamp(project.description, 190),
+    category: brief.category,
+    description: brief.description,
     capabilities: project.tech.slice(0, 4),
     liveUrl: project.siteUrl,
     sourceUrl: project.sourceUrl,
-  }));
+  };
+});
 
-export const additionalProducts = projects
-  .filter((project) => !project.featured)
-  .slice(0, ADDITIONAL_PRODUCT_LIMIT)
-  .map((project) => ({
-    name: project.name,
-    url: project.siteUrl,
-    description: clamp(project.tagline, 64),
-  }));
+export const additionalProducts = [
+  ...resumeProjects.additionalProducts.map((brief) => {
+    const project = resumeProject(brief.slug);
+    return {
+      name: project.name,
+      url: project.siteUrl,
+      description: brief.description,
+    };
+  }),
+  {
+    name: "WinterHunt",
+    url: undefined,
+    description: "Multiplayer hunting-game prototype in development.",
+  },
+];

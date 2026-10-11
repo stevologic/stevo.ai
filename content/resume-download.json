@@ -1,0 +1,173 @@
+{
+  "provenance": {
+    "source": "Approved master resume text read through Library",
+    "library_file_ids": [
+      "libfile_1ebb4382284c81919b83a35d325894c8",
+      "libfile_dfb5c72d829c81919c011de0175a1eb9"
+    ],
+    "regenerated": true
+  },
+  "blocks": [
+    {
+      "kind": "title",
+      "text": "Stephen M Abbott"
+    },
+    {
+      "kind": "subtitle",
+      "text": "Cybersecurity and AI Executive"
+    },
+    {
+      "kind": "contact",
+      "text": "Phoenix, Arizona | +1 (775) 599-7046 | stephenabbott20@gmail.com"
+    },
+    {
+      "kind": "contact",
+      "text": "stevo.ai | github.com/stevologic"
+    },
+    {
+      "kind": "heading",
+      "text": "Profile"
+    },
+    {
+      "kind": "paragraph",
+      "text": "Cybersecurity leader with 16 years across enterprise systems and security at American Express. Built security engineering organizations of up to 26, led enterprise exposure reduction, and translated technical risk into executive and board reporting. Combines application security, governed AI and operational resilience with founder-led delivery of security products, web and mobile platforms, and e-commerce ventures."
+    },
+    {
+      "kind": "heading",
+      "text": "Professional experience"
+    },
+    {
+      "kind": "employer",
+      "text": "American Express | 2010-2026"
+    },
+    {
+      "kind": "role",
+      "text": "Director Cybersecurity | 2024-2026"
+    },
+    {
+      "kind": "bullet",
+      "text": "Led enterprise Continuous Threat Exposure Management and remediation operations with an 11-person team."
+    },
+    {
+      "kind": "bullet",
+      "text": "Introduced risk prioritization, quantification, and governed AI-assisted remediation with executive leadership."
+    },
+    {
+      "kind": "bullet",
+      "text": "Reduced open-source dependencies by more than 75% through developer engagement and preventative controls."
+    },
+    {
+      "kind": "bullet",
+      "text": "Shaped risk-appetite measures and key risk indicators for board and executive reporting; developed leaders who advanced to senior and director roles."
+    },
+    {
+      "kind": "role",
+      "text": "Director Security Data and Risk Intelligence | 2021-2024"
+    },
+    {
+      "kind": "bullet",
+      "text": "Led an engineering organization of up to 26 delivering sensitive-data detection, composition intelligence, and repository enrichment."
+    },
+    {
+      "kind": "bullet",
+      "text": "Reduced sensitive-data findings by 92%, tripled detection coverage, and improved fidelity through automation with human review."
+    },
+    {
+      "kind": "bullet",
+      "text": "Owned application risk assessments, business impact analysis, disaster recovery, and resilience planning for critical platforms."
+    },
+    {
+      "kind": "bullet",
+      "text": "Partnered with cloud and identity teams to harden infrastructure-as-code pipelines and encryption."
+    },
+    {
+      "kind": "role",
+      "text": "Senior Cybersecurity Engineer Application Security | 2019-2021"
+    },
+    {
+      "kind": "bullet",
+      "text": "Owned enterprise application security across static, dynamic, mobile, and software-composition analysis."
+    },
+    {
+      "kind": "bullet",
+      "text": "Set testing strategy, drove secure-development lifecycle adoption, and measured program effectiveness."
+    },
+    {
+      "kind": "heading",
+      "text": "Professional experience continued",
+      "pageBreak": true
+    },
+    {
+      "kind": "role",
+      "text": "Senior Security Engineer Detection and Infrastructure | 2014-2019"
+    },
+    {
+      "kind": "bullet",
+      "text": "Built SIEM, full-packet-capture, and centralized logging platforms; expanded encrypted-traffic visibility and deployed globally distributed, highly available security infrastructure."
+    },
+    {
+      "kind": "bullet",
+      "text": "Delivered incident-response detections from logs, network telemetry, IDS/IPS, and endpoint signals."
+    },
+    {
+      "kind": "role",
+      "text": "Senior Infrastructure Engineer | 2010-2014"
+    },
+    {
+      "kind": "bullet",
+      "text": "Operated critical transaction-system backend services in a regulated environment, sustaining 99.99% availability through monitoring and automated CI/CD deployments."
+    },
+    {
+      "kind": "bullet",
+      "text": "Delivered disaster recovery and resilience programs for high-stakes systems."
+    },
+    {
+      "kind": "heading",
+      "text": "Founder and product leadership"
+    },
+    {
+      "kind": "paragraph",
+      "text": "Wire Hold Security | Wirehold LLC. Founded an AI and cybersecurity consultancy offering vCISO guidance, AI governance, practical technology education, and scoped small-business enablement and defensive assessments."
+    },
+    {
+      "kind": "paragraph",
+      "text": "Arizona Now | Arizona Now LLC. Built and launched an Arizona discovery platform for events, local businesses and vacation-rental listings. Delivered the web platform and published iOS app, with source-linked content, reviewed submissions, Stripe-enabled web payments and optional paid placements."
+    },
+    {
+      "kind": "paragraph",
+      "text": "security-recipes.ai and OSS Dependency Explorer. Built source-backed vulnerability intelligence, bounded AI-remediation playbooks and read-only MCP context, alongside multi-ecosystem dependency, license, vulnerability and SBOM analysis at ossde.dev."
+    },
+    {
+      "kind": "paragraph",
+      "text": "Desert Wander Supply Co. Built and operate a desert-inspired e-commerce brand, including the online storefront, product merchandising and partnership outreach."
+    },
+    {
+      "kind": "paragraph",
+      "text": "Additional products. Shiba Studio: local-first AI-agent workflows. Pro Response: AI writing assistance in Slack. Spare Cycles: multi-provider inference. Sonny’s World: bilingual learning app. Tiny Book Buddies AI: illustrated and narrated storybooks. mouseclicker.app: Windows workflow automation. WinterHunt: multiplayer hunting-game prototype in development."
+    },
+    {
+      "kind": "heading",
+      "text": "Selected technical breadth"
+    },
+    {
+      "kind": "paragraph",
+      "text": "SAST, SCA, DAST, secrets detection, container scanning, secure CI/CD, GitHub Enterprise and Advanced Security, Dependabot, Jenkins, ArgoCD, Kubernetes, Sonatype Nexus, JFrog Artifactory, Burp Suite, NetWitness, ServiceNow and Zafran CTEM."
+    },
+    {
+      "kind": "paragraph",
+      "text": "TypeScript, Python, JavaScript, Go, C#, Docker and MCP orchestration. Framework knowledge: NIST CSF 2.0, ISO 27001, SOC 2, FAIR, NIST AI RMF, OWASP ASVS and NIST SSDF."
+    },
+    {
+      "kind": "heading",
+      "text": "Education and professional development"
+    },
+    {
+      "kind": "paragraph",
+      "text": "BA, Walter Cronkite School of Journalism, Arizona State University."
+    },
+    {
+      "kind": "paragraph",
+      "text": "OSCP; AWS Certified Cloud Practitioner. CRISC bootcamp training; SpecterOps Adversary Tactics. Harvard Leadership Training; Duke University Accelerate Your Growth leadership training."
+    }
+  ]
+}
