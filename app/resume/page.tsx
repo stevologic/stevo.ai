@@ -48,7 +48,15 @@ export default function ResumePage() {
         <Link className="resume-back-link" href="/">
           Back to the site
         </Link>
-        <PrintButton />
+        <div className="resume-download-actions">
+          <a className="resume-download-link" href="/resume-files/Stephen-Abbott-Resume.pdf" download>
+            Download PDF
+          </a>
+          <a className="resume-download-link" href="/resume-files/Stephen-Abbott-Resume.docx" download>
+            Download Word
+          </a>
+          <PrintButton />
+        </div>
       </nav>
 
       <article className="resume-document">

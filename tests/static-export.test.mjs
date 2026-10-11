@@ -891,6 +891,33 @@ test("resume publishes route-specific canonical and social metadata", async () =
   assert.match(html, /summary_large_image/);
 });
 
+test("resume downloads export the verified regenerated master files", async () => {
+  const { createHash } = await import("node:crypto");
+  const html = await exportedPage("resume/index.html");
+  const manifest = JSON.parse(await readFile(new URL("content/resume-downloads.generated.json", root), "utf8"));
+  assert.equal(manifest.regenerated, true);
+  assert.equal(manifest.pages, 2);
+  assert.ok(manifest.verifiedTextBlocks >= 35);
+  for (const [file, expected] of Object.entries(manifest.sources)) {
+    const bytes = await readFile(new URL(file, root));
+    assert.equal(createHash("sha256").update(bytes).digest("hex"), expected,
+      `${file} changed after download verification; regenerate and verify the downloads`);
+  }
+  for (const [name, expected] of Object.entries(manifest.files)) {
+    assert.match(html, new RegExp(`href="/resume-files/${name.replace(/\./g, "\\.")}" download=""`));
+    const [source, exported] = await Promise.all([
+      readFile(new URL(`public/resume-files/${name}`, root)),
+      readFile(new URL(`out/resume-files/${name}`, root)),
+    ]);
+    assert.deepEqual(exported, source, `${name} changed during static export`);
+    assert.equal(source.length, expected.sizeBytes);
+    assert.equal(createHash("sha256").update(source).digest("hex"), expected.sha256);
+    assert.ok(source.length > 10_000, `${name} is unexpectedly small`);
+    assert.ok(source.subarray(0, name.endsWith('.pdf') ? 5 : 2)
+      .equals(Buffer.from(name.endsWith('.pdf') ? '%PDF-' : 'PK')));
+  }
+});
+
 test("resume reflects the current skills, tooling, and credentials", async () => {
   const html = await exportedPage("resume/index.html");
 

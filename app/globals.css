@@ -2332,6 +2332,8 @@ img {
 }
 
 .resume-toolbar {
+  flex-wrap: wrap;
+  gap: 12px;
   display: flex;
   max-width: 1160px;
   align-items: center;
@@ -2340,6 +2342,7 @@ img {
 }
 
 .resume-back-link,
+.resume-download-link,
 .resume-print-button {
   display: inline-flex;
   min-height: 42px;
@@ -2356,7 +2359,15 @@ img {
     color 180ms ease;
 }
 
+.resume-download-actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 12px;
+}
+
 .resume-back-link:hover,
+.resume-download-link:hover,
 .resume-print-button:hover {
   background: var(--ink);
   color: var(--paper);
