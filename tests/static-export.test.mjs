@@ -900,7 +900,8 @@ test("resume downloads export the verified regenerated master files", async () =
   assert.ok(manifest.verifiedTextBlocks >= 35);
   for (const [file, expected] of Object.entries(manifest.sources)) {
     const bytes = await readFile(new URL(file, root));
-    assert.equal(createHash("sha256").update(bytes).digest("hex"), expected,
+    const text = bytes.toString("utf8").replace(/\r\n?/g, "\n");
+    assert.equal(createHash("sha256").update(text).digest("hex"), expected,
       `${file} changed after download verification; regenerate and verify the downloads`);
   }
   for (const [name, expected] of Object.entries(manifest.files)) {

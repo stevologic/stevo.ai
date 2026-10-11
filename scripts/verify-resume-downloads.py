@@ -70,7 +70,9 @@ if args.finalize:
     manifest = {
         'regenerated': True,
         'sourceLibraryIds': source['provenance']['library_file_ids'],
-        'sources': {name: hashlib.sha256((ROOT / name).read_bytes()).hexdigest()
+        # Normalize source-text newlines across Windows/Linux. Download hashes
+        # remain exact binary hashes.
+        'sources': {name: hashlib.sha256((ROOT / name).read_text(encoding='utf-8').encode('utf-8')).hexdigest()
                     for name in source_files},
         'files': {path.name: {'sha256': hashlib.sha256(path.read_bytes()).hexdigest(),
                              'sizeBytes': path.stat().st_size}
