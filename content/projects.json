@@ -5,7 +5,7 @@
     "category": "Security",
     "featured": true,
     "tagline": "vCISO and AI controls.",
-    "description": "The firm I own. Site is going up at wirehold.com.",
+    "description": "The firm I own. Cybersecurity and AI consulting at wirehold.com.",
     "siteUrl": "https://wirehold.com",
     "metrics": [
       "AI governance",
@@ -20,7 +20,7 @@
       "AI governance",
       "Secure delivery"
     ],
-    "statusLabel": "In progress"
+    "statusLabel": "Live"
   },
   {
     "repo": "security-recipes.ai",

@@ -1,9 +1,5 @@
 import type { Metadata, Viewport } from "next";
-import {
-  decodeProtectedEmail,
-  socialProfileUrls,
-  voiceLine,
-} from "@/lib/contact";
+import { socialProfileUrls, voiceLine } from "@/lib/contact";
 import { credentials } from "@/lib/credentials";
 import { practice } from "@/lib/practice";
 import { projects } from "@/lib/project-data";
@@ -116,30 +112,67 @@ export const viewport: Viewport = {
   colorScheme: "dark",
 };
 
+/**
+ * Wire Hold lives on its own domain. stevo.ai only names the employer so
+ * Person is the primary entity here and the two brands stay separate.
+ */
+const wireHoldOrganization = {
+  "@type": "Organization",
+  name: "Wire Hold",
+  legalName: "Wirehold LLC",
+  url: "https://www.wirehold.com",
+};
+
 const structuredData = {
   "@context": "https://schema.org",
   "@graph": [
     {
-      "@type": ["Organization", "ProfessionalService"],
-      "@id": `${siteUrl}/#organization`,
+      "@type": "Person",
+      "@id": `${siteUrl}/#stephen-abbott`,
       name: practice.name,
+      url: `${siteUrl}/resume/`,
+      image: `${siteUrl}/stephen-abbott-field-notes.webp`,
+      jobTitle: practice.jobTitle,
+      telephone: voiceLine.e164,
+      worksFor: wireHoldOrganization,
+      founder: wireHoldOrganization,
+      sameAs: socialProfileUrls,
+      alumniOf: {
+        "@type": "CollegeOrUniversity",
+        name: "Arizona State University",
+      },
+      hasCredential: credentials
+        .flatMap((credential) => credential.certifications ?? [])
+        .map((certification) => ({
+          "@type": "EducationalOccupationalCredential",
+          credentialCategory: "certification",
+          name: certification.name,
+          recognizedBy: {
+            "@type": "Organization",
+            name: certification.issuer,
+          },
+        })),
+      knowsAbout: [...practice.knowsAbout],
+    },
+    {
+      "@type": "ProfessionalService",
+      "@id": `${siteUrl}/#organization`,
+      name: "stevo.ai",
       url: siteUrl,
       logo: `${siteUrl}/icon-512.png`,
       description: practice.description,
       telephone: voiceLine.e164,
-      employee: { "@id": `${siteUrl}/#stephen-abbott` },
       founder: { "@id": `${siteUrl}/#stephen-abbott` },
-      sameAs: socialProfileUrls,
       areaServed: "Worldwide",
       knowsAbout: [...practice.knowsAbout],
+      // Phone is already the published stevo.ai line. Do not invent an email
+      // or republish the personal Gmail in markup.
       contactPoint: {
         "@type": "ContactPoint",
         telephone: voiceLine.e164,
-        // Decoded at build time so the source stays masked; the rendered
-        // contact section already prints this address in the clear.
-        email: decodeProtectedEmail(),
         contactType: "customer service",
         name: voiceLine.label,
+        url: `${siteUrl}/#contact`,
         availableLanguage: "English",
       },
       hasOfferCatalog: {
@@ -161,33 +194,6 @@ const structuredData = {
           },
         })),
       },
-    },
-    {
-      "@type": "Person",
-      "@id": `${siteUrl}/#stephen-abbott`,
-      name: practice.name,
-      url: `${siteUrl}/resume/`,
-      image: `${siteUrl}/stephen-abbott-field-notes.webp`,
-      jobTitle: practice.jobTitle,
-      telephone: voiceLine.e164,
-      worksFor: { "@id": `${siteUrl}/#organization` },
-      sameAs: socialProfileUrls,
-      alumniOf: {
-        "@type": "CollegeOrUniversity",
-        name: "Arizona State University",
-      },
-      hasCredential: credentials
-        .flatMap((credential) => credential.certifications ?? [])
-        .map((certification) => ({
-          "@type": "EducationalOccupationalCredential",
-          credentialCategory: "certification",
-          name: certification.name,
-          recognizedBy: {
-            "@type": "Organization",
-            name: certification.issuer,
-          },
-        })),
-      knowsAbout: [...practice.knowsAbout],
     },
     {
       "@type": "ItemList",
