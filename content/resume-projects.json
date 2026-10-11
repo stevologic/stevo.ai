@@ -1,0 +1,37 @@
+{
+  "representativeWork": [
+    {
+      "slug": "wire-hold",
+      "category": "AI and cybersecurity consultancy",
+      "description": "Founded Wirehold LLC: vCISO guidance, AI governance, practical technology education, small-business enablement and scoped defensive assessments."
+    },
+    {
+      "slug": "arizona-now",
+      "category": "Live web platform and published iOS app",
+      "description": "Built and launched Arizona Now LLC's discovery platform for events, local businesses and vacation rentals, with reviewed submissions and Stripe-enabled web payments."
+    },
+    {
+      "slug": "security-recipes",
+      "category": "Source-backed vulnerability intelligence",
+      "description": "Built source-backed vulnerability intelligence, bounded AI-remediation playbooks and read-only MCP context."
+    },
+    {
+      "slug": "oss-deps-explorer",
+      "category": "Software supply-chain analysis",
+      "description": "Built multi-ecosystem dependency, license, vulnerability and SBOM analysis at ossde.dev."
+    },
+    {
+      "slug": "desert-wander-supply",
+      "category": "Desert-inspired e-commerce brand",
+      "description": "Built and operate Desert Wander Supply Co., including the online storefront, product merchandising and partnership outreach."
+    }
+  ],
+  "additionalProducts": [
+    { "slug": "shiba-studio", "description": "Local-first AI-agent workflows." },
+    { "slug": "pro-response", "description": "AI writing assistance in Slack." },
+    { "slug": "spare-cycles", "description": "Multi-provider inference." },
+    { "slug": "sonnys-world", "description": "Bilingual learning app." },
+    { "slug": "tiny-book-buddies-ai", "description": "Illustrated and narrated storybooks." },
+    { "slug": "mouseclicker", "description": "Windows workflow automation." }
+  ]
+}

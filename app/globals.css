@@ -2503,6 +2503,17 @@ img {
   letter-spacing: -0.035em;
 }
 
+.resume-employer {
+  margin: 8px 0 0;
+  color: var(--muted);
+  font-size: 0.85rem;
+}
+
+.resume-product-name {
+  font-size: 0.85rem;
+  font-weight: 600;
+}
+
 .resume-career-list {
   display: grid;
   margin: 0;
@@ -3384,8 +3395,7 @@ img {
   }
 
   .resume-project-capabilities {
-    gap: 4px;
-    margin-top: 6px;
+    display: none;
   }
 
   .resume-project-capability {
@@ -3442,6 +3452,7 @@ img {
 
   .resume-project-link,
   .resume-product-link,
+  .resume-product-name,
   .resume-github-link {
     padding-bottom: 0;
     border-bottom: 0;

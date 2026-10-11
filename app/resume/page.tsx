@@ -59,9 +59,11 @@ export default function ResumePage() {
             Cybersecurity and AI Executive
           </p>
           <p className="resume-introduction">
-            Cybersecurity and AI executive. Director-level at Fortune 100
-            payments: CTEM, board risk, and a security engineering org of up
-            to 26.
+            Cybersecurity leader with 16 years across enterprise systems and
+            security. Led enterprise CTEM, executive and board risk reporting,
+            and security engineering organizations of up to 26. Combines
+            governed AI and operational resilience with founder-led delivery
+            of security products, web and mobile platforms, and e-commerce ventures.
           </p>
 
           <ul className="resume-contact" aria-label="Contact">
@@ -91,6 +93,7 @@ export default function ResumePage() {
             <h2 id="resume-career-heading" className="resume-section-title">
               Professional experience
             </h2>
+            <p className="resume-employer">American Express · 2010-2026</p>
           </div>
           <div className="resume-career-list">
             {careerExperience.map((role) => (
@@ -241,14 +244,18 @@ export default function ResumePage() {
           <ul className="resume-product-list">
             {additionalProducts.map((product) => (
               <li className="resume-product-item" key={product.name}>
-                <a
-                  className="resume-product-link"
-                  href={product.url}
-                  target="_blank"
-                  rel="noreferrer"
-                >
-                  {product.name}
-                </a>
+                {product.url ? (
+                  <a
+                    className="resume-product-link"
+                    href={product.url}
+                    target="_blank"
+                    rel="noreferrer"
+                  >
+                    {product.name}
+                  </a>
+                ) : (
+                  <span className="resume-product-name">{product.name}</span>
+                )}
                 <span className="resume-product-description">
                   {product.description}
                 </span>
