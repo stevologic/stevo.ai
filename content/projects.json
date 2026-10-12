@@ -35,9 +35,9 @@
       "alt": "Winter Hunt in-game capture: a bright fireball above the forest camp."
     },
     "metrics": [
-      "Forest \u00b7 Snow \u00b7 Inferno",
-      "Windows playtest",
-      "Path to Steam"
+      "Genre: first-person, co-op, Zombie survival mode",
+      "Steam target: Nov 16, 2026 (planning target)",
+      "Forest \u00b7 Snow \u00b7 Inferno"
     ],
     "tech": [
       "Game"
@@ -45,7 +45,13 @@
     "capabilities": [
       "Windows playtest builds"
     ],
-    "statusLabel": "Coming Winter 2026"
+    "statusLabel": "Coming Winter 2026",
+    "extraLinks": [
+      {
+        "label": "Website tracker",
+        "href": "https://stevologic.github.io/winter-hunt-tracker/"
+      }
+    ]
   },
   {
     "repo": "security-recipes.ai",

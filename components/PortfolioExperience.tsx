@@ -2,6 +2,7 @@
 
 import Image from "next/image";
 import Link from "next/link";
+import { decodeSiteEmail } from "@/lib/site-email";
 import {
   memo,
   useEffect,
@@ -11,18 +12,15 @@ import {
 } from "react";
 import { SupportCreativity } from "@/components/SupportCreativity";
 import {
-  decodeProtectedEmail,
   scheduling,
   socialHandles,
   voiceLine,
 } from "@/lib/contact";
 import { credentialHighlights } from "@/lib/credentials";
-import { faqItems } from "@/lib/faq";
 import { careerPaths, heroMetrics } from "@/lib/career";
 import { practice } from "@/lib/practice";
 import {
   engagementProcess,
-  servicePackages,
   serviceTracks,
 } from "@/lib/services";
 import type { PortfolioProject, ProjectCategory } from "@/lib/project-data";
@@ -43,13 +41,6 @@ function formatDate(value?: string) {
     day: "numeric",
     year: "numeric",
   }).format(date);
-}
-
-function formatCompactNumber(value: number) {
-  return new Intl.NumberFormat("en-US", {
-    notation: "compact",
-    maximumFractionDigits: 1,
-  }).format(value);
 }
 
 function Arrow() {
@@ -81,22 +72,6 @@ const ProjectCard = memo(function ProjectCard({
   const latestSignal = project.github.releaseTag
     ? `Release ${project.github.releaseTag}`
     : null;
-  const traffic = project.github.traffic;
-  const trafficSignals = traffic
-    ? [
-        {
-          label: `GitHub views / ${traffic.windowDays}d`,
-          count: traffic.views.count,
-          detail: `${formatCompactNumber(traffic.views.uniques)} visitors`,
-        },
-        {
-          label: `GitHub clones / ${traffic.windowDays}d`,
-          count: traffic.clones.count,
-          detail: `${formatCompactNumber(traffic.clones.uniques)} cloners`,
-        },
-      ].filter((signal) => signal.count > 0)
-    : [];
-
   function handlePointerMove(event: ReactPointerEvent<HTMLElement>) {
     const bounds = event.currentTarget.getBoundingClientRect();
     event.currentTarget.style.setProperty(
@@ -199,31 +174,15 @@ const ProjectCard = memo(function ProjectCard({
         ) : null}
       </div>
 
-      {traffic && trafficSignals.length > 0 ? (
-        <dl
-          className={
-            trafficSignals.length === 1
-              ? "project-traffic project-traffic-single"
-              : "project-traffic"
-          }
-          aria-label={`${project.name} GitHub traffic during the last ${traffic.windowDays} days, captured ${formatDate(traffic.fetchedAt)}`}
-        >
-          {trafficSignals.map((signal) => (
-            <div key={signal.label}>
-              <dt>{signal.label}</dt>
-              <dd>
-                {formatCompactNumber(signal.count)}
-                <small>{signal.detail}</small>
-              </dd>
-            </div>
-          ))}
-        </dl>
-      ) : null}
-
       <div className="project-links">
         <a href={project.siteUrl} target="_blank" rel="noreferrer">
           Visit live product <Arrow />
         </a>
+        {project.extraLinks?.map((link) => (
+          <a key={link.href} href={link.href} target="_blank" rel="noreferrer">
+            {link.label} <Arrow />
+          </a>
+        ))}
         {project.sourceUrl && (
           <a
             className="project-source"
@@ -328,9 +287,6 @@ export function PortfolioExperience({
           <span>Stephen M Abbott</span>
         </a>
         <nav className={mobileOpen ? "nav-links nav-links-open" : "nav-links"}>
-          <a href="#packages" onClick={() => setMobileOpen(false)}>
-            Packages
-          </a>
           <a href="#profile" onClick={() => setMobileOpen(false)}>
             Background
           </a>
@@ -371,18 +327,15 @@ export function PortfolioExperience({
               <span>vCISO · AI governance · Secure delivery</span>
             </p>
             <h1>
-              One seat for cybersecurity and AI.
+              Cybersecurity, AI, and things I build for fun.
             </h1>
             <p className="hero-intro">
-              vCISO work, AI controls, and the occasional build. The point is a
-              decision your people can run after I am gone.
+              My online business card and résumé. Cybersecurity and AI are
+              the day job; the projects below are the fun stuff.
             </p>
             <div className="hero-actions">
               <a className="button button-primary" href={voiceLine.href}>
                 {voiceLine.display} <Arrow />
-              </a>
-              <a className="button button-secondary" href="#packages">
-                View packages
               </a>
               {/* Renders the moment lib/contact.ts publishes a booking URL. */}
               {scheduling.href ? (
@@ -418,7 +371,9 @@ export function PortfolioExperience({
               </div>
             </div>
             <div className="activity-list">
-              {careerPaths.map((path) => (
+              {careerPaths
+                .filter((path) => path.href !== "#packages")
+                .map((path) => (
                 <a key={path.title} href={path.href}>
                   <span>{path.title}</span>
                   <small>{path.label}</small>
@@ -451,48 +406,6 @@ export function PortfolioExperience({
         </section>
 
         <section className="services-section section" id="services">
-          <div className="section-heading section-heading-light" data-reveal>
-            <p className="section-number">Packages</p>
-            <h2>Four scoped ways in.</h2>
-          </div>
-
-          <div
-            className="package-grid"
-            id="packages"
-            aria-label="Consulting packages"
-          >
-            {servicePackages.map((servicePackage) => (
-              <article key={servicePackage.id} data-reveal>
-                <div className="package-topline">
-                  <span>{servicePackage.label}</span>
-                  <span className="package-cadence">{servicePackage.cadence}</span>
-                </div>
-                <h3>{servicePackage.title}</h3>
-                <p>{servicePackage.description}</p>
-                <div className="package-includes">
-                  <span className="detail-label">Included</span>
-                  <ul>
-                    {servicePackage.includes.map((item) => (
-                      <li key={item}>{item}</li>
-                    ))}
-                  </ul>
-                </div>
-                <p className="package-best-for">{servicePackage.bestFor}</p>
-                {/* The card is the decision point, so the way in lives on the
-                    card. Email only: the tel link appears exactly twice
-                    site-wide (hero and contact), and that stays true. */}
-                <a
-                  className="package-start"
-                  href={`mailto:${decodeProtectedEmail()}?subject=${encodeURIComponent(
-                    servicePackage.title,
-                  )}`}
-                >
-                  Email to scope this <Arrow />
-                </a>
-              </article>
-            ))}
-          </div>
-
           <div className="section-heading section-heading-light" data-reveal>
             <p className="section-number">Practice areas</p>
             <h2>Practice areas.</h2>
@@ -589,16 +502,6 @@ export function PortfolioExperience({
         </section>
 
         <section className="profile-section section" id="profile">
-          <div className="profile-photo-wrap" data-reveal>
-            <Image
-              src="/stephen-abbott-field-notes.webp"
-              alt="Stephen Abbott in a camouflage hoodie outdoors"
-              width={1717}
-              height={1288}
-              sizes="(max-width: 760px) 82vw, (max-width: 1050px) 72vw, 440px"
-              loading="lazy"
-            />
-          </div>
           <div className="profile-copy" data-reveal>
             <p className="section-number">Background</p>
             <p>
@@ -662,23 +565,6 @@ export function PortfolioExperience({
           </div>
         </section>
 
-        <section className="faq-section section" id="faq">
-          <div className="section-heading" data-reveal>
-            <p className="section-number">FAQ</p>
-            <h2>Asked before the first call.</h2>
-          </div>
-          {/* The same items feed the FAQPage structured data in app/layout.tsx,
-              so the visible answers and the machine-readable ones match. */}
-          <dl className="faq-list">
-            {faqItems.map((item) => (
-              <div className="faq-item" data-reveal key={item.question}>
-                <dt>{item.question}</dt>
-                <dd>{item.answer}</dd>
-              </div>
-            ))}
-          </dl>
-        </section>
-
         <section className="closing-section section" id="contact">
           <p className="section-number">Contact</p>
           <h2>Contact</h2>
@@ -688,9 +574,9 @@ export function PortfolioExperience({
             </a>
             <a
               className="button button-secondary"
-              href={`mailto:${decodeProtectedEmail()}`}
+              href={`mailto:${decodeSiteEmail()}`}
             >
-              {decodeProtectedEmail()}
+              {decodeSiteEmail()}
             </a>
             {/* Renders the moment lib/contact.ts publishes a booking URL. */}
             {scheduling.href ? (

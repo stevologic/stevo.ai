@@ -1,7 +1,8 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import { decodeSiteEmail } from "@/lib/site-email";
 
-import { decodeProtectedEmail, voiceLine } from "@/lib/contact";
+import { voiceLine } from "@/lib/contact";
 import { practice } from "@/lib/practice";
 import {
   engagementProcess,
@@ -105,8 +106,8 @@ export default async function ServicePage({
         <Link className="service-page-back" href="/">
           Back to the site
         </Link>
-        <Link className="service-page-back" href="/#packages">
-          All packages
+        <Link className="service-page-back" href="/#services">
+          All practice areas
         </Link>
       </nav>
 
@@ -126,7 +127,7 @@ export default async function ServicePage({
             {servicePackage ? (
               <a
                 className="button button-secondary"
-                href={`mailto:${decodeProtectedEmail()}?subject=${encodeURIComponent(
+                href={`mailto:${decodeSiteEmail()}?subject=${encodeURIComponent(
                   servicePackage.title,
                 )}`}
               >
@@ -209,16 +210,11 @@ export default async function ServicePage({
             </a>
             <a
               className="button button-secondary"
-              href={`mailto:${decodeProtectedEmail()}`}
+              href={`mailto:${decodeSiteEmail()}`}
             >
-              {decodeProtectedEmail()}
+              {decodeSiteEmail()}
             </a>
           </div>
-          <p>
-            <Link className="text-link" href="/#faq">
-              Questions asked before the first call
-            </Link>
-          </p>
         </footer>
       </article>
 
