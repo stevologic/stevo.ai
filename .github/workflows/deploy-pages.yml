@@ -6,7 +6,7 @@ on:
       - main
   schedule:
     # 01:17 America/Phoenix; choosing an off-minute reduces cron congestion.
-    - cron: "17 8 * * *"
+    - cron: "17 8 * * 1"
   workflow_dispatch:
 
 concurrency:
@@ -25,12 +25,12 @@ jobs:
 
     steps:
       - name: Check out source
-        uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           persist-credentials: false
 
       - name: Set up Node.js
-        uses: actions/setup-node@249970729cb0ef3589644e2896645e5dc5ba9c38 # v6
+        uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
         with:
           node-version: 24
           cache: npm
@@ -49,7 +49,7 @@ jobs:
           fi
 
       # Runs before the sync so a newly public repository is picked up and then
-      # enriched in the same build. The scheduled run below makes this daily.
+      # enriched in the same build. The scheduled run below makes this weekly.
       - name: Discover newly published projects
         env:
           GITHUB_SYNC_STRICT: "1"
@@ -81,7 +81,7 @@ jobs:
           : > out/.nojekyll
 
       - name: Publish out to gh-pages
-        uses: peaceiris/actions-gh-pages@329bcc8f12caed2cefe5a5b80781499a6f3b361b # v4
+        uses: peaceiris/actions-gh-pages@84c30a85c19949d7eee79c4ff27748b70285e453 # v4
         with:
           deploy_key: ${{ secrets.ACTIONS_DEPLOY_KEY }}
           publish_branch: gh-pages

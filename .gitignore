@@ -44,3 +44,6 @@ next-env.d.ts
 
 # generated advisory output, published as a workflow artifact and issue
 /critique/
+
+.critique-cache/
+maintenance-report/
