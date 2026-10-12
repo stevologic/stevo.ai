@@ -53,6 +53,9 @@ jobs:
       - name: Lint
         run: npm run lint
 
+      - name: Test Next lint root compatibility
+        run: node --test scripts/test-next-eslint-root-dirs.mjs
+
       - name: Typecheck
         run: npm run typecheck
 

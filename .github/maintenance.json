@@ -28,7 +28,8 @@
   ],
   "active_branches": [
     "codex/shared-maintenance-pilot",
-    "codex/maintenance-contract-111"
+    "codex/maintenance-contract-111",
+    "codex/maintenance-compatible-dependencies"
   ],
   "locked_prs": [],
   "required_checks": [
@@ -37,6 +38,7 @@
   "validation_commands": [
     "npm ci",
     "npm run lint",
+    "node --test scripts/test-next-eslint-root-dirs.mjs",
     "npm run typecheck",
     "npm run build",
     "node --test tests/static-export.test.mjs tests/critique-cache.test.mjs",
