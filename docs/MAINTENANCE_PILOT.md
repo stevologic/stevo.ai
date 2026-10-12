@@ -4,7 +4,7 @@ Feature → existing development → validated/reviewed PR to main → existing 
 deployment. This draft leaves both base branches unchanged and preserves the
 published résumé/download work from merged PR48.
 
-The shared read-only [contract 1.1.0](https://github.com/stevologic/oss-deps-explorer/blob/01b814e47b08d3949dd8288f0c426b7ee12630ca/actions/maintenance/README.md)
+The shared read-only [contract 1.1.0](https://github.com/stevologic/oss-deps-explorer/blob/1edddeab11f2fe4598ed45cefda42ab7a2179fa8/actions/maintenance/README.md)
 is pinned by that complete immutable commit. The local JSON policy keeps xAI,
 disables advisory AI and all mutations, and reserves active/default/development/
 release/Pages branches. Custom critique/growth/content jobs remain separate.
