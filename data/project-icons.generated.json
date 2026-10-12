@@ -92,6 +92,12 @@
       "background": "#0a0a0f",
       "source": "https://doge-miner.io/apple-touch-icon.png",
       "fetchedAt": "2026-08-21T07:48:19.100Z"
+    },
+    "winter-hunt": {
+      "src": "/project-icons/winter-hunt.png",
+      "background": "#0c1412",
+      "source": "crop of https://stevologic.github.io/winter-hunt-tracker/assets/gallery-visual02/forest-fireball-640.webp (site has no touch icon)",
+      "fetchedAt": "2026-10-12T05:55:00.000Z"
     }
   }
 }

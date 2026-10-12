@@ -128,7 +128,13 @@ const ProjectCard = memo(function ProjectCard({
       {/* The project's own home-screen presentation: its icon on the theme
           colour its site declares, the way iOS renders an added bookmark. */}
       <div
-        className={`project-visual ${project.icon ? "project-visual-branded" : ""}`}
+        className={[
+          "project-visual",
+          project.icon ? "project-visual-branded" : "",
+          project.preview ? "project-visual-preview" : "",
+        ]
+          .filter(Boolean)
+          .join(" ")}
         aria-hidden="true"
         style={
           project.icon?.background
@@ -136,6 +142,16 @@ const ProjectCard = memo(function ProjectCard({
             : undefined
         }
       >
+        {project.preview ? (
+          // eslint-disable-next-line @next/next/no-img-element -- static export, images.unoptimized
+          <img
+            className="project-preview"
+            src={project.preview.src}
+            alt=""
+            loading="lazy"
+            decoding="async"
+          />
+        ) : null}
         <div className="project-visual-grid" />
         {project.icon ? (
           <span className="project-favicon">
