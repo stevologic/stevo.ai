@@ -1,2 +1,2 @@
-:HL["/_next/static/chunks/14xm9s4bumt9s.css","style"]
-0:{"tree":{"name":"","param":null,"prefetchHints":4112,"slots":{"children":{"name":"services","param":null,"prefetchHints":4160,"slots":{"children":{"name":"slug","param":{"type":"d","key":"ai-native-consulting","siblings":[]},"prefetchHints":4192,"slots":{"children":{"name":"__PAGE__","param":null,"prefetchHints":4256,"slots":null}}}}}}},"staleTime":300,"buildId":"veF9QgeNTNVmY_ISnwhTB"}
+:HL["/_next/static/chunks/0a51x5a_rvqn_.css","style"]
+0:{"tree":{"name":"","param":null,"prefetchHints":4112,"slots":{"children":{"name":"services","param":null,"prefetchHints":4160,"slots":{"children":{"name":"slug","param":{"type":"d","key":"ai-native-consulting","siblings":[]},"prefetchHints":4192,"slots":{"children":{"name":"__PAGE__","param":null,"prefetchHints":4256,"slots":null}}}}}}},"staleTime":300,"buildId":"D8G1RbwUu9IZPrloGKfjn"}
