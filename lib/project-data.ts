@@ -43,6 +43,8 @@ export interface PortfolioProject {
   icon?: ProjectIcon;
   /** Optional preview image that fills the card visual. */
   preview?: ProjectPreview;
+  /** Extra clearly labelled links shown beside "Visit live product". */
+  extraLinks?: { label: string; href: string }[];
   tagline: string;
   description: string;
   siteUrl: string;
@@ -125,6 +127,8 @@ interface SourceProject {
   featured: boolean;
   discovered?: boolean;
   preview?: ProjectPreview;
+  /** Extra clearly labelled links shown beside "Visit live product". */
+  extraLinks?: { label: string; href: string }[];
   tagline: string;
   description: string;
   siteUrl: string;

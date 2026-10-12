@@ -91,17 +91,16 @@ test("site presents the consultancy, packages, and proof with social metadata", 
   ]);
   const retiredEmploymentQualifier = ["frac", "tional"].join("");
 
-  assert.match(html, /One seat for cybersecurity and AI\./);
+  assert.match(html, /Cybersecurity, AI, and things I build for fun\./);
   assert.doesNotMatch(html, /I run the program with your team, then leave it with them\./i);
   assert.doesNotMatch(html, /I run cybersecurity and AI programs\./i);
   assert.doesNotMatch(html, /Secure the enterprise\./i);
   assert.doesNotMatch(html, /Enable what comes next\./i);
-  assert.match(html, /Owner of Wire Hold/);
-  assert.match(html, />Packages</);
+  assert.match(html, /Online business card &amp; résumé/);
+  assert.doesNotMatch(html, />Packages</);
+  assert.doesNotMatch(html, /href="#packages"/);
   assert.match(html, />Background</);
   assert.match(html, />Portfolio</);
-  assert.match(html, /vCISO retainer/);
-  assert.match(html, /AI enablement sprint/i);
   assert.match(html, /vCISO &amp; security leadership/);
   assert.match(html, /AI enablement &amp; governance/i);
   assert.doesNotMatch(html, /Available for select vCISO and consulting engagements/i);
@@ -135,7 +134,7 @@ test("site presents the consultancy, packages, and proof with social metadata", 
   assert.doesNotMatch(resumeHtml, new RegExp(retiredEmploymentQualifier, "i"));
 });
 
-test("packages lead into background and portfolio proof", async () => {
+test("practice areas lead into background and portfolio proof", async () => {
   const html = await exportedPage("index.html");
   const servicesIndex = html.indexOf(
     '<section class="services-section section" id="services">',
@@ -146,21 +145,19 @@ test("packages lead into background and portfolio proof", async () => {
   const profileIndex = html.indexOf(
     '<section class="profile-section section" id="profile">',
   );
-  const packagesIndex = html.indexOf('id="packages"');
 
   assert.ok(servicesIndex > 0);
-  assert.ok(packagesIndex > servicesIndex);
-  assert.ok(profileIndex > packagesIndex);
+  assert.ok(profileIndex > servicesIndex);
   assert.ok(workIndex > profileIndex);
+  // The packages section and the FAQ were retired.
+  assert.doesNotMatch(html, /id="packages"|class="package-grid"/);
+  assert.doesNotMatch(html, /class="section-number">Packages</);
+  assert.doesNotMatch(html, /id="faq"|#faq/);
   // Sections are labelled, not numbered.
-  assert.match(html, /class="section-number">Packages</);
   assert.match(html, /class="section-number">Background</);
   assert.match(html, /class="section-number">Portfolio</);
   assert.match(html, /class="section-number">Contact</);
   assert.doesNotMatch(html, /class="section-number">0\d \//);
-  assert.match(html, /vCISO retainer/);
-  assert.match(html, /AI-native modernization/);
-  assert.match(html, /Delivery sprint/);
 });
 
 test("each homepage section has one distinct job", async () => {
@@ -179,7 +176,7 @@ test("each homepage section has one distinct job", async () => {
 
   assert.ok(heroIntro && identity && profile && closing && footer);
   assert.doesNotMatch(heroIntro, /\b(?:16|11) years|\bVP\b/);
-  assert.match(heroIntro, /vCISO work, AI controls, and the occasional build/);
+  assert.match(heroIntro, /My online business card and résumé/);
   assert.doesNotMatch(identity, /href="\/resume\//);
   assert.doesNotMatch(html, /console-footnote/);
 
@@ -196,8 +193,8 @@ test("each homepage section has one distinct job", async () => {
     /<div class="hero-actions">([\s\S]*?)<\/div>/,
   )?.[1];
   assert.ok(closingActions);
-  assert.match(closingActions, /stephenabbott20@gmail\.com/);
-  assert.match(closingActions, /mailto:stephenabbott20@gmail\.com/);
+  assert.match(closingActions, /stevo@stevo\.ai/);
+  assert.match(closingActions, /mailto:stevo@stevo\.ai/);
   assert.match(closingActions, /href="tel:\+17755997046"/);
   assert.match(closingActions, /\+1 \(775\) 599-7046/);
   assert.doesNotMatch(closingActions, /scheduling line|voice assistant|never as Stephen/i);
@@ -248,8 +245,8 @@ test("the executive profile uses the hoodie portrait, not the suit photo", async
   assert.match(component, /src="\/stephen-abbott-field-notes\.webp"/);
   assert.doesNotMatch(component, /stephen-abbott-profile\.png/);
   assert.match(html, /Stephen Abbott outdoors above a mountain lake/);
-  assert.match(profile, /stephen-abbott-field-notes\.webp/);
-  assert.match(profile, /Stephen Abbott in a camouflage hoodie outdoors/);
+  // The background paragraph sits on a plain surface, without the photo.
+  assert.doesNotMatch(profile, /<img|stephen-abbott-field-notes\.webp/);
   assert.doesNotMatch(html, /stephen-abbott-profile\.png/);
   assert.doesNotMatch(html, /Portrait of Stephen M Abbott/);
   assert.match(styles, /min-height: 84svh/);
@@ -370,39 +367,6 @@ test("service tracks name the frameworks they are measured against", async () =>
   assert.match(html, /Measured against/);
 });
 
-test("consulting packages publish inclusions without invented prices", async () => {
-  const html = await exportedPage("index.html");
-  const packages = html.match(
-    /<div class="package-grid"[^>]*>[\s\S]*?<div class="section-heading/,
-  )?.[0];
-
-  assert.ok(packages, "package grid is missing");
-  for (const title of [
-    "vCISO retainer",
-    "AI enablement sprint",
-    "AI-native modernization",
-    "Delivery sprint",
-  ]) {
-    assert.ok(packages.includes(title), `packages omit ${title}`);
-  }
-  for (const cadence of ["Monthly", "4–6 weeks", "Scoped program", "Scoped build"]) {
-    assert.ok(packages.includes(cadence), `packages omit cadence ${cadence}`);
-  }
-  assert.doesNotMatch(packages, /Book on the stevo\.ai line|Call the stevo\.ai line/);
-  assert.match(html, /Four scoped ways in/);
-  assert.doesNotMatch(html, /consequential decision|Same outcome/);
-  assert.doesNotMatch(packages, /\$\d/);
-  assert.doesNotMatch(html, /class="operating-model"/);
-
-  const { servicePackages, serviceTracks } = await import("../lib/services.ts");
-  assert.equal(servicePackages.length, serviceTracks.length);
-  assert.deepEqual(
-    [...servicePackages.map((servicePackage) => servicePackage.trackId)].sort(),
-    [...serviceTracks.map((track) => track.id)].sort(),
-    "each existing service track must have exactly one package",
-  );
-});
-
 test("engagement formats, process, and safeguards stay distinct", async () => {
   const html = await exportedPage("index.html");
 
@@ -497,8 +461,8 @@ test("homepage contact prints the mailbox next to the phone", async () => {
     /<section class="closing-section section" id="contact">[\s\S]*?<div class="hero-actions">([\s\S]*?)<\/div>/,
   )?.[1];
   assert.ok(closingActions);
-  assert.match(closingActions, /stephenabbott20@gmail\.com/);
-  assert.match(closingActions, /mailto:stephenabbott20@gmail\.com/);
+  assert.match(closingActions, /stevo@stevo\.ai/);
+  assert.match(closingActions, /mailto:stevo@stevo\.ai/);
   assert.doesNotMatch(closingActions, />Email</);
   assert.doesNotMatch(html, /Email available on request/);
   assert.doesNotMatch(resumeHtml, /Email available on request/);
@@ -512,6 +476,8 @@ test("homepage contact prints the mailbox next to the phone", async () => {
 test("obfuscated mailbox still decodes to the real contact address", async () => {
   const { decodeProtectedEmail } = await import("../lib/contact.ts");
   assert.equal(decodeProtectedEmail(), "stephenabbott20@gmail.com");
+  const { decodeSiteEmail } = await import("../lib/site-email.ts");
+  assert.equal(decodeSiteEmail(), "stevo@stevo.ai");
 });
 
 test("the stevo.ai line is the published intake number and the retired number is gone", async () => {
@@ -764,10 +730,6 @@ test("GitHub traffic aggregates stay privacy-conscious wherever they appear", as
   const withTraffic = snapshot.repositories.filter(
     (repository) => repository.traffic,
   );
-  const withVisibleTraffic = withTraffic.filter(
-    (repository) =>
-      repository.traffic.views.count > 0 || repository.traffic.clones.count > 0,
-  );
   for (const repository of withTraffic) {
     assert.equal(repository.traffic.windowDays, 14);
     assert.equal(typeof repository.traffic.fetchedAt, "string");
@@ -777,16 +739,10 @@ test("GitHub traffic aggregates stay privacy-conscious wherever they appear", as
     assert.equal(typeof repository.traffic.clones.uniques, "number");
   }
 
-  assert.equal(
-    (html.match(/class="project-traffic(?:\s|\")/g) || []).length,
-    withVisibleTraffic.length,
-    "every card with meaningful traffic should render a traffic block",
-  );
+  // Cards no longer print traffic numbers; the snapshot keeps them private-safe.
+  assert.doesNotMatch(html, /class="project-traffic/);
   assert.ok(withTraffic.length > 0, "traffic data has stopped being collected");
-  assert.match(html, /GitHub views \//);
-  assert.match(html, /GitHub clones \//);
-  assert.match(html, /visitors/);
-  assert.match(html, /cloners/);
+  assert.doesNotMatch(html, /GitHub views \/|GitHub clones \//);
   assert.match(syncScript, /\/traffic\/views\?per=day/);
   assert.match(syncScript, /\/traffic\/clones\?per=day/);
   assert.match(workflow, /PROJECT_TRAFFIC_TOKEN/);
@@ -1201,33 +1157,13 @@ test("homepage contact is a heading plus phone and email only", async () => {
   assert.ok(closing);
   assert.match(closing, /<h2>Contact<\/h2>/);
   assert.match(closing, /\+1 \(775\) 599-7046/);
-  assert.match(closing, /stephenabbott20@gmail\.com/);
+  assert.match(closing, /stevo@stevo\.ai/);
   assert.doesNotMatch(closing, />Email</);
   assert.equal(
     (html.match(/href="tel:\+17755997046"/g) || []).length,
     2,
     "phone appears in the hero and contact only",
   );
-  assert.match(html, /Part-time security executive/);
-  assert.match(html, /Pick the use cases, write the rules, name the owner/);
-  assert.match(html, /Fix the security and IT workflow, not only the stack/);
-  assert.match(
-    html,
-    /Build one approved use case so it can ship, then hand it to someone on your side/,
-  );
-
-  const vCISOBestFor =
-    /A security program entering growth, transition, board scrutiny, or a reset/;
-  const packages = html.match(
-    /<div class="package-grid"[^>]*>[\s\S]*?<div class="section-heading/,
-  )?.[0];
-  const vCISOTrack = html.match(
-    /<article class="service-detail" id="service-detail-lead"[\s\S]*?<\/article>/,
-  )?.[0];
-  assert.ok(packages);
-  assert.ok(vCISOTrack);
-  assert.match(packages, vCISOBestFor);
-  assert.doesNotMatch(vCISOTrack, vCISOBestFor);
 });
 
 test("Arizona Now is published as a live product without a public source", async () => {
@@ -2110,87 +2046,10 @@ test("dependency monitoring is configured for both ecosystems", async () => {
   }
 });
 
-test("each package card carries its own email CTA", async () => {
+test("the FAQ is retired from the page and from structured data", async () => {
   const html = await exportedPage("index.html");
-  const packages = html.match(
-    /<div class="package-grid"[^>]*>[\s\S]*?<div class="section-heading/,
-  )?.[0];
-  assert.ok(packages, "package grid is missing");
-
-  const { servicePackages } = await import("../lib/services.ts");
-  const ctas = packages.match(/class="package-start"/g) || [];
-  assert.equal(
-    ctas.length,
-    servicePackages.length,
-    "every package needs a way in on the card itself",
-  );
-
-  // The CTA is email with the package title prefilled — never the tel link,
-  // which appears exactly twice site-wide (hero and contact).
-  for (const servicePackage of servicePackages) {
-    const subject = encodeURIComponent(servicePackage.title).replace(
-      /&/g,
-      "&amp;",
-    );
-    assert.ok(
-      packages.includes(`?subject=${subject}`),
-      `package CTA is missing the ${servicePackage.title} subject`,
-    );
-  }
-  assert.doesNotMatch(packages, /tel:\+17755997046/);
-  assert.match(packages, /mailto:stephenabbott20@gmail\.com\?subject=/);
-});
-
-test("the FAQ answers prospects on the page and in structured data", async () => {
-  const html = await exportedPage("index.html");
-  const faq = html.match(
-    /<section class="faq-section section" id="faq">([\s\S]*?)<\/section>/,
-  )?.[1];
-  assert.ok(faq, "FAQ section is missing");
-  assert.match(faq, /class="section-number">FAQ</);
-
-  const { faqItems } = await import("../lib/faq.ts");
-  assert.ok(faqItems.length >= 4, "the FAQ should answer real questions");
-  const escape = (text) =>
-    text.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
-  for (const item of faqItems) {
-    assert.ok(faq.includes(escape(item.question)), `FAQ omits: ${item.question}`);
-    assert.ok(
-      faq.includes(escape(item.answer)),
-      `FAQ omits the answer to: ${item.question}`,
-    );
-  }
-
-  // The FAQ sits between portfolio proof and the contact close.
-  const workIndex = html.indexOf('<section class="work-section section" id="work">');
-  const faqIndex = html.indexOf('<section class="faq-section section" id="faq">');
-  const contactIndex = html.indexOf(
-    '<section class="closing-section section" id="contact">',
-  );
-  assert.ok(workIndex > 0 && faqIndex > workIndex && contactIndex > faqIndex);
-
-  // The FAQPage node mirrors the visible items exactly. It must ship on the
-  // homepage — the page that renders the FAQ — and nowhere else: search
-  // engines require the marked-up questions to be visible on the same page.
-  const faqNode = jsonLdNodes(html).find((node) => node["@type"] === "FAQPage");
-  assert.ok(faqNode, "FAQPage structured data is missing");
-  const resumeHtml = await exportedPage("resume/index.html");
-  assert.ok(
-    !jsonLdNodes(resumeHtml).some((node) => node["@type"] === "FAQPage"),
-    "FAQPage markup must not ship on pages that do not render the FAQ",
-  );
-  assert.deepEqual(
-    faqNode.mainEntity.map((entity) => entity.name),
-    faqItems.map((item) => item.question),
-  );
-  assert.deepEqual(
-    faqNode.mainEntity.map((entity) => entity.acceptedAnswer.text),
-    faqItems.map((item) => item.answer),
-  );
-
-  // Pricing language stays honest: scoped, never hidden-on-request.
-  assert.doesNotMatch(faq, /\$\d/);
-  assert.doesNotMatch(faq, /available on request|intentionally omitted/i);
+  assert.doesNotMatch(html, /class="faq-section/);
+  assert.ok(!jsonLdNodes(html).some((node) => node["@type"] === "FAQPage"));
 });
 
 test("llms.txt describes the practice for answer engines", async () => {
@@ -2265,7 +2124,7 @@ test("each service track exports a landing page with honest, sourced copy", asyn
     // legitimately contains $-digit reference tokens.
     assert.match(html, /tel:\+17755997046/);
     assert.doesNotMatch(html, /623[-.\s]?887[-.\s]?8905|6238878905/);
-    assert.match(html, /mailto:stephenabbott20@gmail\.com\?subject=/);
+    assert.match(html, /mailto:stevo@stevo\.ai\?subject=/);
     const document = html.match(
       /<article class="service-page-document">[\s\S]*?<\/article>/,
     )?.[0];

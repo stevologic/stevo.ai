@@ -1786,9 +1786,7 @@ img {
 
 .profile-section {
   display: grid;
-  grid-template-columns: minmax(300px, 0.68fr) minmax(420px, 1fr);
-  gap: clamp(48px, 7vw, 110px);
-  align-items: center;
+  grid-template-columns: minmax(0, 1fr);
   background: var(--paper-deep);
 }
 
