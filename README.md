@@ -14,7 +14,7 @@ background and a founder portfolio still on the site as proof.
 - Curated live products enriched with current GitHub activity, releases, and traffic
 - A semantic professional profile at `/resume/` that prints to exactly two pages
 - Social, search, sitemap, custom-domain, and reduced-motion support
-- Automated daily project refresh, weekly site critique, and a weekly growth brief
+- Weekly project refresh, monthly site critique with unchanged-content skipping, and a dispatch-only growth brief
 
 ## Local development
 
@@ -45,14 +45,14 @@ The production build is written to `out/`.
 
 ### Publishing a new project
 
-Projects appear automatically. `scripts/discover-projects.mjs` runs in the daily
+Projects appear automatically. `scripts/discover-projects.mjs` runs in the weekly
 deploy, lists the owner's public repositories, and writes a card for any that is
 not already curated. To publish a project:
 
 1. Make the repository public.
 2. Set its **Website** field on GitHub to the live URL.
 
-The next daily build picks it up — no change to this repository. A repository
+The next weekly build picks it up — no change to this repository. A repository
 qualifies when it is public, not a fork, archive, or template, is not listed in
 `exclude`, and resolves to a site URL. Requiring that URL is deliberate: it is a
 single field the owner controls on GitHub, and it means a scratch repository
@@ -66,7 +66,7 @@ always overrides it, so promote a discovered project by curating it. Settings
 
 Project cards show each site's own icon on the colour that site declares — the
 same signals iOS uses for a home-screen bookmark. `npm run icons:projects`
-resolves them in the daily deploy: apple-touch-icon first, then the web
+resolves them in the weekly deploy: apple-touch-icon first, then the web
 manifest, then `<link rel="icon">`, then `/favicon.ico`, with `theme-color` (or
 the manifest's background) as the card colour. Icons land in
 `public/project-icons/`; a project whose site declares none keeps the lettered
@@ -145,7 +145,7 @@ specific binary. The layout currently measures ~1650px of content against a
 
 ## Site critique
 
-A weekly GitHub Action asks Grok to review the site's copy, verbiage, and
+A monthly GitHub Action asks Grok to review the site's copy, verbiage, and
 structure as a buyer of cybersecurity and AI enablement consulting, then
 applies the portfolio half of that advice and **opens a pull request** with
 the diff. The critique is instructed to keep the site a consultancy —
@@ -180,9 +180,9 @@ record of achievements, figures, roles, and credentials, in Stephen's own
 words. Only a human edits it; no workflow ever commits it. The résumé optimizer
 checks dates and titles against it rather than against last week's AI output,
 and any figure it carries stays legal to restate even if an earlier rewrite
-dropped it from the live résumé — without that anchor the weekly rewrites would
+dropped it from the live résumé — without that anchor the monthly critiques would
 validate against each other and drift. To add a new achievement, certification,
-or figure, add it there first; the next weekly run may then use it.
+or figure, add it there first; the next monthly run may then use it.
 
 | Setting | Where | Default |
 | --- | --- | --- |
@@ -224,7 +224,7 @@ drafts. It writes `critique/growth-brief.md` as a 90-day artifact. It does
 **not** send mail, post publicly, book a calendar, open a pull request, or
 change the live site. That is deliberate: AI marketing and meeting
 scheduling are the next wiring, not something an unattended job should
-execute. It stays off the weekly cron while Actions spend is constrained.
+execute. It is dispatch-only to avoid unwanted paid API requests. Public standard Actions runner minutes are free.
 
 ```sh
 GROK_API_KEY=... npm run growth

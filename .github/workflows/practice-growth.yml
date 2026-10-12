@@ -12,9 +12,8 @@ name: Practice growth brief
 #   vars.GROK_MODEL       optional, defaults to grok-4.5
 
 on:
-  # Dispatch only while Actions billing on this account is constrained.
-  # Re-enable a weekly cron when spend is healthy; the script stays cheap
-  # and no-op-safe without GROK_API_KEY.
+  # Dispatch only: briefs are valuable when requested. Standard public
+  # Actions runners are free; this avoids needless API tokens and churn.
   workflow_dispatch:
     inputs:
       model:
@@ -67,7 +66,7 @@ jobs:
         env:
           GROK_API_KEY: ${{ secrets.GROK_API_KEY }}
           GROK_MODEL: ${{ inputs.model || vars.GROK_MODEL || 'grok-4.5' }}
-          GROK_MODEL_AUTO_UPGRADE: ${{ vars.GROK_MODEL_AUTO_UPGRADE || 'true' }}
+          GROK_MODEL_AUTO_UPGRADE: ${{ vars.GROK_MODEL_AUTO_UPGRADE || 'false' }}
         run: npm run growth
 
       - name: Upload the brief

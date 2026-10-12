@@ -1268,7 +1268,7 @@ test("every portfolio category has a visible filter", async () => {
   }
 });
 
-test("the deploy workflow runs discovery daily, before the metadata sync", async () => {
+test("the deploy workflow runs discovery weekly, before the metadata sync", async () => {
   const workflow = await readFile(
     new URL("../.github/workflows/deploy-pages.yml", import.meta.url),
     "utf8",
@@ -1542,23 +1542,18 @@ test("the site critique action is wired to Grok correctly", async () => {
   // It proposes changes on a branch; a person merges. It must never publish to
   // the live site on its own.
   assert.match(workflow, /gh pr create/, "changes must arrive as a pull request");
-  assert.match(workflow, /--base main/);
+  assert.match(workflow, /--base development/);
+  assert.match(workflow, /gh pr create --draft/);
   assert.doesNotMatch(
     workflow,
     /git push origin main|git push .* HEAD:main/,
     "must never push straight to main",
   );
 
-  // It may merge, but only on a real CI verdict. A pull request opened with
-  // GITHUB_TOKEN does not trigger workflows, so CI is dispatched against the
-  // branch and the merge is gated on its conclusion -- never on --auto, which
-  // would merge immediately while main has no required checks.
+  // Token-created PRs need explicit CI dispatch. Review and validated integration
+  // remain required; an advisory workflow cannot merge or deploy its own changes.
   assert.match(workflow, /gh workflow run ci\.yml --ref/, "CI must be dispatched");
-  assert.match(
-    workflow,
-    /conclusion" == "success"[\s\S]{0,200}gh pr merge/,
-    "the merge must be gated on a successful CI conclusion",
-  );
+  assert.doesNotMatch(workflow, /gh pr merge|gh workflow run deploy-pages/);
   assert.doesNotMatch(
     workflow,
     /gh pr merge[^\n]*--auto/,

@@ -29,7 +29,7 @@ const apiKey = process.env.GROK_API_KEY?.trim() || "";
 // name as an auto-updating alias, so this default already tracks the current
 // 4.5 snapshot without a pin.
 const configuredModel = process.env.GROK_MODEL?.trim() || "grok-4.5";
-const autoUpgrade = process.env.GROK_MODEL_AUTO_UPGRADE !== "false";
+const autoUpgrade = process.env.GROK_MODEL_AUTO_UPGRADE === "true";
 const reasoningEffort = process.env.GROK_REASONING_EFFORT?.trim() || "";
 const maxTokens = Number(process.env.GROK_MAX_TOKENS || 6000);
 const requestTimeoutMs = Number(process.env.GROK_TIMEOUT_MS || 300_000);
@@ -364,6 +364,17 @@ async function main() {
   const brief = await buildBrief();
   log(`Prepared ${brief.split(/\s+/).length} words of site content.`);
 
+  const { critiqueHash } = await import("./critique-content-hash.mjs");
+  const hash = await critiqueHash(brief);
+  const marker = path.join(rootDirectory, ".critique-cache", "successful-hash");
+  let previous = "";
+  try { previous = (await readFile(marker, "utf8")).trim(); } catch { /* first successful run */ }
+  if (process.env.CRITIQUE_SKIP_UNCHANGED === "true" && previous === hash) {
+    log("Reviewed content, factual baseline, prompt and model settings are unchanged; skipped before model discovery/request.");
+    if (process.env.GITHUB_OUTPUT) await writeFile(process.env.GITHUB_OUTPUT, "skipped=true\n", { flag: "a" });
+    return;
+  }
+
   let model = await resolveModel();
   let result;
   try {
@@ -398,6 +409,8 @@ async function main() {
 
   await mkdir(path.dirname(outputPath), { recursive: true });
   await writeFile(outputPath, report, "utf8");
+  await mkdir(path.dirname(marker), { recursive: true });
+  await writeFile(marker, hash + "\n", "utf8");
   log(`Wrote ${path.relative(rootDirectory, outputPath)}.`);
 
   if (result.usage) {
@@ -430,4 +443,4 @@ if (invokedDirectly) {
   });
 }
 
-export { outlinePage, buildBrief };
+export { outlinePage, buildBrief, main };

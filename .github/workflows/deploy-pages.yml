@@ -6,7 +6,7 @@ on:
       - main
   schedule:
     # 01:17 America/Phoenix; choosing an off-minute reduces cron congestion.
-    - cron: "17 8 * * *"
+    - cron: "17 8 * * 1"
   workflow_dispatch:
 
 concurrency:
@@ -49,7 +49,7 @@ jobs:
           fi
 
       # Runs before the sync so a newly public repository is picked up and then
-      # enriched in the same build. The scheduled run below makes this daily.
+      # enriched in the same build. The scheduled run below makes this weekly.
       - name: Discover newly published projects
         env:
           GITHUB_SYNC_STRICT: "1"
