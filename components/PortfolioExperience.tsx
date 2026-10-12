@@ -128,7 +128,13 @@ const ProjectCard = memo(function ProjectCard({
       {/* The project's own home-screen presentation: its icon on the theme
           colour its site declares, the way iOS renders an added bookmark. */}
       <div
-        className={`project-visual ${project.icon ? "project-visual-branded" : ""} ${project.preview ? "project-visual-preview" : ""}`}
+        className={[
+          "project-visual",
+          project.icon ? "project-visual-branded" : "",
+          project.preview ? "project-visual-preview" : "",
+        ]
+          .filter(Boolean)
+          .join(" ")}
         aria-hidden="true"
         style={
           project.icon?.background
