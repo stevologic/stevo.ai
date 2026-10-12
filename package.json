@@ -13,6 +13,7 @@
     "verify:pdf": "node scripts/check-resume-pages.mjs",
     "icons": "node scripts/generate-icons.mjs",
     "icons:projects": "node scripts/fetch-project-icons.mjs",
+    "previews": "python3 scripts/capture-project-previews.py",
     "critique": "node scripts/site-critique.mjs",
     "growth": "node scripts/practice-growth.mjs",
     "optimize:portfolio": "node scripts/optimize-portfolio.mjs",

@@ -127,6 +127,7 @@ const ProjectCard = memo(function ProjectCard({
             decoding="async"
           />
         ) : null}
+        {project.preview ? <div className="project-visual-overlay" /> : null}
         <div className="project-visual-grid" />
         {project.icon ? (
           <span className="project-favicon">
