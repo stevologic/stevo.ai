@@ -3476,3 +3476,18 @@ img {
     content: none !important;
   }
 }
+
+/* Cards with a curated screenshot show it edge to edge. */
+.project-preview {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.project-visual-preview::before,
+.project-visual-preview::after,
+.project-visual-preview .project-visual-grid {
+  display: none;
+}

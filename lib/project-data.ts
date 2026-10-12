@@ -24,6 +24,12 @@ export interface ProjectIcon {
   background?: string;
 }
 
+/** A curated screenshot of the project, stored under public/project-previews. */
+export interface ProjectPreview {
+  src: string;
+  alt: string;
+}
+
 export interface PortfolioProject {
   /** Absent for projects that have no public repository, e.g. hosted stores. */
   repo?: string;
@@ -35,6 +41,8 @@ export interface PortfolioProject {
   discovered?: boolean;
   /** The project site's own icon, collected by scripts/fetch-project-icons.mjs. */
   icon?: ProjectIcon;
+  /** Optional preview image that fills the card visual. */
+  preview?: ProjectPreview;
   tagline: string;
   description: string;
   siteUrl: string;
@@ -116,6 +124,7 @@ interface SourceProject {
   category: string;
   featured: boolean;
   discovered?: boolean;
+  preview?: ProjectPreview;
   tagline: string;
   description: string;
   siteUrl: string;

@@ -23,6 +23,31 @@
     "statusLabel": "Live"
   },
   {
+    "slug": "winter-hunt",
+    "name": "Winter Hunt",
+    "category": "Products & ventures",
+    "featured": true,
+    "tagline": "Coming Winter 2026",
+    "description": "A campfire, a bow, and a very strange wilderness: a game following the trail from forest to snow to fire on its way to Steam.",
+    "siteUrl": "https://stevologic.github.io/winter-hunt-tracker/#gallery",
+    "preview": {
+      "src": "/project-previews/winter-hunt.webp",
+      "alt": "Winter Hunt in-game capture: a bright fireball above the forest camp."
+    },
+    "metrics": [
+      "Forest \u00b7 Snow \u00b7 Inferno",
+      "Windows playtest",
+      "Path to Steam"
+    ],
+    "tech": [
+      "Game"
+    ],
+    "capabilities": [
+      "Windows playtest builds"
+    ],
+    "statusLabel": "Coming Winter 2026"
+  },
+  {
     "repo": "security-recipes.ai",
     "slug": "security-recipes",
     "name": "security-recipes.ai",
