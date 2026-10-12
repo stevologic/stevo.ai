@@ -6,6 +6,7 @@ version: 2
 updates:
   - package-ecosystem: npm
     directory: /
+    target-branch: development # version updates only; security updates stay on main
     schedule:
       interval: weekly
       day: monday
@@ -28,9 +29,9 @@ updates:
   # this keeps those pins moving instead of freezing them forever.
   - package-ecosystem: github-actions
     directory: /
+    target-branch: development # version updates only; security updates stay on main
     schedule:
-      interval: weekly
-      day: monday
+      interval: monthly
       time: "08:00"
       timezone: America/Phoenix
     open-pull-requests-limit: 5
