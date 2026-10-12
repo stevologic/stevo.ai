@@ -147,7 +147,7 @@ const ProjectCard = memo(function ProjectCard({
           />
         ) : null}
         <div className="project-visual-grid" />
-        {project.preview ? null : project.icon ? (
+        {project.icon ? (
           <span className="project-favicon">
             {/* eslint-disable-next-line @next/next/no-img-element --
                 these are fixed 46px marks fetched from each project's own site,
@@ -160,7 +160,7 @@ const ProjectCard = memo(function ProjectCard({
             {String(index + 1).padStart(2, "0")}
           </span>
         )}
-        {!project.icon && !project.preview && (
+        {!project.icon && (
           <span className="project-monogram">
             {project.name
               .split(/\s+/)
