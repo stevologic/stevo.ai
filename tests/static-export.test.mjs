@@ -2055,6 +2055,21 @@ test("dependency monitoring is configured for both ecosystems", async () => {
     ...Object.entries(pkg.dependencies),
     ...Object.entries(pkg.devDependencies),
   ]) {
+    if (name === "fast-glob") {
+      // This one private adapter is pinned by committed source, not a registry
+      // range. Its backend and exact clean-install slot must remain locked.
+      assert.equal(version, "file:tools/next-lint-glob");
+      const adapter = JSON.parse(await readFile(new URL("tools/next-lint-glob/package.json", root), "utf8"));
+      assert.equal(adapter.private, true);
+      assert.equal(adapter.name, "fast-glob");
+      assert.equal(adapter.version, "3.3.1");
+      assert.deepEqual(adapter.dependencies, { tinyglobby: "0.2.17" });
+      assert.equal(pkg.overrides["@next/eslint-plugin-next"]["fast-glob"], "$fast-glob");
+      const lock = JSON.parse(await readFile(new URL("package-lock.json", root), "utf8"));
+      assert.equal(lock.packages["node_modules/fast-glob"].resolved, "tools/next-lint-glob");
+      assert.equal(lock.packages["node_modules/fast-glob"].link, true);
+      continue;
+    }
     assert.match(
       version,
       /^\d/,
