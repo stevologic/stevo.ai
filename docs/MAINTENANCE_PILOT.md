@@ -4,7 +4,7 @@ Feature → existing development → validated/reviewed PR to main → existing 
 deployment. This draft leaves both base branches unchanged and preserves the
 published résumé/download work from merged PR48.
 
-The shared read-only [contract 1.1.0](https://github.com/stevologic/oss-deps-explorer/blob/1e6e9a9c4dc9f766c49a421ea268f247d1113287/actions/maintenance/README.md)
+The shared read-only [contract 1.1.1](https://github.com/stevologic/oss-deps-explorer/blob/bf9289390aa6304c4ed81596fb0d7dfba712608b/actions/maintenance/README.md)
 is pinned by that complete immutable commit. The local JSON policy keeps xAI,
 disables advisory AI and all mutations, and reserves active/default/development/
 release/Pages branches. Custom critique/growth/content jobs remain separate.
@@ -36,7 +36,7 @@ Validation: Node24 lint, TypeScript, production static build, all 66 static/mark
 tests (including a31-day durable retrieval and actual critique skip), full npm audit
 (zero vulnerabilities), YAML/policy checks and diff check
 pass. The actual unchanged-content path was exercised with network calls forced
-to throw: it skipped successfully with zero calls. The shared 32-test safety suite
+to throw: it skipped successfully with zero calls. The shared 33-test safety suite
 and complete offline repository pilot pass. The local font/browser PDF gate was
 not rerun because shared browser/UI resources are reserved; original PDF/DOCX
 bytes and résumé files are unchanged.
