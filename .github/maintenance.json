@@ -27,7 +27,8 @@
     "fix/"
   ],
   "active_branches": [
-    "codex/shared-maintenance-pilot"
+    "codex/shared-maintenance-pilot",
+    "codex/maintenance-contract-111"
   ],
   "locked_prs": [],
   "required_checks": [
@@ -38,7 +39,7 @@
     "npm run lint",
     "npm run typecheck",
     "npm run build",
-    "node --test tests/static-export.test.mjs",
+    "node --test tests/static-export.test.mjs tests/critique-cache.test.mjs",
     "npm audit --audit-level=high",
     "npm run verify:pdf (local font/browser gate)"
   ],
