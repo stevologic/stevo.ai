@@ -1,2 +1,3 @@
 :HL["/_next/static/chunks/0nb9x-7d_5rfe.css","style"]
-0:{"tree":{"name":"","param":null,"prefetchHints":4112,"slots":{"children":{"name":"__PAGE__","param":null,"prefetchHints":4224,"slots":null}}},"staleTime":300,"buildId":"y2um5uqfA45we-JgqIN_R"}
+1:[["children",{"s":"__PAGE__","h":128}]]
+0:{"b":"qXfH-v65GLFUSaMBFXHH-","t":{"t":{"s":"","h":16,"c":"$Q1"}}}
