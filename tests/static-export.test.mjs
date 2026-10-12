@@ -1331,9 +1331,31 @@ test("project cards carry each site's own icon and theme colour", async () => {
   assert.doesNotMatch(html, /class="project-index"/);
 
   // At least one card should paint the project's declared colour.
-  assert.match(html, /class="project-visual project-visual-branded"/);
+  assert.match(html, /class="project-visual project-visual-branded[ "]/);
   const backgrounds = icons.filter(([, icon]) => icon.background).length;
   assert.ok(backgrounds > 0, "no project declared a theme colour");
+});
+
+test("every project card is backed by a screenshot of its live site", async () => {
+  const html = await exportedPage("index.html");
+  const snapshot = JSON.parse(
+    await readFile(new URL("../data/project-previews.generated.json", import.meta.url), "utf8"),
+  );
+  const projects = await publishedProjects();
+  for (const project of projects) {
+    const preview = snapshot.previews[project.slug];
+    assert.ok(preview, `${project.slug} has no live-site preview`);
+    assert.match(preview.src, /^\/project-previews\/[a-z0-9-]+\.webp$/);
+    await access(new URL(`../out${preview.src}`, import.meta.url));
+  }
+  assert.equal(
+    (html.match(/class="project-preview"/g) || []).length,
+    projects.length,
+  );
+  assert.equal(
+    (html.match(/class="project-visual-overlay"/g) || []).length,
+    projects.length,
+  );
 });
 
 test("a failed project-icon fetch keeps the last committed icon", async () => {

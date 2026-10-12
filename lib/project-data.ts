@@ -1,6 +1,7 @@
 import curatedProjects from "@/content/projects.json";
 import discoveredSnapshot from "@/data/discovered.generated.json";
 import projectIcons from "@/data/project-icons.generated.json";
+import projectPreviews from "@/data/project-previews.generated.json";
 import generatedSnapshot from "@/data/github.generated.json";
 
 export type ProjectCategory = "Security" | "AI systems" | "Products & ventures";
@@ -167,6 +168,14 @@ function projectIcon(slug: string): ProjectIcon | undefined {
   return { src, background: stringValue(entry.background) };
 }
 
+/** Live-site screenshot captured by scripts/capture-project-previews.py. */
+function projectPreview(slug: string): ProjectPreview | undefined {
+  const entry = record(record(projectPreviews.previews)[slug]);
+  const src = stringValue(entry.src);
+  if (!src) return undefined;
+  return { src, alt: stringValue(entry.alt) ?? "" };
+}
+
 export const projects: PortfolioProject[] = sourceProjects().map((project) => {
   const source = project.repo ? record(repositories[project.repo]) : {};
   const release = record(source.latestRelease ?? source.release);
@@ -192,6 +201,7 @@ export const projects: PortfolioProject[] = sourceProjects().map((project) => {
     category: project.category as ProjectCategory,
     discovered: Boolean(project.discovered),
     icon: projectIcon(project.slug),
+    preview: project.preview ?? projectPreview(project.slug),
     github: {
       language: stringValue(source.language, source.primaryLanguage),
       stars: numberValue(source.stars, source.stargazers_count),

@@ -3482,6 +3482,19 @@ img {
   width: 100%;
   height: 100%;
   object-fit: cover;
+  object-position: top center;
+}
+
+/* Darken the screenshot so the icon and release signal stay legible. */
+.project-visual-preview .project-visual-overlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    180deg,
+    rgba(15, 16, 20, 0.15) 0%,
+    rgba(15, 16, 20, 0.35) 55%,
+    rgba(15, 16, 20, 0.78) 100%
+  );
 }
 
 .project-visual-preview::before,
