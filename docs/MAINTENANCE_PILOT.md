@@ -11,8 +11,12 @@ release/Pages branches. Custom critique/growth/content jobs remain separate.
 
 Metadata discovery/sync/deployment moves from daily to weekly; main pushes and
 manual dispatch remain. Weekly capture fits GitHub's 14-day traffic window.
-Critique moves from weekly to monthly, caches successful content/factual-baseline/
+Critique moves from weekly to monthly, stores successful content/factual-baseline/
 prompt/model hashes, and skips unchanged scheduled content before any model call.
+Its single hash artifact retains90days and is renewed after an unchanged monthly
+skip. Retrieval accepts only this workflow's successful default-branch scheduled/
+manual runs, failing closed on API/incomplete-inventory errors. Dependency caches
+expire after seven unused days and are not used for this monthly success marker.
 Manual dispatch can rerun it. Auto model upgrades require an explicit setting;
 the existing provider/default model is retained. Portfolio apply creates a draft
 to development and dispatches CI; it cannot merge/deploy itself. Locked Brand QA
@@ -28,8 +32,9 @@ API used by that plugin; complete lint/build tests pass. No forced downgrade or
 audit omission is used. Original dependency PRs stay open until equivalent changes
 land and verify through integration/main.
 
-Validation: Node24 lint, TypeScript, production static build, all 63 static/cache
-tests, full npm audit (zero vulnerabilities), YAML/policy checks and diff check
+Validation: Node24 lint, TypeScript, production static build, all 66 static/marker
+tests (including a31-day durable retrieval and actual critique skip), full npm audit
+(zero vulnerabilities), YAML/policy checks and diff check
 pass. The actual unchanged-content path was exercised with network calls forced
 to throw: it skipped successfully with zero calls. The shared 32-test safety suite
 and complete offline repository pilot pass. The local font/browser PDF gate was

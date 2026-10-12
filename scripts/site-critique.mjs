@@ -351,7 +351,7 @@ async function requestCritique(model, brief) {
   return { critique, usage: payload.usage ?? null };
 }
 
-async function main() {
+async function main({ brief: suppliedBrief, markerDirectory = path.join(rootDirectory, ".critique-cache") } = {}) {
   if (!apiKey) {
     const message =
       "GROK_API_KEY is not set, so no critique was requested. Add it to the repository secrets.";
@@ -361,12 +361,12 @@ async function main() {
     return;
   }
 
-  const brief = await buildBrief();
+  const brief = suppliedBrief ?? await buildBrief();
   log(`Prepared ${brief.split(/\s+/).length} words of site content.`);
 
   const { critiqueHash } = await import("./critique-content-hash.mjs");
   const hash = await critiqueHash(brief);
-  const marker = path.join(rootDirectory, ".critique-cache", "successful-hash");
+  const marker = path.join(markerDirectory, "successful-hash");
   let previous = "";
   try { previous = (await readFile(marker, "utf8")).trim(); } catch { /* first successful run */ }
   if (process.env.CRITIQUE_SKIP_UNCHANGED === "true" && previous === hash) {

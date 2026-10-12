@@ -92,11 +92,12 @@ jobs:
           GROK_MODEL_AUTO_UPGRADE: ${{ vars.GROK_MODEL_AUTO_UPGRADE || 'false' }}
         run: node scripts/critique-content-hash.mjs
 
-      - name: Restore successful critique marker
-        uses: actions/cache/restore@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6
-        with:
-          path: .critique-cache
-          key: site-critique-${{ steps.content.outputs.hash }}
+      - name: Restore durable successful critique marker
+        if: github.event_name == 'schedule'
+        env:
+          GH_TOKEN: ${{ github.token }}
+          DEFAULT_BRANCH: ${{ github.event.repository.default_branch }}
+        run: node scripts/critique-marker.mjs
 
       - name: Confirm the API key is configured
         id: preflight
@@ -161,7 +162,7 @@ jobs:
           npm run lint
           npm run typecheck
           npm run build
-          node --test tests/static-export.test.mjs
+          node --test tests/static-export.test.mjs tests/critique-cache.test.mjs
 
       - name: Open a pull request with the changes
         if: steps.optimize.outcome == 'success'
@@ -245,12 +246,17 @@ jobs:
             echo "::warning title=Site critique::Branch $branch is ready to review, but Actions cannot open pull requests. Enable it under Settings > Actions > General."
           fi
 
-      - name: Save successful critique marker
-        if: steps.critique.outcome == 'success'
-        uses: actions/cache/save@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6
+      # Re-publish even after an unchanged skip, renewing the 90-day lifetime.
+      # Only this single non-secret hash is stored; API failures fail before xAI.
+      - name: Save durable successful critique marker
+        if: steps.critique.outcome == 'success' && github.ref == format('refs/heads/{0}', github.event.repository.default_branch)
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
         with:
-          path: .critique-cache
-          key: site-critique-${{ steps.content.outputs.hash }}
+          name: site-critique-success-marker
+          path: .critique-cache/successful-hash
+          include-hidden-files: true
+          retention-days: 90
+          if-no-files-found: error
 
       - name: Upload the critique
         if: steps.preflight.outputs.configured == 'true'

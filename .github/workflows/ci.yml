@@ -61,7 +61,7 @@ jobs:
 
       # The build output is what the tests assert against.
       - name: Test the static export
-        run: node --test tests/static-export.test.mjs
+        run: node --test tests/static-export.test.mjs tests/critique-cache.test.mjs
 
       # verify:pdf is intentionally not run here. It prints the resume with
       # headless Chrome and counts pages, but the resume's serif stack (Iowan
