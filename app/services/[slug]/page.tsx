@@ -4,19 +4,14 @@ import { decodeSiteEmail } from "@/lib/site-email";
 
 import { voiceLine } from "@/lib/contact";
 import { practice } from "@/lib/practice";
-import {
-  engagementProcess,
-  servicePackages,
-  serviceTracks,
-} from "@/lib/services";
+import { servicePackages, serviceTracks } from "@/lib/services";
 
 const siteUrl = "https://stevo.ai";
 
 /**
  * One landing page per service track, so a search for the service lands on
- * the service instead of a homepage section. Every visible sentence comes
- * from lib/services.ts — the same data the homepage renders — so these pages
- * can never promise more than the practice does.
+ * the service. Every visible sentence comes from lib/services.ts so these
+ * pages cannot promise more than the practice does.
  */
 
 export const dynamicParams = false;
@@ -106,9 +101,6 @@ export default async function ServicePage({
         <Link className="service-page-back" href="/">
           Back to the site
         </Link>
-        <Link className="service-page-back" href="/#services">
-          All practice areas
-        </Link>
       </nav>
 
       <article className="service-page-document">
@@ -171,21 +163,6 @@ export default async function ServicePage({
             </div>
           </section>
         ) : null}
-
-        <section
-          className="service-page-section"
-          aria-labelledby="service-process-heading"
-        >
-          <h2 id="service-process-heading">How an engagement runs</h2>
-          <ol className="service-page-process">
-            {engagementProcess.map((phase) => (
-              <li key={phase.title}>
-                <h3>{phase.title}</h3>
-                <p>{phase.description}</p>
-              </li>
-            ))}
-          </ol>
-        </section>
 
         <section
           className="service-page-section"
