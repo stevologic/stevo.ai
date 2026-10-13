@@ -1,6 +1,7 @@
 import assert from "node:assert/strict";
-import { access, readFile } from "node:fs/promises";
+import { access, readFile, readdir } from "node:fs/promises";
 import test from "node:test";
+import { inflateRawSync, inflateSync } from "node:zlib";
 
 const root = new URL("../", import.meta.url);
 
@@ -475,9 +476,195 @@ test("homepage contact prints the mailbox next to the phone", async () => {
 
 test("obfuscated mailbox still decodes to the real contact address", async () => {
   const { decodeProtectedEmail } = await import("../lib/contact.ts");
-  assert.equal(decodeProtectedEmail(), "stephenabbott20@gmail.com");
+  assert.equal(decodeProtectedEmail(), "stevo@stevo.ai");
   const { decodeSiteEmail } = await import("../lib/site-email.ts");
   assert.equal(decodeSiteEmail(), "stevo@stevo.ai");
+});
+
+/** Read one ZIP entry without adding a ZIP package. DOCX is PKZIP + deflate. */
+function zipEntry(bytes, name) {
+  let offset = 0;
+  while (
+    offset + 30 <= bytes.length &&
+    bytes.readUInt32LE(offset) === 0x04034b50
+  ) {
+    const method = bytes.readUInt16LE(offset + 8);
+    const compressedSize = bytes.readUInt32LE(offset + 18);
+    const nameLength = bytes.readUInt16LE(offset + 26);
+    const extraLength = bytes.readUInt16LE(offset + 28);
+    const filename = bytes
+      .subarray(offset + 30, offset + 30 + nameLength)
+      .toString("utf8");
+    const start = offset + 30 + nameLength + extraLength;
+    const compressed = bytes.subarray(start, start + compressedSize);
+    offset = start + compressedSize;
+    if (filename !== name) continue;
+    if (method === 0) return compressed;
+    if (method === 8) return inflateRawSync(compressed);
+    throw new Error(`unsupported ZIP method ${method} for ${name}`);
+  }
+  throw new Error(`ZIP entry not found: ${name}`);
+}
+
+function docxPlainText(bytes) {
+  return zipEntry(bytes, "word/document.xml")
+    .toString("utf8")
+    .replace(/<[^>]+>/g, " ");
+}
+
+function inflatePdfPayload(payload) {
+  try {
+    return inflateSync(payload);
+  } catch {
+    return inflateRawSync(payload);
+  }
+}
+
+/** Inflate every FlateDecode stream. Word/LibreOffice résumé PDFs store text there. */
+function pdfInflatedStreams(bytes) {
+  const streams = [];
+  let cursor = 0;
+  while (cursor < bytes.length) {
+    const pos = bytes.indexOf("stream", cursor);
+    if (pos === -1) break;
+    if (
+      bytes
+        .subarray(Math.max(0, pos - 3), pos)
+        .toString("latin1")
+        .endsWith("end")
+    ) {
+      cursor = pos + 6;
+      continue;
+    }
+    let start;
+    if (bytes[pos + 6] === 0x0d && bytes[pos + 7] === 0x0a) start = pos + 8;
+    else if (bytes[pos + 6] === 0x0a || bytes[pos + 6] === 0x0d) start = pos + 7;
+    else {
+      cursor = pos + 6;
+      continue;
+    }
+    const end = bytes.indexOf("endstream", start);
+    if (end === -1) break;
+    let payload = bytes.subarray(start, end);
+    if (payload.at(-1) === 0x0a) {
+      payload = payload.subarray(
+        0,
+        payload.length - (payload.at(-2) === 0x0d ? 2 : 1),
+      );
+    } else if (payload.at(-1) === 0x0d) {
+      payload = payload.subarray(0, payload.length - 1);
+    }
+    const header = bytes.subarray(Math.max(0, pos - 256), pos).toString("latin1");
+    try {
+      streams.push(
+        header.includes("/FlateDecode") ? inflatePdfPayload(payload) : payload,
+      );
+    } catch {
+      // Skip non-deflate or truncated payloads; other streams still get searched.
+    }
+    cursor = end + 9;
+  }
+  return streams;
+}
+
+function pdfUnicodeFromHex(hex) {
+  const clean = hex.replace(/\s+/g, "");
+  let out = "";
+  for (let index = 0; index + 3 < clean.length; index += 4) {
+    out += String.fromCharCode(Number.parseInt(clean.slice(index, index + 4), 16));
+  }
+  return out;
+}
+
+function parsePdfToUnicode(text) {
+  const map = new Map();
+  for (const match of text.matchAll(/<([0-9A-Fa-f]+)>\s*<([0-9A-Fa-f]+)>/g)) {
+    map.set(match[1].toLowerCase(), pdfUnicodeFromHex(match[2]));
+  }
+  return map;
+}
+
+function decodePdfCidHex(hex, cmap) {
+  const clean = hex.replace(/\s+/g, "").toLowerCase();
+  let out = "";
+  for (let index = 0; index < clean.length; index += 2) {
+    out += cmap.get(clean.slice(index, index + 2)) ?? "";
+  }
+  return out;
+}
+
+/**
+ * Résumé PDFs encode contact text as CID hex plus ToUnicode CMaps, so a raw
+ * byte scan (and even inflated-stream latin1) misses it. Inflate FlateDecode
+ * streams, then reconstruct Tj/TJ text through every CMap.
+ */
+function pdfDecodedText(bytes) {
+  const streams = pdfInflatedStreams(bytes).map((stream) =>
+    stream.toString("latin1"),
+  );
+  const cmaps = streams
+    .filter((text) => text.includes("beginbfchar") || text.includes("begincmap"))
+    .map(parsePdfToUnicode);
+  const decoded = [streams.join("\n")];
+  for (const cmap of cmaps) {
+    const pieces = [];
+    for (const text of streams) {
+      for (const hex of text.matchAll(/<([0-9A-Fa-f\s]+)>/g)) {
+        pieces.push(decodePdfCidHex(hex[1], cmap));
+      }
+    }
+    decoded.push(pieces.join(""));
+  }
+  return decoded.join("\n");
+}
+
+function fileContainsRetiredMailbox(path, bytes, retired) {
+  if (path.endsWith(".pdf")) return pdfDecodedText(bytes).includes(retired);
+  if (path.endsWith(".docx")) return docxPlainText(bytes).includes(retired);
+  return bytes.includes(retired);
+}
+
+test("the built site and résumé files do not contain the retired Gmail mailbox", async () => {
+  const retired = "stephenabbott20@gmail.com";
+  const resumeSource = await readFile(
+    new URL("../content/resume-download.json", import.meta.url),
+    "utf8",
+  );
+  assert.doesNotMatch(resumeSource, /stephenabbott20@gmail\.com/);
+
+  async function filesContaining(directory) {
+    const hits = [];
+    for (const entry of await readdir(directory, { withFileTypes: true })) {
+      const next = new URL(
+        `${entry.name}${entry.isDirectory() ? "/" : ""}`,
+        directory,
+      );
+      if (entry.isDirectory()) {
+        hits.push(...(await filesContaining(next)));
+        continue;
+      }
+      const bytes = await readFile(next);
+      if (fileContainsRetiredMailbox(next.pathname, bytes, retired)) {
+        hits.push(next.pathname.replace(/.*\/(out|public)\//, "$1/"));
+      }
+    }
+    return hits;
+  }
+
+  const exportHits = await filesContaining(new URL("../out/", import.meta.url));
+  const resumeHits = await filesContaining(
+    new URL("../public/resume-files/", import.meta.url),
+  );
+  assert.deepEqual(
+    exportHits,
+    [],
+    `retired Gmail leaked into the export: ${exportHits.join(", ")}`,
+  );
+  assert.deepEqual(
+    resumeHits,
+    [],
+    `retired Gmail leaked into résumé files: ${resumeHits.join(", ")}`,
+  );
 });
 
 test("the stevo.ai line is the published intake number and the retired number is gone", async () => {
