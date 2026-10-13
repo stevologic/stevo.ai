@@ -1,5 +1,5 @@
 import assert from "node:assert/strict";
-import { access, readFile } from "node:fs/promises";
+import { access, readFile, readdir } from "node:fs/promises";
 import test from "node:test";
 
 const root = new URL("../", import.meta.url);
@@ -475,9 +475,46 @@ test("homepage contact prints the mailbox next to the phone", async () => {
 
 test("obfuscated mailbox still decodes to the real contact address", async () => {
   const { decodeProtectedEmail } = await import("../lib/contact.ts");
-  assert.equal(decodeProtectedEmail(), "stephenabbott20@gmail.com");
+  assert.equal(decodeProtectedEmail(), "stevo@stevo.ai");
   const { decodeSiteEmail } = await import("../lib/site-email.ts");
   assert.equal(decodeSiteEmail(), "stevo@stevo.ai");
+});
+
+test("the built site and résumé files do not contain the retired Gmail mailbox", async () => {
+  const retired = Buffer.from("stephenabbott20@gmail.com");
+
+  async function filesContaining(directory) {
+    const hits = [];
+    for (const entry of await readdir(directory, { withFileTypes: true })) {
+      const next = new URL(
+        `${entry.name}${entry.isDirectory() ? "/" : ""}`,
+        directory,
+      );
+      if (entry.isDirectory()) {
+        hits.push(...(await filesContaining(next)));
+        continue;
+      }
+      if ((await readFile(next)).includes(retired)) {
+        hits.push(next.pathname.replace(/.*\/(out|public)\//, "$1/"));
+      }
+    }
+    return hits;
+  }
+
+  const exportHits = await filesContaining(new URL("../out/", import.meta.url));
+  const resumeHits = await filesContaining(
+    new URL("../public/resume-files/", import.meta.url),
+  );
+  assert.deepEqual(
+    exportHits,
+    [],
+    `retired Gmail leaked into the export: ${exportHits.join(", ")}`,
+  );
+  assert.deepEqual(
+    resumeHits,
+    [],
+    `retired Gmail leaked into résumé files: ${resumeHits.join(", ")}`,
+  );
 });
 
 test("the stevo.ai line is the published intake number and the retired number is gone", async () => {
