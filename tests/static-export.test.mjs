@@ -1,7 +1,9 @@
 import assert from "node:assert/strict";
-import { access, readFile, readdir } from "node:fs/promises";
+import { access, mkdtemp, readFile, readdir, rm, writeFile } from "node:fs/promises";
+import { tmpdir } from "node:os";
+import { join } from "node:path";
 import test from "node:test";
-import { inflateRawSync, inflateSync } from "node:zlib";
+import { deflateRawSync, inflateRawSync, inflateSync } from "node:zlib";
 
 const root = new URL("../", import.meta.url);
 
@@ -506,13 +508,41 @@ function* zipEntries(bytes) {
   }
 }
 
+function decodeXmlEntities(text) {
+  return text
+    .replace(/&#x([0-9A-Fa-f]+);/g, (_, hex) =>
+      String.fromCodePoint(Number.parseInt(hex, 16)),
+    )
+    .replace(/&#([0-9]+);/g, (_, decimal) =>
+      String.fromCodePoint(Number.parseInt(decimal, 10)),
+    )
+    .replace(/&amp;/g, "&")
+    .replace(/&lt;/g, "<")
+    .replace(/&gt;/g, ">")
+    .replace(/&quot;/g, '"')
+    .replace(/&apos;/g, "'");
+}
+
 function docxPlainText(bytes) {
   const parts = [];
-  for (const { name, data } of zipEntries(bytes)) {
-    if (!name.endsWith(".xml")) continue;
-    parts.push(data.toString("utf8").replace(/<[^>]+>/g, ""));
+  for (const { data } of zipEntries(bytes)) {
+    const decoded = decodeXmlEntities(data.toString("utf8"));
+    // Keep decoded XML so mailto: and other attributes survive tag stripping.
+    parts.push(decoded, decoded.replace(/<[^>]+>/g, ""));
   }
   return parts.join("");
+}
+
+function normalizedText(text) {
+  return text.replace(/\s+/g, "").toLowerCase();
+}
+
+function retiredMailbox() {
+  return ["stephenabbott20", "gmail.com"].join("@");
+}
+
+function textContainsRetiredMailbox(text, retired) {
+  return normalizedText(text).includes(normalizedText(retired));
 }
 
 function inflatePdfPayload(payload) {
@@ -755,18 +785,187 @@ function pdfDecodedText(bytes) {
 }
 
 function fileContainsRetiredMailbox(path, bytes, retired) {
-  if (path.endsWith(".pdf")) return pdfDecodedText(bytes).includes(retired);
-  if (path.endsWith(".docx")) return docxPlainText(bytes).includes(retired);
-  return bytes.includes(retired);
+  const text = path.endsWith(".pdf")
+    ? pdfDecodedText(bytes)
+    : path.endsWith(".docx")
+      ? docxPlainText(bytes)
+      : bytes.toString("utf8");
+  return textContainsRetiredMailbox(text, retired);
+}
+
+function crc32(bytes) {
+  let crc = ~0;
+  for (const byte of bytes) {
+    crc ^= byte;
+    for (let bit = 0; bit < 8; bit += 1) {
+      crc = (crc >>> 1) ^ (0xedb88320 & -(crc & 1));
+    }
+  }
+  return ~crc >>> 0;
+}
+
+function zipFiles(files) {
+  const locals = [];
+  const centrals = [];
+  let offset = 0;
+  for (const { name, data } of files) {
+    const raw = Buffer.from(data);
+    const compressed = deflateRawSync(raw);
+    const nameBytes = Buffer.from(name, "utf8");
+    const crc = crc32(raw);
+    const local = Buffer.alloc(30 + nameBytes.length);
+    local.writeUInt32LE(0x04034b50, 0);
+    local.writeUInt16LE(20, 4);
+    local.writeUInt16LE(8, 8);
+    local.writeUInt32LE(crc, 14);
+    local.writeUInt32LE(compressed.length, 18);
+    local.writeUInt32LE(raw.length, 22);
+    local.writeUInt16LE(nameBytes.length, 26);
+    nameBytes.copy(local, 30);
+    const central = Buffer.alloc(46 + nameBytes.length);
+    central.writeUInt32LE(0x02014b50, 0);
+    central.writeUInt16LE(20, 4);
+    central.writeUInt16LE(20, 6);
+    central.writeUInt16LE(8, 10);
+    central.writeUInt32LE(crc, 16);
+    central.writeUInt32LE(compressed.length, 20);
+    central.writeUInt32LE(raw.length, 24);
+    central.writeUInt16LE(nameBytes.length, 28);
+    central.writeUInt32LE(offset, 42);
+    nameBytes.copy(central, 46);
+    locals.push(local, compressed);
+    centrals.push(central);
+    offset += local.length + compressed.length;
+  }
+  const centralBuf = Buffer.concat(centrals);
+  const end = Buffer.alloc(22);
+  end.writeUInt32LE(0x06054b50, 0);
+  end.writeUInt16LE(files.length, 8);
+  end.writeUInt16LE(files.length, 10);
+  end.writeUInt32LE(centralBuf.length, 12);
+  end.writeUInt32LE(offset, 16);
+  return Buffer.concat([...locals, centralBuf, end]);
+}
+
+function pdfWithContent(content) {
+  const stream = `BT\n${content}\nET\n`;
+  return Buffer.from(
+    `%PDF-1.4\n1 0 obj\n<< /Length ${stream.length} >>\nstream\n${stream}endstream\nendobj\ntrailer\n<<>>\n%%EOF\n`,
+  );
+}
+
+function docxDocument(body) {
+  return `<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<w:document xmlns:w="http://schemas.openxmlformats.org/wordprocessingml/2006/main">
+  <w:body>${body}</w:body>
+</w:document>
+`;
+}
+
+function retiredLeakFixtures(retired) {
+  const [mailbox, domain] = retired.split("@");
+  const atDomain = ["", domain].join("@");
+  const contentTypes = `<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<Types xmlns="http://schemas.openxmlformats.org/package/2006/content-types"></Types>
+`;
+  const cleanBody = "<w:p><w:r><w:t>contact on file</w:t></w:r></w:p>";
+  return [
+    {
+      name: "split-docx-runs.docx",
+      label: "split DOCX runs",
+      bytes: zipFiles([
+        { name: "[Content_Types].xml", data: contentTypes },
+        {
+          name: "word/document.xml",
+          data: docxDocument(
+            `<w:p><w:r><w:t>${mailbox}</w:t></w:r><w:r><w:t>${atDomain}</w:t></w:r></w:p>`,
+          ),
+        },
+      ]),
+    },
+    {
+      name: "docx-core-props.docx",
+      label: "DOCX core.xml part",
+      bytes: zipFiles([
+        { name: "[Content_Types].xml", data: contentTypes },
+        { name: "word/document.xml", data: docxDocument(cleanBody) },
+        {
+          name: "docProps/core.xml",
+          data: `<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<cp:coreProperties xmlns:cp="http://schemas.openxmlformats.org/package/2006/metadata/core-properties" xmlns:dc="http://purl.org/dc/elements/1.1/">
+  <dc:description>${mailbox}&#64;${domain}</dc:description>
+</cp:coreProperties>
+`,
+        },
+      ]),
+    },
+    {
+      name: "split-tj.pdf",
+      label: "Tj across commands",
+      bytes: pdfWithContent(`(${mailbox}) Tj\n(${atDomain}) Tj`),
+    },
+    {
+      name: "tj-kerning.pdf",
+      label: "TJ kerning array",
+      bytes: pdfWithContent(`[(${mailbox}) -120 (${atDomain})] TJ`),
+    },
+    {
+      name: "tj-whitespace.pdf",
+      label: "whitespace inside TJ string",
+      bytes: pdfWithContent(`(${mailbox} @ ${domain}) Tj`),
+    },
+    {
+      name: "docx-run-whitespace.docx",
+      label: "whitespace between DOCX runs",
+      bytes: zipFiles([
+        { name: "[Content_Types].xml", data: contentTypes },
+        {
+          name: "word/document.xml",
+          data: docxDocument(
+            `<w:p><w:r><w:t>${mailbox}</w:t></w:r>\n  <w:r><w:t>${atDomain}</w:t></w:r></w:p>`,
+          ),
+        },
+      ]),
+    },
+    {
+      name: "docx-entities.docx",
+      label: "entity-encoded address",
+      bytes: zipFiles([
+        { name: "[Content_Types].xml", data: contentTypes },
+        {
+          name: "word/document.xml",
+          data: docxDocument(
+            `<w:p><w:r><w:t>${mailbox}&#x40;gmail&#46;com</w:t></w:r></w:p>`,
+          ),
+        },
+      ]),
+    },
+    {
+      name: "docx-mailto-rels.docx",
+      label: "mailto in .rels",
+      bytes: zipFiles([
+        { name: "[Content_Types].xml", data: contentTypes },
+        { name: "word/document.xml", data: docxDocument(cleanBody) },
+        {
+          name: "word/_rels/document.xml.rels",
+          data: `<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships">
+  <Relationship Id="rId1" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/hyperlink" Target="mailto:${mailbox}&#64;${domain}"/>
+</Relationships>
+`,
+        },
+      ]),
+    },
+  ];
 }
 
 test("the built site and résumé files do not contain the retired Gmail mailbox", async () => {
-  const retired = "stephenabbott20@gmail.com";
+  const retired = retiredMailbox();
   const resumeSource = await readFile(
     new URL("../content/resume-download.json", import.meta.url),
     "utf8",
   );
-  assert.doesNotMatch(resumeSource, /stephenabbott20@gmail\.com/);
+  assert.equal(textContainsRetiredMailbox(resumeSource, retired), false);
 
   async function filesContaining(directory) {
     const hits = [];
@@ -804,27 +1003,26 @@ test("the built site and résumé files do not contain the retired Gmail mailbox
 });
 
 test("the retired-Gmail leak guard reconstructs split DOCX and PDF encodings", async () => {
-  const retired = "stephenabbott20@gmail.com";
-  const cases = [
-    ["split-docx-runs.docx", "split DOCX runs"],
-    ["docx-core-props.docx", "DOCX core.xml part"],
-    ["split-tj.pdf", "Tj across commands"],
-    ["tj-kerning.pdf", "TJ kerning array"],
-  ];
-  for (const [name, label] of cases) {
-    const bytes = await readFile(
-      new URL(`./fixtures/gmail-leak/${name}`, import.meta.url),
-    );
-    assert.equal(
-      bytes.includes(retired),
-      false,
-      `${label} still has the address in raw bytes`,
-    );
-    assert.equal(
-      fileContainsRetiredMailbox(name, bytes, retired),
-      true,
-      `${label} was not reconstructed`,
-    );
+  const retired = retiredMailbox();
+  const directory = await mkdtemp(join(tmpdir(), "gmail-leak-"));
+  try {
+    for (const fixture of retiredLeakFixtures(retired)) {
+      const path = join(directory, fixture.name);
+      await writeFile(path, fixture.bytes);
+      const bytes = await readFile(path);
+      assert.equal(
+        bytes.includes(retired),
+        false,
+        `${fixture.label} still has the address in raw bytes`,
+      );
+      assert.equal(
+        fileContainsRetiredMailbox(fixture.name, bytes, retired),
+        true,
+        `${fixture.label} was not reconstructed`,
+      );
+    }
+  } finally {
+    await rm(directory, { recursive: true, force: true });
   }
 });
 
