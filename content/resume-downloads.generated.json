@@ -5,22 +5,22 @@
     "libfile_dfb5c72d829c81919c011de0175a1eb9"
   ],
   "sources": {
-    "content/resume-download.json": "190436d248a8146f0066c1d81fec7ac81dce9bb125a8db3b693a0d67813506c1",
+    "content/resume-download.json": "abb8d480b31bb078d031cbda16e146bc2b0ce65deedac62110d612976efb22ef",
     "content/resume.json": "d3612f2293c51499030ce5778b0c1929f5ca7a8c1ee76ff83f9027548060b8a3",
     "content/resume-projects.json": "f9a0390af1df8b8fd9590b03c44812172826285ffea5b46548f4736077662cb3",
     "app/resume/page.tsx": "2d6b721429e62f54a0f97684d262e46ee62208a26a0eb5a0593d45e7ad9704b6",
     "lib/career.ts": "748c12212cc581dbbf81214a7b05fba8d2d7e3c5d1fa8882a646f3d26b5448ff",
     "lib/credentials.ts": "f00fe99d685b9be46f5930c578aef15035c923d05c4066170e585416d60e8d30",
-    "lib/contact.ts": "15b732756c351c5a7cb6248b9e2be4ef422d4dc814972f3ca039440c1868e104"
+    "lib/contact.ts": "54a346dd964cc96ff3a65a844fb3331b8a8b3942e871244d88be0b9b4c521b55"
   },
   "files": {
     "Stephen-Abbott-Resume.pdf": {
-      "sha256": "4aecac1215392f660fc1aa34093c84c216f1a6acd5a02a0954d5f207ef698368",
-      "sizeBytes": 131637
+      "sha256": "152f51c0e68e94135c4df6eeb8a4933d69d964898f44d0a3bbe030e574b4ff06",
+      "sizeBytes": 49791
     },
     "Stephen-Abbott-Resume.docx": {
-      "sha256": "c6d9a04229ddebe8e0078eebc457d17c168de6f624214246a4369cb4ea1c7e51",
-      "sizeBytes": 39836
+      "sha256": "9efb8488f09a5f345e83ae56e7e20d7a4122219294bf6eb69cae56160dcb09d8",
+      "sizeBytes": 39828
     }
   },
   "pages": 2,
