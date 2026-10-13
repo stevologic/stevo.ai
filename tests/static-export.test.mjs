@@ -481,8 +481,8 @@ test("obfuscated mailbox still decodes to the real contact address", async () =>
   assert.equal(decodeSiteEmail(), "stevo@stevo.ai");
 });
 
-/** Read one ZIP entry without adding a ZIP package. DOCX is PKZIP + deflate. */
-function zipEntry(bytes, name) {
+/** Yield every ZIP entry. DOCX is PKZIP + deflate; no ZIP package. */
+function* zipEntries(bytes) {
   let offset = 0;
   while (
     offset + 30 <= bytes.length &&
@@ -492,24 +492,27 @@ function zipEntry(bytes, name) {
     const compressedSize = bytes.readUInt32LE(offset + 18);
     const nameLength = bytes.readUInt16LE(offset + 26);
     const extraLength = bytes.readUInt16LE(offset + 28);
-    const filename = bytes
+    const name = bytes
       .subarray(offset + 30, offset + 30 + nameLength)
       .toString("utf8");
     const start = offset + 30 + nameLength + extraLength;
     const compressed = bytes.subarray(start, start + compressedSize);
     offset = start + compressedSize;
-    if (filename !== name) continue;
-    if (method === 0) return compressed;
-    if (method === 8) return inflateRawSync(compressed);
-    throw new Error(`unsupported ZIP method ${method} for ${name}`);
+    let data;
+    if (method === 0) data = compressed;
+    else if (method === 8) data = inflateRawSync(compressed);
+    else throw new Error(`unsupported ZIP method ${method} for ${name}`);
+    yield { name, data };
   }
-  throw new Error(`ZIP entry not found: ${name}`);
 }
 
 function docxPlainText(bytes) {
-  return zipEntry(bytes, "word/document.xml")
-    .toString("utf8")
-    .replace(/<[^>]+>/g, " ");
+  const parts = [];
+  for (const { name, data } of zipEntries(bytes)) {
+    if (!name.endsWith(".xml")) continue;
+    parts.push(data.toString("utf8").replace(/<[^>]+>/g, ""));
+  }
+  return parts.join("");
 }
 
 function inflatePdfPayload(payload) {
@@ -593,6 +596,145 @@ function decodePdfCidHex(hex, cmap) {
   return out;
 }
 
+function pdfHexToBytes(hex) {
+  const clean = hex.replace(/\s+/g, "");
+  const padded = clean.length % 2 === 0 ? clean : `${clean}0`;
+  let out = "";
+  for (let index = 0; index < padded.length; index += 2) {
+    out += String.fromCharCode(Number.parseInt(padded.slice(index, index + 2), 16));
+  }
+  return out;
+}
+
+function readPdfLiteral(source, start) {
+  let index = start + 1;
+  let out = "";
+  let depth = 1;
+  while (index < source.length && depth > 0) {
+    const char = source[index];
+    if (char === "\\") {
+      const next = source[index + 1];
+      if (next === undefined) break;
+      if (next >= "0" && next <= "7") {
+        let octal = next;
+        index += 2;
+        for (
+          let taken = 0;
+          taken < 2 && index < source.length && source[index] >= "0" && source[index] <= "7";
+          taken += 1
+        ) {
+          octal += source[index];
+          index += 1;
+        }
+        out += String.fromCharCode(Number.parseInt(octal, 8));
+        continue;
+      }
+      const escaped = { n: "\n", r: "\r", t: "\t", b: "\b", f: "\f" };
+      out += escaped[next] ?? next;
+      index += 2;
+      continue;
+    }
+    if (char === "(") depth += 1;
+    if (char === ")") {
+      depth -= 1;
+      if (depth === 0) return [out, index + 1];
+    }
+    if (depth > 0) out += char;
+    index += 1;
+  }
+  return [out, index];
+}
+
+function decodePdfStringToken(source, start, cmap) {
+  if (source[start] === "(") return readPdfLiteral(source, start);
+  if (source[start] === "<" && source[start + 1] !== "<") {
+    const end = source.indexOf(">", start + 1);
+    if (end === -1) return ["", start + 1];
+    const hex = source.slice(start + 1, end);
+    return [cmap ? decodePdfCidHex(hex, cmap) : pdfHexToBytes(hex), end + 1];
+  }
+  return null;
+}
+
+function skipPdfWhitespace(source, start) {
+  let index = start;
+  while (index < source.length) {
+    const char = source[index];
+    if (char === "%") {
+      const newline = source.indexOf("\n", index);
+      index = newline === -1 ? source.length : newline + 1;
+      continue;
+    }
+    if (!/\s/.test(char)) break;
+    index += 1;
+  }
+  return index;
+}
+
+function readPdfNumber(source, start) {
+  const match = source.slice(start).match(/^[+-]?(?:\d+\.?\d*|\.\d+)/);
+  if (!match) return null;
+  return [Number(match[0]), start + match[0].length];
+}
+
+/** Parse a TJ array, skipping numeric kerning and joining string entries. */
+function readPdfTjArray(source, start, cmap) {
+  if (source[start] !== "[") return null;
+  const strings = [];
+  let index = start + 1;
+  while (index < source.length) {
+    index = skipPdfWhitespace(source, index);
+    if (index >= source.length) break;
+    if (source[index] === "]") {
+      const after = skipPdfWhitespace(source, index + 1);
+      if (!source.startsWith("TJ", after)) return null;
+      return [strings.join(""), after + 2];
+    }
+    const stringToken = decodePdfStringToken(source, index, cmap);
+    if (stringToken) {
+      strings.push(stringToken[0]);
+      index = stringToken[1];
+      continue;
+    }
+    const numberToken = readPdfNumber(source, index);
+    if (numberToken) {
+      index = numberToken[1];
+      continue;
+    }
+    return null;
+  }
+  return null;
+}
+
+/**
+ * Reconstruct shown text: concatenate Tj pieces across commands with no
+ * separator, and join TJ string entries while skipping kerning numbers.
+ */
+function pdfShownText(source, cmap) {
+  if (!/Tj|TJ|'|"/.test(source)) return "";
+  let out = "";
+  let index = 0;
+  while (index < source.length) {
+    const arrayToken = readPdfTjArray(source, index, cmap);
+    if (arrayToken) {
+      out += arrayToken[0];
+      index = arrayToken[1];
+      continue;
+    }
+    const stringToken = decodePdfStringToken(source, index, cmap);
+    if (stringToken) {
+      const after = skipPdfWhitespace(source, stringToken[1]);
+      if (source.startsWith("Tj", after) || source[after] === "'" || source[after] === '"') {
+        out += stringToken[0];
+        index = after + (source.startsWith("Tj", after) ? 2 : 1);
+        continue;
+      }
+    }
+    index += 1;
+  }
+  return out;
+}
+
 /**
  * Résumé PDFs encode contact text as CID hex plus ToUnicode CMaps, so a raw
  * byte scan (and even inflated-stream latin1) misses it. Inflate FlateDecode
@@ -605,17 +747,11 @@ function pdfDecodedText(bytes) {
   const cmaps = streams
     .filter((text) => text.includes("beginbfchar") || text.includes("begincmap"))
     .map(parsePdfToUnicode);
-  const decoded = [streams.join("\n")];
-  for (const cmap of cmaps) {
-    const pieces = [];
-    for (const text of streams) {
-      for (const hex of text.matchAll(/<([0-9A-Fa-f\s]+)>/g)) {
-        pieces.push(decodePdfCidHex(hex[1], cmap));
-      }
-    }
-    decoded.push(pieces.join(""));
+  const decoded = [streams.join("")];
+  for (const cmap of [null, ...cmaps]) {
+    decoded.push(streams.map((text) => pdfShownText(text, cmap)).join(""));
   }
-  return decoded.join("\n");
+  return decoded.join("");
 }
 
 function fileContainsRetiredMailbox(path, bytes, retired) {
@@ -665,6 +801,31 @@ test("the built site and résumé files do not contain the retired Gmail mailbox
     [],
     `retired Gmail leaked into résumé files: ${resumeHits.join(", ")}`,
   );
+});
+
+test("the retired-Gmail leak guard reconstructs split DOCX and PDF encodings", async () => {
+  const retired = "stephenabbott20@gmail.com";
+  const cases = [
+    ["split-docx-runs.docx", "split DOCX runs"],
+    ["docx-core-props.docx", "DOCX core.xml part"],
+    ["split-tj.pdf", "Tj across commands"],
+    ["tj-kerning.pdf", "TJ kerning array"],
+  ];
+  for (const [name, label] of cases) {
+    const bytes = await readFile(
+      new URL(`./fixtures/gmail-leak/${name}`, import.meta.url),
+    );
+    assert.equal(
+      bytes.includes(retired),
+      false,
+      `${label} still has the address in raw bytes`,
+    );
+    assert.equal(
+      fileContainsRetiredMailbox(name, bytes, retired),
+      true,
+      `${label} was not reconstructed`,
+    );
+  }
 });
 
 test("the stevo.ai line is the published intake number and the retired number is gone", async () => {
