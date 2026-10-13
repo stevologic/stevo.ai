@@ -1,7 +1,9 @@
 import assert from "node:assert/strict";
-import { access, readFile, readdir } from "node:fs/promises";
+import { access, mkdtemp, readFile, readdir, rm, writeFile } from "node:fs/promises";
+import { tmpdir } from "node:os";
+import { join } from "node:path";
 import test from "node:test";
-import { inflateRawSync, inflateSync } from "node:zlib";
+import { deflateRawSync, inflateRawSync, inflateSync } from "node:zlib";
 
 const root = new URL("../", import.meta.url);
 
@@ -481,8 +483,8 @@ test("obfuscated mailbox still decodes to the real contact address", async () =>
   assert.equal(decodeSiteEmail(), "stevo@stevo.ai");
 });
 
-/** Read one ZIP entry without adding a ZIP package. DOCX is PKZIP + deflate. */
-function zipEntry(bytes, name) {
+/** Yield every ZIP entry. DOCX is PKZIP + deflate; no ZIP package. */
+function* zipEntries(bytes) {
   let offset = 0;
   while (
     offset + 30 <= bytes.length &&
@@ -492,24 +494,55 @@ function zipEntry(bytes, name) {
     const compressedSize = bytes.readUInt32LE(offset + 18);
     const nameLength = bytes.readUInt16LE(offset + 26);
     const extraLength = bytes.readUInt16LE(offset + 28);
-    const filename = bytes
+    const name = bytes
       .subarray(offset + 30, offset + 30 + nameLength)
       .toString("utf8");
     const start = offset + 30 + nameLength + extraLength;
     const compressed = bytes.subarray(start, start + compressedSize);
     offset = start + compressedSize;
-    if (filename !== name) continue;
-    if (method === 0) return compressed;
-    if (method === 8) return inflateRawSync(compressed);
-    throw new Error(`unsupported ZIP method ${method} for ${name}`);
+    let data;
+    if (method === 0) data = compressed;
+    else if (method === 8) data = inflateRawSync(compressed);
+    else throw new Error(`unsupported ZIP method ${method} for ${name}`);
+    yield { name, data };
   }
-  throw new Error(`ZIP entry not found: ${name}`);
+}
+
+function decodeXmlEntities(text) {
+  return text
+    .replace(/&#x([0-9A-Fa-f]+);/g, (_, hex) =>
+      String.fromCodePoint(Number.parseInt(hex, 16)),
+    )
+    .replace(/&#([0-9]+);/g, (_, decimal) =>
+      String.fromCodePoint(Number.parseInt(decimal, 10)),
+    )
+    .replace(/&amp;/g, "&")
+    .replace(/&lt;/g, "<")
+    .replace(/&gt;/g, ">")
+    .replace(/&quot;/g, '"')
+    .replace(/&apos;/g, "'");
 }
 
 function docxPlainText(bytes) {
-  return zipEntry(bytes, "word/document.xml")
-    .toString("utf8")
-    .replace(/<[^>]+>/g, " ");
+  const parts = [];
+  for (const { data } of zipEntries(bytes)) {
+    const decoded = decodeXmlEntities(data.toString("utf8"));
+    // Keep decoded XML so mailto: and other attributes survive tag stripping.
+    parts.push(decoded, decoded.replace(/<[^>]+>/g, ""));
+  }
+  return parts.join("");
+}
+
+function normalizedText(text) {
+  return text.replace(/\s+/g, "").toLowerCase();
+}
+
+function retiredMailbox() {
+  return ["stephenabbott20", "gmail.com"].join("@");
+}
+
+function textContainsRetiredMailbox(text, retired) {
+  return normalizedText(text).includes(normalizedText(retired));
 }
 
 function inflatePdfPayload(payload) {
@@ -593,6 +626,145 @@ function decodePdfCidHex(hex, cmap) {
   return out;
 }
 
+function pdfHexToBytes(hex) {
+  const clean = hex.replace(/\s+/g, "");
+  const padded = clean.length % 2 === 0 ? clean : `${clean}0`;
+  let out = "";
+  for (let index = 0; index < padded.length; index += 2) {
+    out += String.fromCharCode(Number.parseInt(padded.slice(index, index + 2), 16));
+  }
+  return out;
+}
+
+function readPdfLiteral(source, start) {
+  let index = start + 1;
+  let out = "";
+  let depth = 1;
+  while (index < source.length && depth > 0) {
+    const char = source[index];
+    if (char === "\\") {
+      const next = source[index + 1];
+      if (next === undefined) break;
+      if (next >= "0" && next <= "7") {
+        let octal = next;
+        index += 2;
+        for (
+          let taken = 0;
+          taken < 2 && index < source.length && source[index] >= "0" && source[index] <= "7";
+          taken += 1
+        ) {
+          octal += source[index];
+          index += 1;
+        }
+        out += String.fromCharCode(Number.parseInt(octal, 8));
+        continue;
+      }
+      const escaped = { n: "\n", r: "\r", t: "\t", b: "\b", f: "\f" };
+      out += escaped[next] ?? next;
+      index += 2;
+      continue;
+    }
+    if (char === "(") depth += 1;
+    if (char === ")") {
+      depth -= 1;
+      if (depth === 0) return [out, index + 1];
+    }
+    if (depth > 0) out += char;
+    index += 1;
+  }
+  return [out, index];
+}
+
+function decodePdfStringToken(source, start, cmap) {
+  if (source[start] === "(") return readPdfLiteral(source, start);
+  if (source[start] === "<" && source[start + 1] !== "<") {
+    const end = source.indexOf(">", start + 1);
+    if (end === -1) return ["", start + 1];
+    const hex = source.slice(start + 1, end);
+    return [cmap ? decodePdfCidHex(hex, cmap) : pdfHexToBytes(hex), end + 1];
+  }
+  return null;
+}
+
+function skipPdfWhitespace(source, start) {
+  let index = start;
+  while (index < source.length) {
+    const char = source[index];
+    if (char === "%") {
+      const newline = source.indexOf("\n", index);
+      index = newline === -1 ? source.length : newline + 1;
+      continue;
+    }
+    if (!/\s/.test(char)) break;
+    index += 1;
+  }
+  return index;
+}
+
+function readPdfNumber(source, start) {
+  const match = source.slice(start).match(/^[+-]?(?:\d+\.?\d*|\.\d+)/);
+  if (!match) return null;
+  return [Number(match[0]), start + match[0].length];
+}
+
+/** Parse a TJ array, skipping numeric kerning and joining string entries. */
+function readPdfTjArray(source, start, cmap) {
+  if (source[start] !== "[") return null;
+  const strings = [];
+  let index = start + 1;
+  while (index < source.length) {
+    index = skipPdfWhitespace(source, index);
+    if (index >= source.length) break;
+    if (source[index] === "]") {
+      const after = skipPdfWhitespace(source, index + 1);
+      if (!source.startsWith("TJ", after)) return null;
+      return [strings.join(""), after + 2];
+    }
+    const stringToken = decodePdfStringToken(source, index, cmap);
+    if (stringToken) {
+      strings.push(stringToken[0]);
+      index = stringToken[1];
+      continue;
+    }
+    const numberToken = readPdfNumber(source, index);
+    if (numberToken) {
+      index = numberToken[1];
+      continue;
+    }
+    return null;
+  }
+  return null;
+}
+
+/**
+ * Reconstruct shown text: concatenate Tj pieces across commands with no
+ * separator, and join TJ string entries while skipping kerning numbers.
+ */
+function pdfShownText(source, cmap) {
+  if (!/Tj|TJ|'|"/.test(source)) return "";
+  let out = "";
+  let index = 0;
+  while (index < source.length) {
+    const arrayToken = readPdfTjArray(source, index, cmap);
+    if (arrayToken) {
+      out += arrayToken[0];
+      index = arrayToken[1];
+      continue;
+    }
+    const stringToken = decodePdfStringToken(source, index, cmap);
+    if (stringToken) {
+      const after = skipPdfWhitespace(source, stringToken[1]);
+      if (source.startsWith("Tj", after) || source[after] === "'" || source[after] === '"') {
+        out += stringToken[0];
+        index = after + (source.startsWith("Tj", after) ? 2 : 1);
+        continue;
+      }
+    }
+    index += 1;
+  }
+  return out;
+}
+
 /**
  * Résumé PDFs encode contact text as CID hex plus ToUnicode CMaps, so a raw
  * byte scan (and even inflated-stream latin1) misses it. Inflate FlateDecode
@@ -605,32 +777,195 @@ function pdfDecodedText(bytes) {
   const cmaps = streams
     .filter((text) => text.includes("beginbfchar") || text.includes("begincmap"))
     .map(parsePdfToUnicode);
-  const decoded = [streams.join("\n")];
-  for (const cmap of cmaps) {
-    const pieces = [];
-    for (const text of streams) {
-      for (const hex of text.matchAll(/<([0-9A-Fa-f\s]+)>/g)) {
-        pieces.push(decodePdfCidHex(hex[1], cmap));
-      }
-    }
-    decoded.push(pieces.join(""));
+  const decoded = [streams.join("")];
+  for (const cmap of [null, ...cmaps]) {
+    decoded.push(streams.map((text) => pdfShownText(text, cmap)).join(""));
   }
-  return decoded.join("\n");
+  return decoded.join("");
 }
 
 function fileContainsRetiredMailbox(path, bytes, retired) {
-  if (path.endsWith(".pdf")) return pdfDecodedText(bytes).includes(retired);
-  if (path.endsWith(".docx")) return docxPlainText(bytes).includes(retired);
-  return bytes.includes(retired);
+  const text = path.endsWith(".pdf")
+    ? pdfDecodedText(bytes)
+    : path.endsWith(".docx")
+      ? docxPlainText(bytes)
+      : bytes.toString("utf8");
+  return textContainsRetiredMailbox(text, retired);
+}
+
+function crc32(bytes) {
+  let crc = ~0;
+  for (const byte of bytes) {
+    crc ^= byte;
+    for (let bit = 0; bit < 8; bit += 1) {
+      crc = (crc >>> 1) ^ (0xedb88320 & -(crc & 1));
+    }
+  }
+  return ~crc >>> 0;
+}
+
+function zipFiles(files) {
+  const locals = [];
+  const centrals = [];
+  let offset = 0;
+  for (const { name, data } of files) {
+    const raw = Buffer.from(data);
+    const compressed = deflateRawSync(raw);
+    const nameBytes = Buffer.from(name, "utf8");
+    const crc = crc32(raw);
+    const local = Buffer.alloc(30 + nameBytes.length);
+    local.writeUInt32LE(0x04034b50, 0);
+    local.writeUInt16LE(20, 4);
+    local.writeUInt16LE(8, 8);
+    local.writeUInt32LE(crc, 14);
+    local.writeUInt32LE(compressed.length, 18);
+    local.writeUInt32LE(raw.length, 22);
+    local.writeUInt16LE(nameBytes.length, 26);
+    nameBytes.copy(local, 30);
+    const central = Buffer.alloc(46 + nameBytes.length);
+    central.writeUInt32LE(0x02014b50, 0);
+    central.writeUInt16LE(20, 4);
+    central.writeUInt16LE(20, 6);
+    central.writeUInt16LE(8, 10);
+    central.writeUInt32LE(crc, 16);
+    central.writeUInt32LE(compressed.length, 20);
+    central.writeUInt32LE(raw.length, 24);
+    central.writeUInt16LE(nameBytes.length, 28);
+    central.writeUInt32LE(offset, 42);
+    nameBytes.copy(central, 46);
+    locals.push(local, compressed);
+    centrals.push(central);
+    offset += local.length + compressed.length;
+  }
+  const centralBuf = Buffer.concat(centrals);
+  const end = Buffer.alloc(22);
+  end.writeUInt32LE(0x06054b50, 0);
+  end.writeUInt16LE(files.length, 8);
+  end.writeUInt16LE(files.length, 10);
+  end.writeUInt32LE(centralBuf.length, 12);
+  end.writeUInt32LE(offset, 16);
+  return Buffer.concat([...locals, centralBuf, end]);
+}
+
+function pdfWithContent(content) {
+  const stream = `BT\n${content}\nET\n`;
+  return Buffer.from(
+    `%PDF-1.4\n1 0 obj\n<< /Length ${stream.length} >>\nstream\n${stream}endstream\nendobj\ntrailer\n<<>>\n%%EOF\n`,
+  );
+}
+
+function docxDocument(body) {
+  return `<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<w:document xmlns:w="http://schemas.openxmlformats.org/wordprocessingml/2006/main">
+  <w:body>${body}</w:body>
+</w:document>
+`;
+}
+
+function retiredLeakFixtures(retired) {
+  const [mailbox, domain] = retired.split("@");
+  const atDomain = ["", domain].join("@");
+  const contentTypes = `<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<Types xmlns="http://schemas.openxmlformats.org/package/2006/content-types"></Types>
+`;
+  const cleanBody = "<w:p><w:r><w:t>contact on file</w:t></w:r></w:p>";
+  return [
+    {
+      name: "split-docx-runs.docx",
+      label: "split DOCX runs",
+      bytes: zipFiles([
+        { name: "[Content_Types].xml", data: contentTypes },
+        {
+          name: "word/document.xml",
+          data: docxDocument(
+            `<w:p><w:r><w:t>${mailbox}</w:t></w:r><w:r><w:t>${atDomain}</w:t></w:r></w:p>`,
+          ),
+        },
+      ]),
+    },
+    {
+      name: "docx-core-props.docx",
+      label: "DOCX core.xml part",
+      bytes: zipFiles([
+        { name: "[Content_Types].xml", data: contentTypes },
+        { name: "word/document.xml", data: docxDocument(cleanBody) },
+        {
+          name: "docProps/core.xml",
+          data: `<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<cp:coreProperties xmlns:cp="http://schemas.openxmlformats.org/package/2006/metadata/core-properties" xmlns:dc="http://purl.org/dc/elements/1.1/">
+  <dc:description>${mailbox}&#64;${domain}</dc:description>
+</cp:coreProperties>
+`,
+        },
+      ]),
+    },
+    {
+      name: "split-tj.pdf",
+      label: "Tj across commands",
+      bytes: pdfWithContent(`(${mailbox}) Tj\n(${atDomain}) Tj`),
+    },
+    {
+      name: "tj-kerning.pdf",
+      label: "TJ kerning array",
+      bytes: pdfWithContent(`[(${mailbox}) -120 (${atDomain})] TJ`),
+    },
+    {
+      name: "tj-whitespace.pdf",
+      label: "whitespace inside TJ string",
+      bytes: pdfWithContent(`(${mailbox} @ ${domain}) Tj`),
+    },
+    {
+      name: "docx-run-whitespace.docx",
+      label: "whitespace between DOCX runs",
+      bytes: zipFiles([
+        { name: "[Content_Types].xml", data: contentTypes },
+        {
+          name: "word/document.xml",
+          data: docxDocument(
+            `<w:p><w:r><w:t>${mailbox}</w:t></w:r>\n  <w:r><w:t>${atDomain}</w:t></w:r></w:p>`,
+          ),
+        },
+      ]),
+    },
+    {
+      name: "docx-entities.docx",
+      label: "entity-encoded address",
+      bytes: zipFiles([
+        { name: "[Content_Types].xml", data: contentTypes },
+        {
+          name: "word/document.xml",
+          data: docxDocument(
+            `<w:p><w:r><w:t>${mailbox}&#x40;gmail&#46;com</w:t></w:r></w:p>`,
+          ),
+        },
+      ]),
+    },
+    {
+      name: "docx-mailto-rels.docx",
+      label: "mailto in .rels",
+      bytes: zipFiles([
+        { name: "[Content_Types].xml", data: contentTypes },
+        { name: "word/document.xml", data: docxDocument(cleanBody) },
+        {
+          name: "word/_rels/document.xml.rels",
+          data: `<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships">
+  <Relationship Id="rId1" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/hyperlink" Target="mailto:${mailbox}&#64;${domain}"/>
+</Relationships>
+`,
+        },
+      ]),
+    },
+  ];
 }
 
 test("the built site and résumé files do not contain the retired Gmail mailbox", async () => {
-  const retired = "stephenabbott20@gmail.com";
+  const retired = retiredMailbox();
   const resumeSource = await readFile(
     new URL("../content/resume-download.json", import.meta.url),
     "utf8",
   );
-  assert.doesNotMatch(resumeSource, /stephenabbott20@gmail\.com/);
+  assert.equal(textContainsRetiredMailbox(resumeSource, retired), false);
 
   async function filesContaining(directory) {
     const hits = [];
@@ -665,6 +1000,30 @@ test("the built site and résumé files do not contain the retired Gmail mailbox
     [],
     `retired Gmail leaked into résumé files: ${resumeHits.join(", ")}`,
   );
+});
+
+test("the retired-Gmail leak guard reconstructs split DOCX and PDF encodings", async () => {
+  const retired = retiredMailbox();
+  const directory = await mkdtemp(join(tmpdir(), "gmail-leak-"));
+  try {
+    for (const fixture of retiredLeakFixtures(retired)) {
+      const path = join(directory, fixture.name);
+      await writeFile(path, fixture.bytes);
+      const bytes = await readFile(path);
+      assert.equal(
+        bytes.includes(retired),
+        false,
+        `${fixture.label} still has the address in raw bytes`,
+      );
+      assert.equal(
+        fileContainsRetiredMailbox(fixture.name, bytes, retired),
+        true,
+        `${fixture.label} was not reconstructed`,
+      );
+    }
+  } finally {
+    await rm(directory, { recursive: true, force: true });
+  }
 });
 
 test("the stevo.ai line is the published intake number and the retired number is gone", async () => {
