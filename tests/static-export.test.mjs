@@ -251,6 +251,7 @@ test("the executive profile uses the hoodie portrait, not the suit photo", async
   // The background paragraph sits on a plain surface, without the photo.
   assert.doesNotMatch(profile, /<img|stephen-abbott-field-notes\.webp/);
   assert.doesNotMatch(html, /stephen-abbott-profile\.png/);
+  assert.doesNotMatch(html, /stephen-abbott-resume\.png/);
   assert.doesNotMatch(html, /Portrait of Stephen M Abbott/);
   assert.match(styles, /min-height: 84svh/);
   assert.match(styles, /padding: 104px 20px 58px/);
@@ -1355,6 +1356,23 @@ test("professional resume is detailed, private, and print-ready", async () => {
 
   assert.match(html, /Professional resume/);
   assert.match(html, /Stephen M Abbott/);
+  assert.match(html, /class="resume-headshot"/);
+  assert.match(html, /alt="Stephen Abbott"/);
+  assert.match(html, /src="\/stephen-abbott-resume\.png"/);
+  const headshot = await readFile(
+    new URL("../out/stephen-abbott-resume.png", import.meta.url),
+  );
+  assert.equal(headshot.subarray(0, 8).toString("hex"), "89504e470d0a1a0a");
+  const pngWidth = headshot.readUInt32BE(16);
+  const pngHeight = headshot.readUInt32BE(20);
+  assert.ok(
+    pngWidth >= 600 && pngHeight >= 600,
+    `resume headshot is ${pngWidth}x${pngHeight}; expected the high-res suit crop`,
+  );
+  const styles = await readFile(new URL("../app/globals.css", import.meta.url), "utf8");
+  assert.match(styles, /\.resume-headshot \{[\s\S]*?width: 140px;/);
+  assert.match(styles, /\.resume-headshot \{[\s\S]*?border-radius: 50%;/);
+  assert.match(styles, /@media print \{[\s\S]*?\.resume-headshot \{[\s\S]*?width: 52px;/);
   // The role line stands alone; the resume is the person, not the company.
   assert.match(
     html,

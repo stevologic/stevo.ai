@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Image from "next/image";
 import Link from "next/link";
 
 import { PrintButton } from "../../components/PrintButton";
@@ -61,11 +62,22 @@ export default function ResumePage() {
 
       <article className="resume-document">
         <header className="resume-header">
-          <p className="resume-eyebrow">Professional resume</p>
-          <h1 className="resume-name">Stephen M Abbott</h1>
-          <p className="resume-role">
-            Cybersecurity and AI Executive
-          </p>
+          <div className="resume-header-identity">
+            <Image
+              className="resume-headshot"
+              src="/stephen-abbott-resume.png"
+              alt="Stephen Abbott"
+              width={140}
+              height={140}
+            />
+            <div className="resume-header-copy">
+              <p className="resume-eyebrow">Professional resume</p>
+              <h1 className="resume-name">Stephen M Abbott</h1>
+              <p className="resume-role">
+                Cybersecurity and AI Executive
+              </p>
+            </div>
+          </div>
           <p className="resume-introduction">
             Cybersecurity leader with 16 years across enterprise systems and
             security. Led enterprise CTEM, executive and board risk reporting,
