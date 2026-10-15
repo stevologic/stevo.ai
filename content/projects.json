@@ -29,7 +29,7 @@
     "featured": true,
     "tagline": "Coming Winter 2026",
     "description": "A campfire, a bow, and a very strange wilderness: a game following the trail from forest to snow to fire on its way to Steam.",
-    "siteUrl": "https://stevologic.github.io/winter-hunt-tracker/#gallery",
+    "siteUrl": "http://winter-hunt.com/#gallery",
     "metrics": [
       "Genre: first-person, co-op, Zombie survival mode",
       "Steam target: Nov 16, 2026 (planning target)",
@@ -45,7 +45,7 @@
     "extraLinks": [
       {
         "label": "Website tracker",
-        "href": "https://stevologic.github.io/winter-hunt-tracker/"
+        "href": "http://winter-hunt.com/"
       }
     ]
   },

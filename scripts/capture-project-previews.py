@@ -14,7 +14,7 @@ root = pathlib.Path(__file__).resolve().parent.parent
 out_dir = root / "public" / "project-previews"
 data_file = root / "data" / "project-previews.generated.json"
 # Cards whose screenshot should come from a different page than siteUrl.
-CAPTURE_URL = {"winter-hunt": "https://stevologic.github.io/winter-hunt-tracker/"}
+CAPTURE_URL = {"winter-hunt": "http://winter-hunt.com/"}
 
 
 def projects():
