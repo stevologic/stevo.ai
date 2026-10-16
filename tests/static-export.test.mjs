@@ -94,7 +94,7 @@ test("site presents the consultancy, packages, and proof with social metadata", 
   ]);
   const retiredEmploymentQualifier = ["frac", "tional"].join("");
 
-  assert.match(html, /Cybersecurity, AI, and things I build for fun\./);
+  assert.doesNotMatch(html, /Cybersecurity, AI, and things I build for fun\./);
   assert.doesNotMatch(html, /I run the program with your team, then leave it with them\./i);
   assert.doesNotMatch(html, /I run cybersecurity and AI programs\./i);
   assert.doesNotMatch(html, /Secure the enterprise\./i);
@@ -104,8 +104,7 @@ test("site presents the consultancy, packages, and proof with social metadata", 
   assert.doesNotMatch(html, /href="#packages"/);
   assert.match(html, />Background</);
   assert.match(html, />Portfolio</);
-  assert.match(html, /vCISO &amp; security leadership/);
-  assert.match(html, /AI enablement &amp; governance/i);
+  assert.match(html, /vCISO · AI governance · Secure delivery/);
   assert.doesNotMatch(html, /Available for select vCISO and consulting engagements/i);
   assert.doesNotMatch(html, /Open to full-time CISO/);
   assert.match(html, /Shiba Studio/);
@@ -137,11 +136,8 @@ test("site presents the consultancy, packages, and proof with social metadata", 
   assert.doesNotMatch(resumeHtml, new RegExp(retiredEmploymentQualifier, "i"));
 });
 
-test("practice areas lead into background and portfolio proof", async () => {
+test("homepage proof is background then portfolio, without retired sections", async () => {
   const html = await exportedPage("index.html");
-  const servicesIndex = html.indexOf(
-    '<section class="services-section section" id="services">',
-  );
   const workIndex = html.indexOf(
     '<section class="work-section section" id="work">',
   );
@@ -149,10 +145,12 @@ test("practice areas lead into background and portfolio proof", async () => {
     '<section class="profile-section section" id="profile">',
   );
 
-  assert.ok(servicesIndex > 0);
-  assert.ok(profileIndex > servicesIndex);
+  assert.ok(profileIndex > 0);
   assert.ok(workIndex > profileIndex);
-  // The packages section and the FAQ were retired.
+  // Practice areas, engagement process, packages, and the FAQ are retired.
+  assert.doesNotMatch(html, /id="services"|class="services-section"/);
+  assert.doesNotMatch(html, /Practice areas/);
+  assert.doesNotMatch(html, /How an engagement runs/);
   assert.doesNotMatch(html, /id="packages"|class="package-grid"/);
   assert.doesNotMatch(html, /class="section-number">Packages</);
   assert.doesNotMatch(html, /id="faq"|#faq/);
@@ -348,7 +346,7 @@ test("credentials are named rather than counted", async () => {
 });
 
 test("service tracks name the frameworks they are measured against", async () => {
-  const html = await exportedPage("index.html");
+  const html = await exportedPage("services/vciso/index.html");
 
   for (const standard of [
     "NIST CSF 2.0",
@@ -356,36 +354,23 @@ test("service tracks name the frameworks they are measured against", async () =>
     "SOC 2",
     "CIS Controls v8",
     "FAIR risk quantification",
-    "NIST AI RMF 1.0",
-    "ISO/IEC 42001",
-    "EU AI Act",
-    "OWASP ASVS",
-    "NIST SSDF (SP 800-218)",
-    "ITIL 4",
-    "COBIT 2019",
-    "CycloneDX &amp; SPDX SBOM",
   ]) {
-    assert.ok(html.includes(standard), `index never names ${standard}`);
+    assert.ok(html.includes(standard), `vCISO page never names ${standard}`);
   }
 
   assert.match(html, /Measured against/);
 });
 
-test("engagement formats, process, and safeguards stay distinct", async () => {
+test("homepage no longer sells engagement process or package formats", async () => {
   const html = await exportedPage("index.html");
 
   assert.doesNotMatch(html, /class="engagement-deliverables"/);
-  for (const format of ["vCISO retainer", "AI-native modernization", "Delivery sprint"]) {
-    assert.ok(html.includes(format), `packages omit ${format}`);
-  }
-  assert.match(html, /How an engagement runs/);
+  assert.doesNotMatch(html, /How an engagement runs/);
+  assert.doesNotMatch(html, /Professional safeguards/);
   assert.doesNotMatch(html, /A clear path from evidence to internal ownership/);
   for (const phase of ["Baseline", "Prioritize", "Operate", "Transfer"]) {
-    assert.ok(html.includes(`<h4>${phase}</h4>`), `process omits ${phase}`);
+    assert.doesNotMatch(html, new RegExp(`<h4>${phase}</h4>`));
   }
-
-  assert.match(html, /Professional safeguards/);
-  assert.match(html, /Confidential by default/);
   assert.doesNotMatch(html, /Working principles|Built to be handed over/);
 });
 
@@ -1712,6 +1697,74 @@ test("shipped consumer products render as project-card headings", async () => {
   assert.ok(cards.some((card) => card.includes("<h3>Shiba Studio</h3>")));
 });
 
+test("portfolio cards drop count stats and keep qualitative highlights", async () => {
+  const { qualitativeHighlights } = await import("../lib/project-metrics.ts");
+  const html = await exportedPage("index.html");
+  const work = html.match(
+    /<section class="work-section section" id="work">([\s\S]*?)<\/section>/,
+  )?.[1];
+  assert.ok(work, "portfolio section is missing");
+  const cards = work.match(/<article class="project-card[\s\S]*?<\/article>/g) || [];
+
+  assert.deepEqual(
+    qualitativeHighlights([
+      "296K+ CVEs",
+      "158 reviewed workflows",
+      "AI governance",
+      "Genre: first-person, co-op, Zombie survival mode",
+      "Steam target: Nov 16, 2026 (planning target)",
+      "Forest · Snow · Inferno",
+    ]),
+    [
+      "AI governance",
+      "Genre: first-person, co-op, Zombie survival mode",
+      "Steam target: Nov 16, 2026 (planning target)",
+      "Forest · Snow · Inferno",
+    ],
+  );
+
+  const byName = (name) => {
+    const card = cards.find((markup) => markup.includes(`<h3>${name}</h3>`));
+    assert.ok(card, `${name} card is missing`);
+    return card;
+  };
+
+  const recipes = byName("security-recipes.ai");
+  const shiba = byName("Shiba Studio");
+  const desert = byName("Desert Wander Supply Co.");
+  const winter = byName("Winter Hunt");
+
+  for (const [card, stat] of [
+    [recipes, "296K+ CVEs"],
+    [recipes, "158 reviewed workflows"],
+    [recipes, "75 executable playbooks"],
+    [shiba, "40+ built-in tools"],
+    [desert, "24+ products"],
+  ]) {
+    const escaped = stat.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+    assert.doesNotMatch(card, new RegExp(`<li>${escaped}</li>`));
+  }
+
+  assert.match(winter, /Genre: first-person, co-op, Zombie survival mode/);
+  assert.match(winter, /Steam target: Nov 16, 2026/);
+  assert.match(winter, /Forest · Snow · Inferno/);
+  assert.match(winter, /Website tracker/);
+
+  const strip = html.match(
+    /<section class="signal-strip"[^>]*>[\s\S]*?<\/section>/,
+  )?.[0];
+  assert.ok(strip, "career signal strip is missing");
+  assert.match(strip, /Years in enterprise technology/);
+  assert.match(strip, /Years in cybersecurity/);
+
+  const profile = html.match(
+    /<section class="profile-section section" id="profile">([\s\S]*?)<\/section>/,
+  )?.[1];
+  assert.ok(profile);
+  assert.doesNotMatch(profile, /CTEM/);
+  assert.match(html, /stevo@stevo\.ai/);
+});
+
 test("homepage contact is a heading plus phone and email only", async () => {
   const html = await exportedPage("index.html");
   const closing = html.match(
@@ -2694,7 +2747,7 @@ test("each service track exports a landing page with honest, sourced copy", asyn
       assert.ok(html.includes(escape(standard)), `${track.page.slug}: ${standard}`);
     }
     assert.ok(html.includes(escape(servicePackage.title)));
-    assert.match(html, /How an engagement runs/);
+    assert.doesNotMatch(html, /How an engagement runs/);
 
     // Route-specific metadata and structured data.
     assert.ok(
@@ -2733,16 +2786,8 @@ test("each service track exports a landing page with honest, sourced copy", asyn
     assert.doesNotMatch(html, /available on request|intentionally omitted/i);
   }
 
-  // The homepage links every page, and the sitemap lists every page.
-  const [index, sitemap] = await Promise.all([
-    exportedPage("index.html"),
-    exportedPage("sitemap.xml"),
-  ]);
+  const sitemap = await exportedPage("sitemap.xml");
   for (const track of serviceTracks) {
-    assert.ok(
-      index.includes(`href="/services/${track.page.slug}/"`),
-      `homepage never links /services/${track.page.slug}/`,
-    );
     assert.ok(
       sitemap.includes(`https://stevo.ai/services/${track.page.slug}/`),
       `sitemap omits /services/${track.page.slug}/`,
