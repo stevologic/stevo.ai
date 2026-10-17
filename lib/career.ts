@@ -8,7 +8,7 @@ import resumeProjects from "@/content/resume-projects.json";
  */
 export const career = {
   yearsInTechnology: 16,
-  yearsInCybersecurity: 11,
+  yearsInCybersecurity: 12,
   largestOrgLed: 26,
   enterpriseScale: "Fortune 100",
 } as const;
