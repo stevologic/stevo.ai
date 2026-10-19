@@ -54,9 +54,9 @@ export const creativitySupport = {
 /** Public stevo.ai line. Do not publish a personal cell. */
 export const voiceLine = {
   label: "Phone",
-  display: "+1 (623) 363-4985",
-  href: "tel:+16233634985",
-  e164: "+16233634985",
+  display: "+1 (775) 599-7046",
+  href: "tel:+17755997046",
+  e164: "+17755997046",
 } as const;
 
 /**

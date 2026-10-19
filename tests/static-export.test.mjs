@@ -45,14 +45,6 @@ function jsonLdNodes(html) {
   return scripts.flatMap((script) => script["@graph"] ?? [script]);
 }
 
-// Split so a repo-wide search for the retired area code cannot hit this file.
-const retiredStevoArea = ["7", "7", "5"].join("");
-const retiredStevoRest = ["599", "7046"].join("");
-const retiredStevoDigits = `${retiredStevoArea}${retiredStevoRest}`;
-const retiredStevoLoose = new RegExp(
-  `${retiredStevoArea}[-.\\s]?599[-.\\s]?7046|${retiredStevoDigits}|\\+1[-.\\s]?${retiredStevoArea}[-.\\s]?599[-.\\s]?7046`,
-);
-
 function walkJsonLd(value, visit) {
   if (Array.isArray(value)) {
     for (const item of value) walkJsonLd(item, visit);
@@ -206,8 +198,8 @@ test("each homepage section has one distinct job", async () => {
   assert.ok(closingActions);
   assert.match(closingActions, /stevo@stevo\.ai/);
   assert.match(closingActions, /mailto:stevo@stevo\.ai/);
-  assert.match(closingActions, /href="tel:\+16233634985"/);
-  assert.match(closingActions, /\+1 \(623\) 363-4985/);
+  assert.match(closingActions, /href="tel:\+17755997046"/);
+  assert.match(closingActions, /\+1 \(775\) 599-7046/);
   assert.doesNotMatch(closingActions, /scheduling line|voice assistant|never as Stephen/i);
   assert.doesNotMatch(closing, /Bring the hard problem/);
   assert.match(closing, /<h2>Contact<\/h2>/);
@@ -1044,9 +1036,9 @@ test("the stevo.ai line is the published intake number and the retired number is
   ]);
 
   assert.match(contactSource, /label: "Phone"/);
-  assert.match(contactSource, /display: "\+1 \(623\) 363-4985"/);
-  assert.match(contactSource, /href: "tel:\+16233634985"/);
-  assert.match(contactSource, /e164: "\+16233634985"/);
+  assert.match(contactSource, /display: "\+1 \(775\) 599-7046"/);
+  assert.match(contactSource, /href: "tel:\+17755997046"/);
+  assert.match(contactSource, /e164: "\+17755997046"/);
   assert.doesNotMatch(
     contactSource,
     /887-8905|16238878905|623[-.\s]?887/,
@@ -1067,10 +1059,10 @@ test("the stevo.ai line is the published intake number and the retired number is
     ["resume", resumeHtml],
   ]) {
     assert.doesNotMatch(page, /scheduling line/, `${label} still explains a scheduling line`);
-    assert.match(page, /tel:\+16233634985/, `${label} omits the tel link`);
+    assert.match(page, /tel:\+17755997046/, `${label} omits the tel link`);
     assert.match(
       page,
-      /\+1 \(623\) 363-4985/,
+      /\+1 \(775\) 599-7046/,
       `${label} omits the formatted number`,
     );
     assert.doesNotMatch(page, /Recruiter line/, `${label} still labels the line for recruiters`);
@@ -1082,7 +1074,7 @@ test("the stevo.ai line is the published intake number and the retired number is
     );
     assert.doesNotMatch(
       page,
-      retiredStevoLoose,
+      /623[-.\s]?363[-.\s]?4985|6233634985|\+1[-.\s]?623[-.\s]?363[-.\s]?4985/,
       `${label} still publishes the retired number`,
     );
     assert.doesNotMatch(
@@ -1106,7 +1098,10 @@ test("the stevo.ai line is the published intake number and the retired number is
     contactSource,
     /623[-.\s]?887[-.\s]?8905|6238878905/,
   );
-  assert.doesNotMatch(contactSource, retiredStevoLoose);
+  assert.doesNotMatch(
+    contactSource,
+    /623[-.\s]?363[-.\s]?4985|6233634985/,
+  );
 });
 
 test("social handles are published on the site and in structured data", async () => {
@@ -1139,7 +1134,7 @@ test("social handles are published on the site and in structured data", async ()
   assert.ok(person, "Person node is missing");
   assert.deepEqual(person.sameAs, profiles);
   assert.equal(person.jobTitle, "Cybersecurity and AI Executive");
-  assert.equal(person.telephone, "+16233634985");
+  assert.equal(person.telephone, "+17755997046");
   assert.equal(person.image, "https://stevo.ai/stephen-abbott-field-notes.webp");
   assert.deepEqual(person.worksFor, {
     "@id": "https://www.wirehold.com/#organization",
@@ -1165,9 +1160,9 @@ test("social handles are published on the site and in structured data", async ()
   assert.equal(professionalService["@type"], "ProfessionalService");
   assert.equal(professionalService.name, "stevo.ai");
   assert.notEqual(professionalService.name, "Stephen M Abbott");
-  assert.equal(professionalService.telephone, "+16233634985");
+  assert.equal(professionalService.telephone, "+17755997046");
   assert.equal(professionalService.contactPoint?.name, "Phone");
-  assert.equal(professionalService.contactPoint?.telephone, "+16233634985");
+  assert.equal(professionalService.contactPoint?.telephone, "+17755997046");
   assert.equal(professionalService.contactPoint?.url, "https://stevo.ai/#contact");
   assert.equal(professionalService.contactPoint?.email, undefined);
   assert.equal(professionalService.hasOfferCatalog?.itemListElement?.length, 4);
@@ -1435,8 +1430,8 @@ test("professional resume is detailed, private, and print-ready", async () => {
   assert.doesNotMatch(contact, /MadeItHappen|twitch\.tv|discord\.com|x\.com/i);
   assert.equal((contact.match(/<li>/g) || []).length, 2, "email and phone");
   assert.doesNotMatch(contact, /scheduling line/);
-  assert.match(contact, /href="tel:\+16233634985"/);
-  assert.match(contact, /\+1 \(623\) 363-4985/);
+  assert.match(contact, /href="tel:\+17755997046"/);
+  assert.match(contact, /\+1 \(775\) 599-7046/);
 
   // Sections are unnumbered.
   assert.doesNotMatch(html, /resume-section-index/);
@@ -1727,11 +1722,11 @@ test("homepage contact is a heading plus phone and email only", async () => {
 
   assert.ok(closing);
   assert.match(closing, /<h2>Contact<\/h2>/);
-  assert.match(closing, /\+1 \(623\) 363-4985/);
+  assert.match(closing, /\+1 \(775\) 599-7046/);
   assert.match(closing, /stevo@stevo\.ai/);
   assert.doesNotMatch(closing, />Email</);
   assert.equal(
-    (html.match(/href="tel:\+16233634985"/g) || []).length,
+    (html.match(/href="tel:\+17755997046"/g) || []).length,
     2,
     "phone appears in the hero and contact only",
   );
@@ -2287,7 +2282,7 @@ test("the critique brief carries readable copy, not build artifacts", async () =
 
   // Real copy from both pages, so the advisor reviews what a visitor reads.
   assert.match(brief, /Cybersecurity and AI enablement/);
-  assert.match(brief, /View packages|\+1 \(623\) 363-4985/);
+  assert.match(brief, /View packages|\+1 \(775\) 599-7046/);
   assert.match(brief, /Enterprise platforms/);
 
   // None of the export plumbing.
@@ -2668,13 +2663,13 @@ test("llms.txt describes the practice for answer engines", async () => {
   ]) {
     assert.ok(llms.includes(offering), `llms.txt omits ${offering}`);
   }
-  assert.match(llms, /\+1 \(623\) 363-4985/);
+  assert.match(llms, /\+1 \(775\) 599-7046/);
   assert.match(llms, /https:\/\/stevo\.ai\/resume\//);
   // The same guards the rest of the site honours.
   assert.doesNotMatch(llms, /\$\d/);
   assert.doesNotMatch(llms, new RegExp(["frac", "tional"].join(""), "i"));
   assert.doesNotMatch(llms, /623[-.\s]?887[-.\s]?8905|6238878905/);
-  assert.doesNotMatch(llms, retiredStevoLoose);
+  assert.doesNotMatch(llms, /623[-.\s]?363[-.\s]?4985/);
   assert.doesNotMatch(llms, /887-8905|16238878905|623[-.\s]?887/);
   assert.doesNotMatch(llms, /American Express/i);
 });
@@ -2725,7 +2720,7 @@ test("each service track exports a landing page with honest, sourced copy", asyn
     // Both ways in, and the same guards the rest of the site honours. The
     // price check reads the rendered document only: the Next flight payload
     // legitimately contains $-digit reference tokens.
-    assert.match(html, /tel:\+16233634985/);
+    assert.match(html, /tel:\+17755997046/);
     assert.doesNotMatch(html, /623[-.\s]?887[-.\s]?8905|6238878905/);
     assert.match(html, /mailto:stevo@stevo\.ai\?subject=/);
     const document = html.match(
@@ -2734,7 +2729,7 @@ test("each service track exports a landing page with honest, sourced copy", asyn
     assert.ok(document, `${track.page.slug} rendered document not found`);
     assert.doesNotMatch(document, /\$\d/);
     assert.doesNotMatch(html, new RegExp(retiredEmploymentQualifier, "i"));
-    assert.doesNotMatch(html, retiredStevoLoose);
+    assert.doesNotMatch(html, /623[-.\s]?363[-.\s]?4985/);
     assert.doesNotMatch(html, /American Express/i);
     assert.doesNotMatch(html, /\bCEO\b/);
     assert.doesNotMatch(html, /available on request|intentionally omitted/i);
