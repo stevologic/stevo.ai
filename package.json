@@ -23,9 +23,9 @@
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
-    "next": "16.4.0",
-    "react": "19.3.0",
-    "react-dom": "19.3.0"
+    "next": "16.4.2",
+    "react": "19.3.1",
+    "react-dom": "19.3.1"
   },
   "devDependencies": {
     "fast-glob": "file:tools/next-lint-glob",
