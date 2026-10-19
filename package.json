@@ -11,6 +11,7 @@
     "discover": "node scripts/discover-projects.mjs",
     "sync:github": "node scripts/sync-github.mjs",
     "verify:pdf": "node scripts/check-resume-pages.mjs",
+    "resume:downloads": "python3 scripts/build-resume-downloads.py && python3 scripts/verify-resume-downloads.py --finalize",
     "icons": "node scripts/generate-icons.mjs",
     "icons:projects": "node scripts/fetch-project-icons.mjs",
     "previews": "python3 scripts/capture-project-previews.py",

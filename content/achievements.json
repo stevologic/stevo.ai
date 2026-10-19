@@ -17,7 +17,7 @@
   "identity": {
     "name": "Stephen M Abbott",
     "practice": "Cybersecurity and AI enablement consultancy",
-    "intake": "+1 (775) 599-7046",
+    "intake": "+1 (623) 363-4985",
     "targetRoles": [
       "Cybersecurity and AI Enablement Principal",
       "Virtual Chief Information Security Officer (vCISO)",
@@ -30,7 +30,7 @@
   },
   "figures": {
     "16 years": "Years across enterprise technology and security",
-    "11 years": "Years focused on cybersecurity",
+    "12 years": "Years focused on cybersecurity",
     "Fortune 100": "Scale of enterprise operating environment",
     "26": "Largest engineering organization led",
     "11-person": "Team responsible for remediation operations and CTEM",
@@ -158,6 +158,7 @@
     "education": "BA, Walter Cronkite School of Journalism, Arizona State University",
     "certifications": [
       "Offensive Security Certified Professional (OSCP)",
+      "Certified Kubernetes Application Developer (CKAD)",
       "AWS Certified Cloud Practitioner"
     ],
     "training": [
