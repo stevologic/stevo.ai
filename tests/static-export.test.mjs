@@ -219,7 +219,7 @@ test("hero career strip summarizes professional experience", async () => {
   assert.match(careerStrip, />16<\/strong><span>Years in enterprise technology/);
   assert.match(
     careerStrip,
-    />11<\/strong><span>Years in cybersecurity/,
+    />12<\/strong><span>Years in cybersecurity/,
   );
   // Derived from the project data, so discovery cannot leave it stale.
   const projects = await publishedProjects();
@@ -322,6 +322,7 @@ test("credentials are named rather than counted", async () => {
   assert.ok(strip, "index is missing the credential strip");
   const credentialOrder = [
     "Offensive Security Certified Professional",
+    "Certified Kubernetes Application Developer (CKAD)",
     "BA, Walter Cronkite School of Journalism, Arizona State University",
   ];
   assert.doesNotMatch(strip, /BA, Arizona State University</);
@@ -1384,7 +1385,7 @@ test("professional resume is detailed, private, and print-ready", async () => {
   );
   assert.match(html, /Professional experience/);
   assert.match(html, /16 years/);
-  assert.match(html, /11 years/);
+  assert.match(html, /12 years/);
   assert.match(html, /Fortune 100/);
   assert.match(html, /99\.99%/);
   assert.match(html, /2024-2026/);
@@ -1538,6 +1539,7 @@ test("resume reflects the current skills, tooling, and credentials", async () =>
   // Certifications are awarded; training is training. The distinction matters.
   assert.match(html, /Certifications/);
   assert.match(html, /Offensive Security Certified Professional \(OSCP\)/);
+  assert.match(html, /Certified Kubernetes Application Developer \(CKAD\)/);
   assert.match(html, /AWS Certified Cloud Practitioner/);
   assert.match(html, /Training/);
   assert.match(html, /CRISC Bootcamp/);
