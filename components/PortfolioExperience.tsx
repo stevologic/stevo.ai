@@ -1,7 +1,7 @@
 "use client";
 
 import Image from "next/image";
-import Link from "next/link";
+import DocumentLink from "@/components/DocumentLink";
 import { decodeSiteEmail } from "@/lib/site-email";
 import {
   memo,
@@ -19,11 +19,8 @@ import {
 import { credentialHighlights } from "@/lib/credentials";
 import { careerPaths, heroMetrics } from "@/lib/career";
 import { practice } from "@/lib/practice";
-import {
-  engagementProcess,
-  serviceTracks,
-} from "@/lib/services";
 import type { PortfolioProject, ProjectCategory } from "@/lib/project-data";
+import { qualitativeHighlights } from "@/lib/project-metrics";
 
 const filters: Array<"All work" | ProjectCategory> = [
   "All work",
@@ -72,6 +69,7 @@ const ProjectCard = memo(function ProjectCard({
   const latestSignal = project.github.releaseTag
     ? `Release ${project.github.releaseTag}`
     : null;
+  const highlights = qualitativeHighlights(project.metrics);
   function handlePointerMove(event: ReactPointerEvent<HTMLElement>) {
     const bounds = event.currentTarget.getBoundingClientRect();
     event.currentTarget.style.setProperty(
@@ -160,11 +158,13 @@ const ProjectCard = memo(function ProjectCard({
         <p className="project-description">{project.description}</p>
       </div>
 
-      <ul className="project-metrics" aria-label={`${project.name} highlights`}>
-        {project.metrics.map((metric) => (
-          <li key={metric}>{metric}</li>
-        ))}
-      </ul>
+      {highlights.length > 0 ? (
+        <ul className="project-metrics" aria-label={`${project.name} highlights`}>
+          {highlights.map((metric) => (
+            <li key={metric}>{metric}</li>
+          ))}
+        </ul>
+      ) : null}
 
       <div className="project-meta">
         <span>{project.github.language || project.tech[0]}</span>
@@ -209,7 +209,6 @@ export function PortfolioExperience({
   const [activeFilter, setActiveFilter] = useState<(typeof filters)[number]>(
     "All work",
   );
-  const [activeService, setActiveService] = useState(serviceTracks[0].id);
   const [mobileOpen, setMobileOpen] = useState(false);
   const rootRef = useRef<HTMLDivElement>(null);
 
@@ -294,9 +293,9 @@ export function PortfolioExperience({
           <a href="#work" onClick={() => setMobileOpen(false)}>
             Portfolio
           </a>
-          <Link href="/resume/" onClick={() => setMobileOpen(false)}>
+          <DocumentLink href="/resume/" onClick={() => setMobileOpen(false)}>
             Résumé
-          </Link>
+          </DocumentLink>
         </nav>
         <div className="header-actions">
           <a className="header-contact" href="#contact">
@@ -325,18 +324,19 @@ export function PortfolioExperience({
           <div className="hero-copy" data-reveal>
             <p className="eyebrow">
               <span>{practice.headline}</span>
-              <span>vCISO · AI governance · Secure delivery</span>
+              <span>Cybersecurity · AI · Projects</span>
             </p>
-            <h1>
-              Cybersecurity, AI, and things I build for fun.
-            </h1>
+            <h1 className="visually-hidden">Stephen M Abbott</h1>
             <p className="hero-intro">
               My online business card and résumé. Cybersecurity and AI are
               the day job; the projects below are the fun stuff.
             </p>
             <div className="hero-actions">
-              <a className="button button-primary" href={voiceLine.href}>
-                {voiceLine.display} <Arrow />
+              <DocumentLink className="button button-primary" href="/resume/">
+                Read my résumé <Arrow />
+              </DocumentLink>
+              <a className="button button-secondary" href="#work">
+                Explore my projects <Arrow />
               </a>
               {/* Renders the moment lib/contact.ts publishes a booking URL. */}
               {scheduling.href ? (
@@ -350,10 +350,10 @@ export function PortfolioExperience({
           <aside
             className="hero-console"
             data-reveal
-            aria-label="Practice paths"
+            aria-label="About Stephen"
           >
             <div className="console-header">
-              <span className="console-kicker">How to start</span>
+              <span className="console-kicker">About me</span>
             </div>
             <div className="identity-card">
               <div className="profile-frame">
@@ -372,9 +372,7 @@ export function PortfolioExperience({
               </div>
             </div>
             <div className="activity-list">
-              {careerPaths
-                .filter((path) => path.href !== "#packages")
-                .map((path) => (
+              {careerPaths.map((path) => (
                 <a key={path.title} href={path.href}>
                   <span>{path.title}</span>
                   <small>{path.label}</small>
@@ -406,102 +404,6 @@ export function PortfolioExperience({
           </ul>
         </section>
 
-        <section className="services-section section" id="services">
-          <div className="section-heading section-heading-light" data-reveal>
-            <p className="section-number">Practice areas</p>
-            <h2>Practice areas.</h2>
-          </div>
-
-          <div className="service-workbench" data-reveal>
-            <div className="service-tabs" aria-label="Service areas">
-              {serviceTracks.map((service) => (
-                <button
-                  type="button"
-                  aria-controls={`service-detail-${service.id}`}
-                  aria-pressed={activeService === service.id}
-                  className={activeService === service.id ? "is-active" : ""}
-                  key={service.id}
-                  onClick={() => setActiveService(service.id)}
-                >
-                  {service.label}
-                </button>
-              ))}
-            </div>
-            {/* Every panel stays in the document and inactive ones are hidden,
-                so all four service descriptions and their reference frameworks
-                are reachable without JavaScript and visible to crawlers. */}
-            {serviceTracks.map((service) => (
-              <article
-                className="service-detail"
-                id={`service-detail-${service.id}`}
-                key={service.id}
-                hidden={activeService !== service.id}
-              >
-                <p className="service-signal">
-                  <span className="status-dot" aria-hidden="true" />
-                  {service.mode}
-                </p>
-                <h3>{service.title}</h3>
-                <p>{service.description}</p>
-                <div className="service-detail-grid">
-                  <div>
-                    <span className="detail-label">Typical outcomes</span>
-                    <ul>
-                      {service.outcomes.map((outcome) => (
-                        <li key={outcome}>{outcome}</li>
-                      ))}
-                    </ul>
-                  </div>
-                  {service.bestFor ? (
-                    <div className="best-for">
-                      <span className="detail-label">Best for</span>
-                      <p>{service.bestFor}</p>
-                    </div>
-                  ) : null}
-                </div>
-                <div className="service-standards">
-                  <span className="detail-label">Measured against</span>
-                  <ul aria-label={`${service.title} reference frameworks`}>
-                    {service.standards.map((standard) => (
-                      <li key={standard}>{standard}</li>
-                    ))}
-                  </ul>
-                </div>
-                <p className="service-detail-more">
-                  <Link
-                    className="text-link"
-                    href={`/services/${service.page.slug}/`}
-                  >
-                    The full brief <Arrow />
-                  </Link>
-                </p>
-              </article>
-            ))}
-          </div>
-
-          <div className="engagement-process" data-reveal>
-            <div className="engagement-process-heading">
-              <h3>How an engagement runs</h3>
-            </div>
-            <ol>
-              {engagementProcess.map((phase) => (
-                <li key={phase.title}>
-                  <h4>{phase.title}</h4>
-                  <p>{phase.description}</p>
-                </li>
-              ))}
-            </ol>
-          </div>
-
-          <div className="engagement-safeguards" data-reveal>
-            <span className="detail-label">Professional safeguards</span>
-            <p>
-              Confidential by default, with transparent assumptions and source
-              evidence attached to every recommendation.
-            </p>
-          </div>
-        </section>
-
         <section className="profile-section section" id="profile">
           <div className="profile-copy" data-reveal>
             <p className="section-number">Background</p>
@@ -516,14 +418,14 @@ export function PortfolioExperience({
               He owns Wire Hold.
             </p>
             <p>
-              Board-facing risk, CTEM, application and software supply-chain
+              Board-facing risk, application and software supply-chain
               security, security data platforms, resilience, and governed AI,
               with hands-on product and engineering work.
             </p>
             <div className="profile-actions">
-              <Link className="text-link" href="/resume/">
+              <DocumentLink className="text-link" href="/resume/">
                 Read the full career record <Arrow />
-              </Link>
+              </DocumentLink>
             </div>
           </div>
         </section>

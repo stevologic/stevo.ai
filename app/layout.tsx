@@ -3,7 +3,6 @@ import { socialProfileUrls, voiceLine } from "@/lib/contact";
 import { credentials } from "@/lib/credentials";
 import { practice } from "@/lib/practice";
 import { projects } from "@/lib/project-data";
-import { servicePackages, serviceTracks } from "@/lib/services";
 import "./globals.css";
 
 const siteUrl = "https://stevo.ai";
@@ -56,9 +55,9 @@ export const metadata: Metadata = {
     description: practice.socialDescription,
     images: [
       {
-        url: `${siteUrl}/og-executive.png`,
-        width: 1734,
-        height: 907,
+        url: `${siteUrl}/stephen-abbott-resume.png`,
+        width: 680,
+        height: 680,
         type: "image/png",
         alt: practice.socialImageAlt,
       },
@@ -70,10 +69,10 @@ export const metadata: Metadata = {
     description: practice.socialDescription,
     images: [
       {
-        url: `${siteUrl}/og-executive.png`,
+        url: `${siteUrl}/stephen-abbott-resume.png`,
         alt: practice.socialImageAlt,
-        width: 1734,
-        height: 907,
+        width: 680,
+        height: 680,
       },
     ],
   },
@@ -157,47 +156,6 @@ const structuredData = {
       legalName: "Wirehold LLC",
       url: "https://www.wirehold.com",
       founder: { "@id": personId },
-    },
-    {
-      "@type": "ProfessionalService",
-      "@id": `${siteUrl}/#organization`,
-      name: "stevo.ai",
-      url: siteUrl,
-      logo: `${siteUrl}/icon-512.png`,
-      description: practice.description,
-      telephone: voiceLine.e164,
-      founder: { "@id": personId },
-      areaServed: "Worldwide",
-      knowsAbout: [...practice.knowsAbout],
-      // Phone is already the published stevo.ai line. Do not invent an email
-      // or republish the personal Gmail in markup.
-      contactPoint: {
-        "@type": "ContactPoint",
-        telephone: voiceLine.e164,
-        contactType: "customer service",
-        name: voiceLine.label,
-        url: `${siteUrl}/#contact`,
-        availableLanguage: "English",
-      },
-      hasOfferCatalog: {
-        "@type": "OfferCatalog",
-        name: "Consulting packages",
-        itemListElement: servicePackages.map((servicePackage) => ({
-          "@type": "Offer",
-          itemOffered: {
-            "@type": "Service",
-            name: servicePackage.title,
-            description: servicePackage.description,
-            serviceType: servicePackage.label,
-            // Each offer points at its track's landing page.
-            url: `${siteUrl}/services/${
-              serviceTracks.find((track) => track.id === servicePackage.trackId)
-                ?.page.slug
-            }/`,
-            provider: { "@id": `${siteUrl}/#organization` },
-          },
-        })),
-      },
     },
     {
       "@type": "ItemList",

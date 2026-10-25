@@ -8,8 +8,8 @@
     "content/resume-download.json": "bd4da425a37b4b20a50913546b98ed4d618475f6d7769fe7f2548423a3030b16",
     "content/resume.json": "d3612f2293c51499030ce5778b0c1929f5ca7a8c1ee76ff83f9027548060b8a3",
     "content/resume-projects.json": "f9a0390af1df8b8fd9590b03c44812172826285ffea5b46548f4736077662cb3",
-    "app/resume/page.tsx": "9abc88a0ada381a44ab96a59c08e318eec27280043e2b89b76c7b94ca19b4fa2",
-    "lib/career.ts": "687dbf9732689f8d361607a8938957b282d32ab0a08d2b78b993d1cf7de49381",
+    "app/resume/page.tsx": "849f435034df043d0af5fe4e2e97793b30f06c7f854cbfd2118c04a705615b73",
+    "lib/career.ts": "dfd1c0e6fe21e881fd731126d225e12bc449aef83527021a772d7b1e8861019d",
     "lib/credentials.ts": "39c5ec703c22f8291662956f3998d46ffc33e00a7636aace1772c0e3d9039501",
     "lib/contact.ts": "54a346dd964cc96ff3a65a844fb3331b8a8b3942e871244d88be0b9b4c521b55"
   },
