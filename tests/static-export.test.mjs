@@ -76,7 +76,7 @@ test("exports the site, install icons, and social assets", async () => {
     access(new URL("../out/index.html", import.meta.url)),
     access(new URL("../out/resume/index.html", import.meta.url)),
     access(new URL("../out/CNAME", import.meta.url)),
-    access(new URL("../out/og-executive.png", import.meta.url)),
+    access(new URL("../out/stephen-abbott-resume.png", import.meta.url)),
     access(new URL("../out/favicon.ico", import.meta.url)),
     access(new URL("../out/favicon-16x16.png", import.meta.url)),
     access(new URL("../out/favicon-32x32.png", import.meta.url)),
@@ -87,7 +87,7 @@ test("exports the site, install icons, and social assets", async () => {
   ]);
 });
 
-test("site presents the consultancy, packages, and proof with social metadata", async () => {
+test("site presents personal background and projects with social metadata", async () => {
   const [html, resumeHtml] = await Promise.all([
     exportedPage("index.html"),
     exportedPage("resume/index.html"),
@@ -104,13 +104,16 @@ test("site presents the consultancy, packages, and proof with social metadata", 
   assert.doesNotMatch(html, /href="#packages"/);
   assert.match(html, />Background</);
   assert.match(html, />Portfolio</);
-  assert.match(html, /vCISO · AI governance · Secure delivery/);
+  assert.match(html, /Cybersecurity · AI · Projects/);
+  assert.doesNotMatch(html, /vCISO|consulting|consultancy|retainer/i);
+  assert.match(html, /Read my résumé/);
+  assert.match(html, /Explore my projects/);
   assert.doesNotMatch(html, /Available for select vCISO and consulting engagements/i);
   assert.doesNotMatch(html, /Open to full-time CISO/);
   assert.match(html, /Shiba Studio/);
   assert.match(html, /security-recipes\.ai/);
   assert.match(html, /Stephen M Abbott/);
-  assert.match(html, /https:\/\/stevo\.ai\/og-executive\.png/);
+  assert.match(html, /https:\/\/stevo\.ai\/stephen-abbott-resume\.png/);
   assert.match(html, /summary_large_image/);
   assert.match(html, /twitter:image/);
   assert.match(html, /twitter:image:alt/);
@@ -249,7 +252,7 @@ test("the executive profile uses the hoodie portrait, not the suit photo", async
   // The background paragraph sits on a plain surface, without the photo.
   assert.doesNotMatch(profile, /<img|stephen-abbott-field-notes\.webp/);
   assert.doesNotMatch(html, /stephen-abbott-profile\.png/);
-  assert.doesNotMatch(html, /stephen-abbott-resume\.png/);
+  assert.doesNotMatch(html, /<img[^>]+src="\/stephen-abbott-resume\.png"/);
   assert.doesNotMatch(html, /Portrait of Stephen M Abbott/);
   assert.match(styles, /min-height: 84svh/);
   assert.match(styles, /padding: 104px 20px 58px/);
@@ -346,20 +349,14 @@ test("credentials are named rather than counted", async () => {
   assert.doesNotMatch(html, /CRISC certified|Certified in Risk and Information/i);
 });
 
-test("service tracks name the frameworks they are measured against", async () => {
-  const html = await exportedPage("services/vciso/index.html");
-
-  for (const standard of [
-    "NIST CSF 2.0",
-    "ISO/IEC 27001",
-    "SOC 2",
-    "CIS Controls v8",
-    "FAIR risk quantification",
-  ]) {
-    assert.ok(html.includes(standard), `vCISO page never names ${standard}`);
+test("homepage has an accessible personal heading and working navigation", async () => {
+  const html = await exportedPage("index.html");
+  assert.match(html, /<h1 class="visually-hidden">Stephen M Abbott<\/h1>/);
+  const ids = new Set([...html.matchAll(/\bid="([^"]+)"/g)].map((match) => match[1]));
+  for (const [, hash] of html.matchAll(/href="#([^"]+)"/g)) {
+    assert.ok(ids.has(hash), `missing navigation destination #${hash}`);
   }
-
-  assert.match(html, /Measured against/);
+  assert.doesNotMatch(html, /Practice paths|How to start|#packages|#services/);
 });
 
 test("homepage no longer sells engagement process or package formats", async () => {
@@ -406,9 +403,8 @@ test("site manifest uses installable Stevo.AI icons", async () => {
 
   assert.equal(manifest.short_name, "Abbott");
   assert.match(manifest.name, /Stephen M Abbott/);
-  assert.match(manifest.description, /consultancy/);
-  assert.match(manifest.description, /vCISO/);
-  assert.match(manifest.description, /cybersecurity and IT consulting/);
+  assert.match(manifest.description, /personal background, projects, and résumé/);
+  assert.doesNotMatch(manifest.description, /consultancy|vCISO|consulting/);
   assert.equal(manifest.display, "standalone");
   assert.equal(manifest.theme_color, "#0f1014");
   assert.deepEqual(
@@ -1138,27 +1134,15 @@ test("social handles are published on the site and in structured data", async ()
     "@id": "https://stevo.ai/#stephen-abbott",
   });
 
-  const professionalService = graph.find((node) =>
-    typeOf(node).includes("ProfessionalService"),
-  );
-  assert.ok(professionalService, "ProfessionalService node is missing");
-  assert.equal(professionalService["@type"], "ProfessionalService");
-  assert.equal(professionalService.name, "stevo.ai");
-  assert.notEqual(professionalService.name, "Stephen M Abbott");
-  assert.equal(professionalService.telephone, "+17755997046");
-  assert.equal(professionalService.contactPoint?.name, "Phone");
-  assert.equal(professionalService.contactPoint?.telephone, "+17755997046");
-  assert.equal(professionalService.contactPoint?.url, "https://stevo.ai/#contact");
-  assert.equal(professionalService.contactPoint?.email, undefined);
-  assert.equal(professionalService.hasOfferCatalog?.itemListElement?.length, 4);
-  assert.equal(professionalService.sameAs, undefined);
+  assert.ok(!graph.some((node) => typeOf(node).includes("ProfessionalService")));
+  assert.ok(!graph.some((node) => node.hasOfferCatalog));
   const portfolio = graph.find((node) => node["@type"] === "ItemList");
   const projects = await publishedProjects();
   assert.equal(portfolio.numberOfItems, projects.length);
   assert.equal(portfolio.itemListElement.length, projects.length);
 });
 
-test("consultancy offer, background, and employment history stay distinct", async () => {
+test("personal project context and verified employment history stay distinct", async () => {
   const [html, resumeHtml] = await Promise.all([
     exportedPage("index.html"),
     exportedPage("resume/index.html"),
@@ -1166,7 +1150,7 @@ test("consultancy offer, background, and employment history stay distinct", asyn
 
   assert.doesNotMatch(html, /\bCEO\b/);
   assert.doesNotMatch(resumeHtml, /\bCEO\b/);
-  assert.match(html, /vCISO/);
+  assert.doesNotMatch(html, /vCISO|consulting|consultancy|retainer/i);
   assert.match(html, /AI enablement/);
   assert.match(html, /class="section-number">Portfolio</);
   assert.doesNotMatch(resumeHtml, /VP Cybersecurity/);
@@ -1176,11 +1160,8 @@ test("consultancy offer, background, and employment history stay distinct", asyn
     /<article class="resume-document">([\s\S]*?)<\/article>/,
   )?.[1];
   assert.ok(resumeDocument, "exported résumé document is missing");
-  assert.doesNotMatch(
-    resumeDocument,
-    /\bvCISO\b/i,
-    "the recruiter-facing résumé should stay focused on full-time roles",
-  );
+  assert.match(resumeHtml, /Founded Wirehold LLC: vCISO guidance/,
+    "truthful historic vCISO experience remains in the résumé");
 
   // Target roles and services can be named in the résumé, but the historical
   // title elements must remain the verified historical titles.
@@ -1196,8 +1177,8 @@ test("consultancy offer, background, and employment history stay distinct", asyn
     "utf8",
   );
   assert.doesNotMatch(manifest, /\bCEO\b/);
-  assert.match(manifest, /CISO/);
-  assert.match(manifest, /vCISO/);
+  assert.match(manifest, /personal background, projects, and résumé/);
+  assert.doesNotMatch(manifest, /vCISO|consulting|consultancy|services/i);
 });
 
 test("icons are the generated brand mark, not photo-derived art", async () => {
@@ -1435,7 +1416,7 @@ test("resume publishes route-specific canonical and social metadata", async () =
     html,
     /Employer-anonymized|full-time CISO|VP Cybersecurity|VP AI Enablement opportunities/,
   );
-  assert.match(html, /https:\/\/stevo\.ai\/og-executive\.png/);
+  assert.match(html, /https:\/\/stevo\.ai\/stephen-abbott-resume\.png/);
   assert.match(html, /summary_large_image/);
 });
 
@@ -1580,7 +1561,8 @@ test("Wire Hold is live and Person is the primary JSON-LD entity", async () => {
   assert.match(card, /href="https:\/\/www\.wirehold\.com"/);
   assert.doesNotMatch(card, /href="https:\/\/wirehold\.com"/);
   assert.match(card, />Live</);
-  assert.match(card, /vCISO and AI controls/);
+  assert.match(card, /The company I own/);
+  assert.doesNotMatch(card, /vCISO|consulting|consultancy|retainer/i);
   assert.doesNotMatch(card, /In progress|going up at/);
 
   const jsonLdScripts = [
@@ -1629,11 +1611,11 @@ test("Wire Hold is live and Person is the primary JSON-LD entity", async () => {
 });
 
 test("every JSON-LD @id reference resolves to a typed node", async () => {
-  const { serviceTracks } = await import("../lib/services.ts");
+  const { retiredServiceSlugs } = await import("../lib/services.ts");
   const paths = [
     "index.html",
     "resume/index.html",
-    ...serviceTracks.map((track) => `services/${track.page.slug}/index.html`),
+    ...retiredServiceSlugs.map((slug) => `services/${slug}/index.html`),
   ];
 
   for (const path of paths) {
@@ -1780,8 +1762,8 @@ test("homepage contact is a heading plus phone and email only", async () => {
   assert.doesNotMatch(closing, />Email</);
   assert.equal(
     (html.match(/href="tel:\+17755997046"/g) || []).length,
-    2,
-    "phone appears in the hero and contact only",
+    1,
+    "phone remains in the personal contact section",
   );
 });
 
@@ -2150,10 +2132,10 @@ test("the site critique action is wired to Grok correctly", async () => {
   // The key must never be committed, only read from the environment.
   assert.doesNotMatch(script, /xai-[A-Za-z0-9]{8}/, "no API key literal");
   assert.match(script, /process\.env\.GROK_API_KEY/);
-  assert.match(script, /cybersecurity and AI enablement consultancy/);
-  assert.match(script, /Contact is a heading plus the stevo.ai line/);
-  assert.match(script, /Background and portfolio remain available as proof/);
-  assert.match(script, /Headlines, package blurbs, contact, and the résumé header are locked/);
+  assert.match(script, /personal website/);
+  assert.match(script, /does not solicit services or vCISO engagements/);
+  assert.match(script, /Preserve the published phone/);
+  assert.match(script, /Headlines, contact, and the résumé header are locked/);
   assert.match(workflow, /github.event_name == 'workflow_dispatch'/);
   assert.match(workflow, /default: false/);
   assert.match(workflow, /id: resume\n        if: false/);
@@ -2186,28 +2168,23 @@ test("the site critique action is wired to Grok correctly", async () => {
   assert.ok(testIndex > 0 && testIndex < prIndex, "tests must run before the PR");
 });
 
-test("the practice growth action drafts marketing without publishing or sending", async () => {
-  const [workflow, script, pkg] = await Promise.all([
-    readFile(new URL(".github/workflows/practice-growth.yml", root), "utf8"),
-    readFile(new URL("scripts/practice-growth.mjs", root), "utf8"),
-    readFile(new URL("package.json", root), "utf8"),
-  ]);
+test("the service growth workflow and command are retired", async () => {
+  const pkg = JSON.parse(await readFile(new URL("package.json", root), "utf8"));
+  assert.equal(pkg.scripts.growth, undefined);
+  for (const path of [".github/workflows/practice-growth.yml", "scripts/practice-growth.mjs"]) {
+    await assert.rejects(access(new URL(path, root)), { code: "ENOENT" });
+  }
+  const guidance = await readFile(new URL("README.md", root), "utf8");
+  assert.match(guidance, /must not draft service outreach/);
+});
 
-  assert.match(workflow, /secrets\.GROK_API_KEY/);
-  assert.match(workflow, /'grok-4\.5'/);
-  assert.match(workflow, /npm run growth/);
-  assert.match(JSON.parse(pkg).scripts.growth, /practice-growth\.mjs/);
-  assert.match(script, /stevo.ai line/);
-  assert.match(script, /servicePackages/);
-  assert.match(script, /does not send/i);
-  assert.doesNotMatch(workflow, /gh pr create|git push origin main/);
-  assert.doesNotMatch(script, /nodemailer|sendgrid|resend|smtp/i);
-  assert.doesNotMatch(script, /calendar\.events|events\.insert/);
-  assert.doesNotMatch(
-    workflow,
-    /git add|git commit|gh pr create/,
-    "the growth brief must never change the site",
-  );
+test("portfolio automation rejects service solicitation in project descriptions", async () => {
+  const { applyEdits } = await import("../scripts/optimize-portfolio.mjs");
+  const current = JSON.parse(await readFile(new URL("content/projects.json", root), "utf8"));
+  const order = current.map((project) => project.slug);
+  for (const tagline of ["vCISO services", "Consulting packages", "Book a consultation", "Available for security work", "Monthly retainer"]) {
+    assert.throws(() => applyEdits(current, [], { order, projects: { "wire-hold": { tagline } } }), /must not solicit services/);
+  }
 });
 
 test("the portfolio optimizer cannot lose or fabricate project data", async () => {
@@ -2703,98 +2680,41 @@ test("the FAQ is retired from the page and from structured data", async () => {
   assert.ok(!jsonLdNodes(html).some((node) => node["@type"] === "FAQPage"));
 });
 
-test("llms.txt describes the practice for answer engines", async () => {
-  const llms = await readFile(new URL("../out/llms.txt", import.meta.url), "utf8");
-
+test("llms.txt describes the person, projects, and résumé", async () => {
+  const llms = await exportedPage("llms.txt");
   assert.match(llms, /^# stevo\.ai/m);
   assert.match(llms, /Owner of Wire Hold/);
-  for (const offering of [
-    "vCISO retainer",
-    "AI enablement sprint",
-    "AI-native modernization",
-    "Delivery sprint",
-  ]) {
-    assert.ok(llms.includes(offering), `llms.txt omits ${offering}`);
-  }
+  assert.match(llms, /personal site: background, projects, and résumé/);
   assert.match(llms, /\+1 \(775\) 599-7046/);
+  assert.match(llms, /stevo@stevo\.ai/);
   assert.match(llms, /https:\/\/stevo\.ai\/resume\//);
-  // The same guards the rest of the site honours.
-  assert.doesNotMatch(llms, /\$\d/);
-  assert.doesNotMatch(llms, new RegExp(["frac", "tional"].join(""), "i"));
-  assert.doesNotMatch(llms, /623[-.\s]?887[-.\s]?8905|6238878905/);
-  assert.doesNotMatch(llms, /623[-.\s]?363[-.\s]?4985/);
-  assert.doesNotMatch(llms, /887-8905|16238878905|623[-.\s]?887/);
-  assert.doesNotMatch(llms, /American Express/i);
+  assert.doesNotMatch(llms, /vCISO|consulting|consultancy|retainer|packages|engagements|\/services\//i);
+  assert.doesNotMatch(llms, /623[-.\s]?887[-.\s]?8905|6238878905|623[-.\s]?363[-.\s]?4985/);
 });
 
-test("each service track exports a landing page with honest, sourced copy", async () => {
-  const { serviceTracks, servicePackages } = await import("../lib/services.ts");
-  const retiredEmploymentQualifier = ["frac", "tional"].join("");
-
-  for (const track of serviceTracks) {
-    const html = await exportedPage(`services/${track.page.slug}/index.html`);
-    const servicePackage = servicePackages.find(
-      (candidate) => candidate.trackId === track.id,
-    );
-    const escape = (text) => text.replace(/&/g, "&amp;");
-
-    // The page says what the homepage says — title, outcomes, standards,
-    // package — never more.
-    assert.ok(html.includes(escape(track.title)), `${track.page.slug} h1`);
-    assert.ok(html.includes(escape(track.description)));
-    for (const outcome of track.outcomes) {
-      assert.ok(html.includes(escape(outcome)), `${track.page.slug}: ${outcome}`);
+test("old service URLs are noindex archives without service or contact pitches", async () => {
+  const { retiredServiceSlugs } = await import("../lib/services.ts");
+  assert.deepEqual([...retiredServiceSlugs], ["vciso", "ai-governance", "ai-native-consulting", "secure-ai-delivery"]);
+  for (const slug of retiredServiceSlugs) {
+    const html = await exportedPage(`services/${slug}/index.html`);
+    assert.match(html, /<h1>This page has been retired\.<\/h1>/);
+    assert.match(html, /<meta name="robots" content="noindex, follow"/);
+    assert.match(html, /rel="canonical" href="https:\/\/stevo\.ai\/"/);
+    assert.match(html, /href="\/">Visit the homepage/);
+    assert.match(html, /href="\/resume\/">Read the résumé/);
+    const main = html.match(/<main[\s\S]*?<\/main>/)?.[0];
+    assert.ok(main);
+    assert.doesNotMatch(main, /vCISO|consulting|packages|engagements|tel:|mailto:/i);
+    for (const node of jsonLdNodes(html)) {
+      walkJsonLd(node, (value) => {
+        assert.ok(!["ProfessionalService", "OfferCatalog", "Offer", "Service"].includes(value["@type"]));
+        assert.equal(value.hasOfferCatalog, undefined);
+      });
     }
-    for (const standard of track.standards) {
-      assert.ok(html.includes(escape(standard)), `${track.page.slug}: ${standard}`);
-    }
-    assert.ok(html.includes(escape(servicePackage.title)));
-    assert.doesNotMatch(html, /How an engagement runs/);
-
-    // Route-specific metadata and structured data.
-    assert.ok(
-      html.includes(
-        `rel="canonical" href="https://stevo.ai/services/${track.page.slug}/"`,
-      ),
-      `${track.page.slug} canonical`,
-    );
-    assert.ok(html.includes(escape(track.page.metaDescription)));
-    assert.match(html, /https:\/\/stevo\.ai\/og-services\.png/);
-    const graph = jsonLdNodes(html);
-    const service = graph.find((node) => node["@type"] === "Service");
-    assert.equal(service?.name, track.title);
-    assert.deepEqual(service?.provider, {
-      "@id": "https://stevo.ai/#organization",
-    });
-    assert.ok(graph.some((node) => node["@type"] === "BreadcrumbList"));
-    // FAQ markup belongs only to the page that renders the FAQ.
-    assert.ok(!graph.some((node) => node["@type"] === "FAQPage"));
-
-    // Both ways in, and the same guards the rest of the site honours. The
-    // price check reads the rendered document only: the Next flight payload
-    // legitimately contains $-digit reference tokens.
-    assert.match(html, /tel:\+17755997046/);
-    assert.doesNotMatch(html, /623[-.\s]?887[-.\s]?8905|6238878905/);
-    assert.match(html, /mailto:stevo@stevo\.ai\?subject=/);
-    const document = html.match(
-      /<article class="service-page-document">[\s\S]*?<\/article>/,
-    )?.[0];
-    assert.ok(document, `${track.page.slug} rendered document not found`);
-    assert.doesNotMatch(document, /\$\d/);
-    assert.doesNotMatch(html, new RegExp(retiredEmploymentQualifier, "i"));
-    assert.doesNotMatch(html, /623[-.\s]?363[-.\s]?4985/);
-    assert.doesNotMatch(html, /American Express/i);
-    assert.doesNotMatch(html, /\bCEO\b/);
-    assert.doesNotMatch(html, /available on request|intentionally omitted/i);
   }
-
   const sitemap = await exportedPage("sitemap.xml");
-  for (const track of serviceTracks) {
-    assert.ok(
-      sitemap.includes(`https://stevo.ai/services/${track.page.slug}/`),
-      `sitemap omits /services/${track.page.slug}/`,
-    );
-  }
+  assert.doesNotMatch(sitemap, /\/services\//);
+  assert.match(sitemap, /https:\/\/stevo\.ai\/resume\//);
 });
 
 test("a published booking URL reaches the hero and contact automatically", async () => {

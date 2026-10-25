@@ -16,7 +16,6 @@
     "icons:projects": "node scripts/fetch-project-icons.mjs",
     "previews": "python3 scripts/capture-project-previews.py",
     "critique": "node scripts/site-critique.mjs",
-    "growth": "node scripts/practice-growth.mjs",
     "optimize:portfolio": "node scripts/optimize-portfolio.mjs",
     "optimize:resume": "node scripts/optimize-resume.mjs",
     "test": "npm run build && node --test tests/static-export.test.mjs && npm run verify:pdf",

@@ -1,204 +1,39 @@
 import type { Metadata } from "next";
-import Link from "next/link";
-import { decodeSiteEmail } from "@/lib/site-email";
+import DocumentLink from "@/components/DocumentLink";
+import { notFound } from "next/navigation";
+import { retiredServiceSlugs } from "@/lib/services";
 
-import { voiceLine } from "@/lib/contact";
-import { practice } from "@/lib/practice";
-import { servicePackages, serviceTracks } from "@/lib/services";
-
-const siteUrl = "https://stevo.ai";
-
-/**
- * One landing page per service track, so a search for the service lands on
- * the service. Every visible sentence comes from lib/services.ts so these
- * pages cannot promise more than the practice does.
- */
-
+// GitHub Pages cannot issue server redirects. Keep these published URLs usable
+// as noindex archives with explicit navigation and no service or contact pitch.
 export const dynamicParams = false;
 
 export function generateStaticParams() {
-  return serviceTracks.map((track) => ({ slug: track.page.slug }));
+  return retiredServiceSlugs.map((slug) => ({ slug }));
 }
 
-function trackBySlug(slug: string) {
-  const track = serviceTracks.find((candidate) => candidate.page.slug === slug);
-  if (!track) throw new Error(`unknown service page: ${slug}`);
-  return track;
-}
+export const metadata: Metadata = {
+  title: "Page retired",
+  description: "This page has been retired. Visit Stephen Abbott's personal background, projects, and résumé.",
+  alternates: { canonical: "/" },
+  robots: { index: false, follow: true },
+};
 
-export async function generateMetadata({
-  params,
-}: {
-  params: Promise<{ slug: string }>;
-}): Promise<Metadata> {
-  const track = trackBySlug((await params).slug);
-  return {
-    title: track.page.metaTitle,
-    description: track.page.metaDescription,
-    alternates: { canonical: `/services/${track.page.slug}/` },
-    openGraph: {
-      type: "website",
-      url: `/services/${track.page.slug}/`,
-      title: track.page.metaTitle,
-      description: track.page.metaDescription,
-      images: [{ url: "/og-services.png", width: 1734, height: 907 }],
-    },
-    twitter: {
-      card: "summary_large_image",
-      title: track.page.metaTitle,
-      description: track.page.metaDescription,
-      images: ["/og-services.png"],
-    },
-  };
-}
-
-export default async function ServicePage({
+export default async function RetiredPage({
   params,
 }: {
   params: Promise<{ slug: string }>;
 }) {
-  const track = trackBySlug((await params).slug);
-  const servicePackage = servicePackages.find(
-    (candidate) => candidate.trackId === track.id,
-  );
-
-  const structuredData = {
-    "@context": "https://schema.org",
-    "@graph": [
-      {
-        "@type": "Service",
-        "@id": `${siteUrl}/services/${track.page.slug}/#service`,
-        name: track.title,
-        description: track.description,
-        serviceType: track.label,
-        url: `${siteUrl}/services/${track.page.slug}/`,
-        areaServed: "Worldwide",
-        provider: { "@id": `${siteUrl}/#organization` },
-      },
-      {
-        "@type": "BreadcrumbList",
-        itemListElement: [
-          {
-            "@type": "ListItem",
-            position: 1,
-            name: practice.name,
-            item: `${siteUrl}/`,
-          },
-          {
-            "@type": "ListItem",
-            position: 2,
-            name: track.title,
-            item: `${siteUrl}/services/${track.page.slug}/`,
-          },
-        ],
-      },
-    ],
-  };
+  const { slug } = await params;
+  if (!retiredServiceSlugs.some((retired) => retired === slug)) notFound();
 
   return (
-    <main className="service-page">
-      <nav className="service-page-toolbar" aria-label="Service page actions">
-        <Link className="service-page-back" href="/">
-          Back to the site
-        </Link>
+    <main className="not-found-page">
+      <h1>This page has been retired.</h1>
+      <p>stevo.ai is Stephen Abbott&apos;s personal site: background, projects, and résumé.</p>
+      <nav aria-label="Continue exploring">
+        <DocumentLink className="button button-primary" href="/">Visit the homepage</DocumentLink>{" "}
+        <DocumentLink className="button button-secondary" href="/resume/">Read the résumé</DocumentLink>
       </nav>
-
-      <article className="service-page-document">
-        <header className="service-page-header">
-          <p className="service-page-eyebrow">{practice.headline}</p>
-          <h1>{track.title}</h1>
-          <p className="service-page-lede">{track.description}</p>
-          <p className="service-page-mode">
-            <span className="status-dot" aria-hidden="true" />
-            {track.mode}
-          </p>
-          <div className="service-page-actions">
-            <a className="button button-primary" href={voiceLine.href}>
-              {voiceLine.display}
-            </a>
-            {servicePackage ? (
-              <a
-                className="button button-secondary"
-                href={`mailto:${decodeSiteEmail()}?subject=${encodeURIComponent(
-                  servicePackage.title,
-                )}`}
-              >
-                Email to scope this
-              </a>
-            ) : null}
-          </div>
-        </header>
-
-        <section
-          className="service-page-section"
-          aria-labelledby="service-outcomes-heading"
-        >
-          <h2 id="service-outcomes-heading">Typical outcomes</h2>
-          <ul className="service-page-outcomes">
-            {track.outcomes.map((outcome) => (
-              <li key={outcome}>{outcome}</li>
-            ))}
-          </ul>
-        </section>
-
-        {servicePackage ? (
-          <section
-            className="service-page-section"
-            aria-labelledby="service-package-heading"
-          >
-            <h2 id="service-package-heading">The package</h2>
-            <div className="service-page-package">
-              <div className="package-topline">
-                <span>{servicePackage.label}</span>
-                <span className="package-cadence">{servicePackage.cadence}</span>
-              </div>
-              <h3>{servicePackage.title}</h3>
-              <p>{servicePackage.description}</p>
-              <ul className="service-page-outcomes">
-                {servicePackage.includes.map((item) => (
-                  <li key={item}>{item}</li>
-                ))}
-              </ul>
-              <p className="package-best-for">{servicePackage.bestFor}</p>
-            </div>
-          </section>
-        ) : null}
-
-        <section
-          className="service-page-section"
-          aria-labelledby="service-standards-heading"
-        >
-          <h2 id="service-standards-heading">Measured against</h2>
-          <ul
-            className="service-page-standards"
-            aria-label={`${track.title} reference frameworks`}
-          >
-            {track.standards.map((standard) => (
-              <li key={standard}>{standard}</li>
-            ))}
-          </ul>
-        </section>
-
-        <footer className="service-page-footer">
-          <h2>Contact</h2>
-          <div className="service-page-actions">
-            <a className="button button-primary" href={voiceLine.href}>
-              {voiceLine.display}
-            </a>
-            <a
-              className="button button-secondary"
-              href={`mailto:${decodeSiteEmail()}`}
-            >
-              {decodeSiteEmail()}
-            </a>
-          </div>
-        </footer>
-      </article>
-
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData) }}
-      />
     </main>
   );
 }

@@ -13,7 +13,7 @@
 //   * a project may only be ADDED if discovery already found it on GitHub, and
 //     its identity fields must match what GitHub reported
 //   * any number in new copy must already appear in that project's own data,
-//     so the model cannot invent a metric on a site that sells security work
+//     so the model cannot invent a metric in the personal portfolio
 //
 // Usage: npm run optimize:portfolio     (needs GROK_API_KEY)
 
@@ -179,27 +179,24 @@ export function applyEdits(current, discovered, edits) {
     "the portfolio shrank, which must never happen",
   );
 
-  // Owner direction: employment is positioned as full-time. The separate
-  // advisory lane may use vCISO, but portfolio copy must not recast a product
-  // as an employment arrangement. Metrics and capabilities are the
-  // product-portfolio leak surface; newly proposed edits may not introduce
-  // the advisory token either. Existing locked product copy (the Wire Hold
-  // tagline) is left in place.
-  const serviceLeak = /vciso/i;
+  // Project copy describes ownership and products, never a service offering.
+  const serviceLeak = /vciso|consult(?:ing|ancy)|(?:book|schedule) (?:a |an )?(?:call|consultation)|(?:available|hire me) for|(?:monthly|security) retainer/i;
   assert(
     !serviceLeak.test(
       JSON.stringify(
         result.map((project) => ({
+          tagline: project.tagline,
+          description: project.description,
           metrics: project.metrics,
           capabilities: project.capabilities,
         })),
       ),
     ),
-    "vCISO belongs to the advisory service, not the product portfolio",
+    "project copy must not solicit services",
   );
   assert(
     !serviceLeak.test(JSON.stringify(edits.projects || {})),
-    "vCISO belongs to the advisory service, not the product portfolio",
+    "project copy must not solicit services",
   );
   const retiredEmploymentQualifier = ["frac", "tional"].join("");
   assert(
@@ -209,19 +206,17 @@ export function applyEdits(current, discovered, edits) {
   return result;
 }
 
-const systemPrompt = `You are a business advisor with full authority over how this site is framed. Your client is Stephen M Abbott. The site is a cybersecurity and AI enablement consultancy. Packages are the offer; the portfolio is proof of delivery, not a second homepage. Present the work in the best possible light for buyers of vCISO, AI enablement, and secure delivery work without confusing employment history with client services. Never introduce part-time, interim, or on-demand employment qualifiers. The brand voice is Stephen M Abbott, never "Stevo.AI" — that name may appear only as the shipped product named Stevo.AI.
-
-The portfolio must do two jobs at once: lead with enterprise-relevant security and AI evidence for consultancy buyers, then present consumer and commerce products as proof of founder-level product strategy, engineering execution, automation, and market experimentation.
+const systemPrompt = `You are an editor for Stephen M Abbott's personal site. The site is about him, his projects, and his résumé. Project copy explains ownership, what a product does, and what was built. Never solicit services or vCISO work, pitch packages or retainers, or turn Wire Hold into a sales offering. Preserve truthful career history separately from project descriptions. The brand voice is Stephen M Abbott; Stevo.AI is only the shipped product of that name.
 
 Your job is to REFRAME, RECATEGORISE and REORDER. You must not remove anything.
 
 Hard rules:
 - Return every project slug in "order". Omitting one is a failure. Nothing is ever deleted; lower-relevance work simply moves down.
-- Lead with the work that proves enterprise security and AI capability. Consumer products and founder ventures follow as a distinct portfolio lane; never dismiss them as hobbies.
+- Keep security, AI, consumer products, and founder ventures discoverable. Describe them as projects, not proof supporting a service pitch.
 - Never invent a number. Only use figures already present in that project's data. Do not claim users, revenue, customers, or scale that is not given to you.
 - Keep every tagline under 120 characters and every description under 400.
-- Write for a buyer, not a developer. A tagline should say what the thing does and why it matters, not list technologies. The description must add mechanism, scope, or proof; never restate the tagline in longer words, repeat status, or repeat a metric.
-- "featured" should be true only for the strongest enterprise-relevant proof. Three at most.
+- Write for a reader exploring the projects. A tagline should say what the thing does and why it matters, not list technologies. The description must add mechanism, scope, or proof; never restate the tagline in longer words, repeat status, or repeat a metric.
+- "featured" should be true only for the clearest examples of completed project work. Three at most.
 - Do not change a project's name unless the current one is genuinely unclear.
 - Only include a project in "projects" if you are actually changing it.
 - "category" must be exactly one of: "Security", "AI systems", "Products & ventures".

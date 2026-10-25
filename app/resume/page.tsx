@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import Image from "next/image";
-import Link from "next/link";
+import DocumentLink from "@/components/DocumentLink";
 
 import { PrintButton } from "../../components/PrintButton";
 import { ProtectedEmailAddress } from "../../components/ProtectedEmail";
@@ -31,13 +31,13 @@ export const metadata: Metadata = {
     url: "/resume/",
     title: resumeTitle,
     description: resumeDescription,
-    images: [{ url: "/og-executive.png", width: 1734, height: 907 }],
+    images: [{ url: "/stephen-abbott-resume.png", width: 680, height: 680 }],
   },
   twitter: {
     card: "summary_large_image",
     title: resumeTitle,
     description: resumeDescription,
-    images: ["/og-executive.png"],
+    images: ["/stephen-abbott-resume.png"],
   },
 };
 
@@ -46,9 +46,9 @@ export default function ResumePage() {
   return (
     <main className="resume-page">
       <nav className="resume-toolbar" aria-label="Professional profile actions">
-        <Link className="resume-back-link" href="/">
+        <DocumentLink className="resume-back-link" href="/">
           Back to the site
-        </Link>
+        </DocumentLink>
         <div className="resume-download-actions">
           <a className="resume-download-link" href="/resume-files/Stephen-Abbott-Resume.pdf" download>
             Download PDF

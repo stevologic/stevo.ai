@@ -1,7 +1,5 @@
 /**
- * Company identity for the practice. Homepage copy, metadata, the install
- * manifest, and JSON-LD all read from here so the consultancy framing cannot
- * drift between surfaces.
+ * Personal profile shared by the homepage, metadata, and JSON-LD.
  */
 export const practice = {
   name: "Stephen M Abbott",
@@ -17,21 +15,21 @@ export const practice = {
     "Stephen M Abbott, owner of Wire Hold.",
   jobTitle: "Cybersecurity and AI Executive",
   knowsAbout: [
-    "Cybersecurity consulting",
+    "Cybersecurity leadership",
     "Wire Hold",
     "AI enablement",
-    "Virtual CISO services",
+    "Security engineering",
     "AI governance",
     "Application security",
     "Software supply chain security",
     "AI-native IT operations",
   ],
   keywords: [
-    "cybersecurity consultant",
+    "Stephen M Abbott",
     "Wire Hold",
-    "AI enablement consultant",
-    "vCISO services",
-    "cybersecurity and IT consulting",
+    "personal portfolio",
+    "resume",
+    "projects",
     "AI governance",
     "AI security",
     "cybersecurity",

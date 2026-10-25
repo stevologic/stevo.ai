@@ -1,20 +1,17 @@
 # stevo.ai
 
-The cybersecurity and AI enablement consultancy of Stephen M Abbott:
-packages for vCISO leadership, AI governance, and secure delivery, with
-background and a founder portfolio still on the site as proof.
+Stephen M Abbott's personal site: background, projects, résumé, and contact.
+Cybersecurity and AI are the day job; the portfolio includes software, games,
+commerce, and things he builds for fun.
 
 ## What is included
 
-- Consulting packages with the stevo.ai line as the public intake and scheduling number
-- Practice areas measured against named security and AI frameworks, each with
-  a landing page at `/services/<slug>/` rendered from the same data
-- A homepage FAQ backed by FAQPage structured data, and an `/llms.txt` brief
-  for AI answer engines, both sourced from the libraries the pages render
-- Curated live products enriched with current GitHub activity, releases, and traffic
-- A semantic professional profile at `/resume/` that prints to exactly two pages
+- Personal background and verified career achievements
+- Curated projects with live and source links, filters, and GitHub activity
+- A professional record at `/resume/` with two-page print, PDF, and Word exports
+- The published +1 (775) 599-7046 phone and stevo@stevo.ai email
 - Social, search, sitemap, custom-domain, and reduced-motion support
-- Weekly project refresh, monthly site critique with unchanged-content skipping, and a dispatch-only growth brief
+- Project refresh and advisory editorial critique through reviewed draft PRs
 
 ## Local development
 
@@ -108,15 +105,17 @@ URL stays unpublished until one exists. The email address is stored
 XOR-masked and decoded in the browser, so it never appears in the static
 export.
 
-Company framing lives in `lib/practice.ts`. Service tracks, commercial
-packages, the engagement process, and working principles live in
-`lib/services.ts`; credentials live in `lib/credentials.ts`. They feed the
-page and the structured data, so the marketing copy and the machine-readable
-claims cannot drift apart. Packages do not publish dollar prices; a
-security engagement is scoped before a price is published.
-Credential wording is deliberate — completed training is described as
-training, never as certification — and the `standards` on each service
-track name frameworks the work is measured against, not certifications held.
+Personal metadata lives in `lib/practice.ts`; credentials live in
+`lib/credentials.ts`. Do not restore service selling, vCISO solicitation,
+commercial packages, sales CTAs, or offer structured data. Historic security
+and vCISO experience in the résumé remains part of the professional record.
+Wire Hold is presented as the company Stephen owns; keep its project link.
+
+The four old `/services/<slug>/` URLs are retained as noindex archive pages
+with a homepage canonical and accessible links to the homepage and résumé.
+GitHub Pages cannot serve application redirects. Archives stay out of the
+sitemap and `llms.txt`; unknown service URLs remain 404s. Internal page links
+use native document navigation so GitHub Pages does not depend on RSC prefetch.
 
 The `@media print` block in `app/globals.css` is tuned so `/resume/` exports to
 exactly two Letter pages. It sets print sizes explicitly rather than inheriting
@@ -145,20 +144,14 @@ specific binary. The layout currently measures ~1650px of content against a
 
 ## Site critique
 
-A monthly GitHub Action asks Grok to review the site's copy, verbiage, and
-structure as a buyer of cybersecurity and AI enablement consulting, then
-applies the portfolio half of that advice and **opens a pull request** with
-the diff. The critique is instructed to keep the site a consultancy —
-packages as the offer, phone and email as contact, background and portfolio
-as proof — and not to recast the homepage as a job hunt. Scheduled runs
-are advisory only; they cannot rewrite headlines, package blurbs, contact,
-or the résumé header.
+A monthly GitHub Action asks Grok to review clarity, factual accuracy,
+accessibility, navigation, and project context. It proposes portfolio edits
+through a draft pull request to `development`. Headlines, contact, and the
+résumé header stay locked. It must not recommend service packages, leads,
+meetings, sales CTAs, or conversion tactics. A person reviews and merges;
+a release still needs a PR to `main` and the required checks.
 
-It proposes; a person merges. The critique disagrees with itself between runs on
-judgement calls, and this site sells security services where a wrong claim is a
-professional liability, so nothing reaches stevo.ai unreviewed. Lint, typecheck,
-build, and the full test suite all run against the edited site before the pull
-request opens.
+Lint, typecheck, build, and the full test suite run before the draft opens.
 
 `scripts/optimize-portfolio.mjs` may change framing, wording, category, and
 display order in `content/projects.json`. Four things it cannot do are enforced
@@ -217,23 +210,13 @@ GROK_API_KEY=... npm run critique
 
 Model ids use a dot: `grok-4.5` is valid, `grok-4-5` returns model-not-found.
 
-## Practice growth brief
-
-A dispatch-only Action asks Grok for marketing, lead, and meeting-prep
-drafts. It writes `critique/growth-brief.md` as a 90-day artifact. It does
-**not** send mail, post publicly, book a calendar, open a pull request, or
-change the live site. That is deliberate: AI marketing and meeting
-scheduling are the next wiring, not something an unattended job should
-execute. It is dispatch-only to avoid unwanted paid API requests. Public standard Actions runner minutes are free.
-
-```sh
-GROK_API_KEY=... npm run growth
-```
+The former practice-growth workflow and command are retired. Automation
+must preserve the personal-site direction and must not draft service outreach.
 
 ## Publishing
 
 The deployment workflow refreshes project data, builds the static export, and
-publishes it to `gh-pages` on every `main` push, on demand, and once per day.
+publishes it to `gh-pages` on every `main` push, on demand, and weekly.
 The one-time deploy-key, Pages, and `stevo.ai` DNS setup is documented in
 [`docs/GITHUB_PAGES.md`](docs/GITHUB_PAGES.md).
 

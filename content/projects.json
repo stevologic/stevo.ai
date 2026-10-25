@@ -4,8 +4,8 @@
     "name": "Wire Hold",
     "category": "Security",
     "featured": true,
-    "tagline": "vCISO and AI controls.",
-    "description": "The firm I own. Cybersecurity and AI consulting at wirehold.com.",
+    "tagline": "The company I own.",
+    "description": "Wire Hold is my company. Its own website is at wirehold.com.",
     "siteUrl": "https://www.wirehold.com",
     "metrics": [
       "AI governance",
@@ -142,14 +142,14 @@
     "name": "Stevo.AI",
     "category": "AI systems",
     "featured": false,
-    "tagline": "Governed AI operations that critique, revise, and ship only under CI controls.",
-    "description": "Live proof of agentic content operations with control at every step: an AI advisor reframes copy under code-enforced factual guards, opens a pull request, passes CI, merges, and deploys\u2014evidence for leaders evaluating governed AI enablement.",
+    "tagline": "My personal portfolio and résumé.",
+    "description": "This site brings together my background and projects, with scheduled project updates and editorial suggestions proposed through reviewed pull requests.",
     "siteUrl": "https://stevo.ai",
     "sourceUrl": "https://github.com/stevologic/stevo.ai",
     "metrics": [
-      "AI-operated weekly",
-      "CI-gated auto-merge",
-      "Daily project discovery"
+      "Reviewed pull requests",
+      "Scheduled project refresh",
+      "Static export"
     ],
     "tech": [
       "TypeScript",

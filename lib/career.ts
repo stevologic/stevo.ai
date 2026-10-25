@@ -14,22 +14,16 @@ export const career = {
 } as const;
 
 /**
- * How a visitor should move through the site. The practice leads with
- * packages; background and portfolio stay available as proof.
+ * Personal background and project navigation for the homepage.
  */
 export const careerPaths = [
   {
-    label: "How to start",
-    title: "Packages",
-    href: "#packages",
-  },
-  {
-    label: "The principal",
+    label: "Career and experience",
     title: "Background",
     href: "#profile",
   },
   {
-    label: "Proof of delivery",
+    label: "Things I build",
     title: "Portfolio",
     href: "#work",
   },

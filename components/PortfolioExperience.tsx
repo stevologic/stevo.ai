@@ -1,7 +1,7 @@
 "use client";
 
 import Image from "next/image";
-import Link from "next/link";
+import DocumentLink from "@/components/DocumentLink";
 import { decodeSiteEmail } from "@/lib/site-email";
 import {
   memo,
@@ -293,9 +293,9 @@ export function PortfolioExperience({
           <a href="#work" onClick={() => setMobileOpen(false)}>
             Portfolio
           </a>
-          <Link href="/resume/" onClick={() => setMobileOpen(false)}>
+          <DocumentLink href="/resume/" onClick={() => setMobileOpen(false)}>
             Résumé
-          </Link>
+          </DocumentLink>
         </nav>
         <div className="header-actions">
           <a className="header-contact" href="#contact">
@@ -324,15 +324,19 @@ export function PortfolioExperience({
           <div className="hero-copy" data-reveal>
             <p className="eyebrow">
               <span>{practice.headline}</span>
-              <span>vCISO · AI governance · Secure delivery</span>
+              <span>Cybersecurity · AI · Projects</span>
             </p>
+            <h1 className="visually-hidden">Stephen M Abbott</h1>
             <p className="hero-intro">
               My online business card and résumé. Cybersecurity and AI are
               the day job; the projects below are the fun stuff.
             </p>
             <div className="hero-actions">
-              <a className="button button-primary" href={voiceLine.href}>
-                {voiceLine.display} <Arrow />
+              <DocumentLink className="button button-primary" href="/resume/">
+                Read my résumé <Arrow />
+              </DocumentLink>
+              <a className="button button-secondary" href="#work">
+                Explore my projects <Arrow />
               </a>
               {/* Renders the moment lib/contact.ts publishes a booking URL. */}
               {scheduling.href ? (
@@ -346,10 +350,10 @@ export function PortfolioExperience({
           <aside
             className="hero-console"
             data-reveal
-            aria-label="Practice paths"
+            aria-label="About Stephen"
           >
             <div className="console-header">
-              <span className="console-kicker">How to start</span>
+              <span className="console-kicker">About me</span>
             </div>
             <div className="identity-card">
               <div className="profile-frame">
@@ -368,9 +372,7 @@ export function PortfolioExperience({
               </div>
             </div>
             <div className="activity-list">
-              {careerPaths
-                .filter((path) => path.href !== "#packages")
-                .map((path) => (
+              {careerPaths.map((path) => (
                 <a key={path.title} href={path.href}>
                   <span>{path.title}</span>
                   <small>{path.label}</small>
@@ -421,9 +423,9 @@ export function PortfolioExperience({
               with hands-on product and engineering work.
             </p>
             <div className="profile-actions">
-              <Link className="text-link" href="/resume/">
+              <DocumentLink className="text-link" href="/resume/">
                 Read the full career record <Arrow />
-              </Link>
+              </DocumentLink>
             </div>
           </div>
         </section>

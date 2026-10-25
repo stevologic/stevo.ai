@@ -1,7 +1,6 @@
 #!/usr/bin/env node
 // Sends the site's copy and structure to Grok for a critique written from the
-// perspective of a business advisor who buys cybersecurity and AI enablement
-// work -- the buyer this site is written for.
+// perspective of a reader exploring Stephen Abbott's background and projects.
 //
 // Reads the built export in out/ rather than the source components, so the
 // critique covers what a visitor actually reads, in the order they read it.
@@ -269,41 +268,31 @@ async function resolveModel() {
  * Critique
  * ------------------------------------------------------------------ */
 
-const systemPrompt = `You are a seasoned independent business advisor who has spent 20 years buying cybersecurity and AI enablement work, running a boutique consultancy, and evaluating founder-led technology companies. You have sat on all sides of the table: as a Fortune 500 CISO, a buyer of vCISO and AI-native cybersecurity and IT consulting, and a principal who built and sold a boutique cybersecurity consultancy.
+const systemPrompt = `You are an editor reviewing Stephen M Abbott's personal website. Its direction is fixed: personal background, projects, résumé, and contact. It does not solicit services or vCISO engagements. Do not recommend packages, pricing, lead generation, sales CTAs, or buyer-conversion tactics.
 
-You are reviewing the professional site of Stephen M Abbott. Its direction is fixed and not up for debate: the site is a cybersecurity and AI enablement consultancy led by a cybersecurity and AI executive. Packages are the offer. Contact is a heading plus the stevo.ai line at ${voiceLine.display} and email. Do not describe a voice assistant, how intake works, who it answers as, or when email is better. Do not recommend "Call the stevo.ai line" or "Book on the stevo.ai line" as repeated CTAs. Background and portfolio remain available as proof, not as a second homepage. Do not turn the homepage back into a job-seeking executive site. Do not blur employment history into client services. Do not name an employer or recommend an "employer names omitted" line. Use "Fortune 100 payments" only if a scale phrase is needed, and only once. The personal brand is Stephen M Abbott; the site must never be branded as "Stevo.AI" in its voice or copy—that name may appear only as the name of a shipped product or the domain. Headlines, package blurbs, contact, and the résumé header are locked Brand QA copy: do not rewrite them. Your job is to strengthen the practice, win qualified engagements, and keep founder execution visible without fabrication.
+Review clarity, factual accuracy, accessibility, navigation, and how well readers can explore the projects and career record. Preserve the published phone ${voiceLine.display} and email, all project links, and truthful career achievements, including historic security and vCISO experience. Do not turn that experience into an offering. Do not invent numbers, employers, client names, credentials, or calendar URLs. Headlines, contact, and the résumé header are locked Brand QA copy: do not rewrite them. The brand is Stephen M Abbott; Stevo.AI may appear only as a shipped product or domain.
 
-Judge it the way an economic buyer would. Be direct and specific. Praise sparingly and only where earned; a critique that flatters is useless. Every criticism must name the exact text you are reacting to and offer a concrete rewrite or a specific structural change. Vague advice like "add more social proof" is a failure — say precisely what proof, in which section, and in what words.
-
-Weigh these lenses:
-1. Positioning and differentiation — is it obvious within 5 seconds what is sold, to whom, and why this person over a boutique firm or a Big 4 practice? Does it read as a commodity?
-2. Credibility and proof — does the evidence justify the claims for a buyer signing a five- or six-figure engagement? What claim is asserted but unproven? Employer names are deliberately omitted for confidentiality; do not advise naming clients or employers, but do say how to convey scale credibly without naming them.
-3. Verbiage — jargon, hedging, throat-clearing, abstraction, and consultant-speak. Quote weak lines and rewrite them. Flag anything that sounds AI-generated or generic.
-4. Structure and information order — does the sequence match how a buyer actually decides? Is anything buried, redundant, or missing?
-5. Conversion — is the call to action clear and low-friction? What objection is left unanswered at the moment of decision?
-6. Risk — any claim that is legally, ethically, or professionally risky, overstated, or that a sophisticated buyer would read as a red flag.
-
-Treat conceptual repetition as a defect even when the wording changes. Each section has one job: the hero states the practice, the console routes to packages / background / portfolio, packages sell the offer, practice areas explain capability, background proves outcomes, the portfolio proves founder execution, and the close is phone plus email. Do not recommend restating the same packages, résumé link, social profiles, or delivery promise across multiple sections. Do not invent prices, client names, employer names, or a calendar booking URL that is not already published.
+Every criticism must quote actual copy and propose a concrete edit. Avoid repetition. The hero introduces Stephen, background records experience, the portfolio describes projects, and contact gives phone plus email.
 
 Structure your response in GitHub-flavoured markdown exactly as:
 
 ## Verdict
-Two or three sentences. Would you take a meeting based on this site? What is the single biggest thing costing engagements?
+Two or three sentences about how clearly the site introduces Stephen and his work.
 
 ## Scorecard
-A markdown table scoring Positioning, Credibility, Verbiage, Structure, and Conversion out of 10, each with a one-line justification.
+A table scoring Clarity, Accuracy, Accessibility, Navigation, and Project context out of 10, with one-line reasons.
 
-## The five highest-leverage fixes
-A numbered list, ordered by revenue impact. For each: what is wrong, the exact text at fault, and the specific replacement or change.
+## The five most useful fixes
+A numbered list ordered by reader impact, with exact text and a specific replacement or change.
 
 ## Line edits
-A markdown table with columns "Current", "Problem", "Suggested". At least six rows quoting real copy from the site.
+A table with columns "Current", "Problem", "Suggested". Quote only real copy.
 
 ## What is working
-Brief. Only what genuinely helps close business.
+Briefly describe what helps readers understand the person and projects.
 
-## The buyer's unanswered question
-The one question a serious buyer is left asking, and where on the page to answer it.
+## The reader's unanswered question
+The most useful missing context, and where to put it.
 
 Do not preface your response with any commentary. Begin at "## Verdict".`;
 
@@ -398,7 +387,7 @@ async function main({ brief: suppliedBrief, markerDirectory = path.join(rootDire
     `Generated ${generatedAt} by \`${model}\`.`,
     "",
     "> Advisory output from a language model, reviewing the site as a prospective",
-    "> buyer of cybersecurity and AI enablement services. Treat it as a second opinion to",
+    "> reader exploring personal background and projects. Treat it as a second opinion to",
     "> weigh, not instructions to apply.",
     "",
     "---",

@@ -1,13 +1,12 @@
 name: Site critique
 
-# Reviews the site as a buyer of cybersecurity and AI enablement consulting.
-# Scheduled runs are advisory only. They must not rewrite headlines, package
-# blurbs, contact, or the résumé header — those are human-owned Brand QA copy.
+# Reviews the personal site for clarity, accuracy, accessibility, and navigation.
+# Scheduled runs are advisory only. Headlines, contact, and the résumé header
+# are human-owned Brand QA copy; service selling must not return.
 # Portfolio apply stays behind an explicit workflow_dispatch flag.
 #
 # It proposes changes, it does not publish them. The critique disagrees with
-# itself between runs on judgement calls, and this site sells security services
-# where a wrong claim is a professional liability, so a person merges. Nothing
+# itself between runs on judgement calls, so a person reviews and merges. Nothing
 # reaches stevo.ai until you do.
 #
 # What it may change: portfolio framing, category and order in
@@ -36,7 +35,7 @@ on:
         required: false
         type: string
       apply_changes:
-        description: "Apply portfolio-only changes and open a pull request. Does not rewrite headlines, packages, contact, or the resume header."
+        description: "Apply portfolio-only changes and open a pull request. Does not rewrite headlines, contact, or the resume header."
         required: false
         default: false
         type: boolean
