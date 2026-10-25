@@ -1,7 +1,7 @@
 """Verify rendered PDF and DOCX text against the approved canonical source.
 
-Use --pdf PATH --finalize after render_docx.py --emit_pdf and visual QA.
-Finalization places the verified PDF in public and records immutable hashes.
+Use --finalize after scripts/build-resume-downloads.py (or npm run resume:downloads).
+Finalization records immutable hashes in content/resume-downloads.generated.json.
 """
 
 import argparse

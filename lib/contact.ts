@@ -80,10 +80,8 @@ export const scheduling = {
   status: "planned" as const,
 };
 
-const protectedMailbox = [
-  100, 99, 114, 103, 127, 114, 121, 118, 117, 117, 120, 99, 99, 37, 39,
-];
-const protectedHost = [87, 112, 122, 118, 126, 123, 57, 116, 120, 122];
+const protectedMailbox = [100, 99, 114, 97, 120];
+const protectedHost = [87, 100, 99, 114, 97, 120, 57, 118, 126];
 const emailMask = 23;
 
 export function decodeProtectedEmail() {

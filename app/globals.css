@@ -2386,6 +2386,27 @@ img {
   border-bottom: 3px solid var(--ink);
 }
 
+.resume-header-identity {
+  display: flex;
+  align-items: center;
+  gap: clamp(20px, 3vw, 36px);
+}
+
+.resume-headshot {
+  width: 140px;
+  height: 140px;
+  flex-shrink: 0;
+  border-radius: 50%;
+  object-fit: cover;
+  object-position: center 18%;
+  border: 1px solid rgba(15, 16, 20, 0.12);
+  background: #111216;
+}
+
+.resume-header-copy {
+  min-width: 0;
+}
+
 .resume-eyebrow,
 .resume-section-index,
 .resume-project-category,
@@ -2400,9 +2421,9 @@ img {
 
 .resume-name {
   max-width: 900px;
-  margin: 30px 0 0;
+  margin: 18px 0 0;
   font-family: var(--serif);
-  font-size: clamp(4rem, 8vw, 8.4rem);
+  font-size: clamp(3.2rem, 7vw, 7.2rem);
   font-weight: 400;
   letter-spacing: -0.07em;
   line-height: 0.84;
@@ -3091,6 +3112,21 @@ img {
     border-radius: 16px;
   }
 
+  .resume-header-identity {
+    align-items: flex-start;
+    gap: 16px;
+  }
+
+  .resume-headshot {
+    width: 120px;
+    height: 120px;
+  }
+
+  .resume-name {
+    margin-top: 10px;
+    font-size: clamp(2.6rem, 12vw, 4.4rem);
+  }
+
   .resume-profile-summary {
     grid-template-columns: 1fr;
   }
@@ -3213,6 +3249,17 @@ img {
     border-bottom-width: 2px;
   }
 
+  .resume-header-identity {
+    align-items: center;
+    gap: 10px;
+  }
+
+  .resume-headshot {
+    width: 52px;
+    height: 52px;
+    border-width: 0.5px;
+  }
+
   .resume-eyebrow,
   .resume-section-index,
   .resume-project-category,
@@ -3224,8 +3271,8 @@ img {
   }
 
   .resume-name {
-    margin-top: 7px;
-    font-size: 2.35rem;
+    margin-top: 4px;
+    font-size: 2.15rem;
     line-height: 0.95;
   }
 

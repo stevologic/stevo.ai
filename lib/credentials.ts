@@ -22,12 +22,16 @@ export const credentials: Credential[] = [
   {
     label: "Certifications",
     value:
-      "Offensive Security Certified Professional (OSCP) · AWS Certified Cloud Practitioner",
+      "Offensive Security Certified Professional (OSCP) · Certified Kubernetes Application Developer (CKAD) · AWS Certified Cloud Practitioner",
     short: "Offensive Security Certified Professional",
     certifications: [
       {
         name: "Offensive Security Certified Professional (OSCP)",
         issuer: "OffSec",
+      },
+      {
+        name: "Certified Kubernetes Application Developer (CKAD)",
+        issuer: "The Linux Foundation",
       },
       {
         name: "AWS Certified Cloud Practitioner",
@@ -51,5 +55,6 @@ export const credentials: Credential[] = [
 /** Named credentials for the homepage strip. Training stays on the résumé. */
 export const credentialHighlights = [
   "Offensive Security Certified Professional",
+  "Certified Kubernetes Application Developer (CKAD)",
   "BA, Walter Cronkite School of Journalism, Arizona State University",
 ];

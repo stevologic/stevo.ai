@@ -1,6 +1,9 @@
 import assert from "node:assert/strict";
-import { access, readFile } from "node:fs/promises";
+import { access, mkdtemp, readFile, readdir, rm, writeFile } from "node:fs/promises";
+import { tmpdir } from "node:os";
+import { join } from "node:path";
 import test from "node:test";
+import { deflateRawSync, inflateRawSync, inflateSync } from "node:zlib";
 
 const root = new URL("../", import.meta.url);
 
@@ -214,7 +217,7 @@ test("hero career strip summarizes professional experience", async () => {
   assert.match(careerStrip, />16<\/strong><span>Years in enterprise technology/);
   assert.match(
     careerStrip,
-    />11<\/strong><span>Years in cybersecurity/,
+    />12<\/strong><span>Years in cybersecurity/,
   );
   // Derived from the project data, so discovery cannot leave it stale.
   const projects = await publishedProjects();
@@ -246,6 +249,7 @@ test("the executive profile uses the hoodie portrait, not the suit photo", async
   // The background paragraph sits on a plain surface, without the photo.
   assert.doesNotMatch(profile, /<img|stephen-abbott-field-notes\.webp/);
   assert.doesNotMatch(html, /stephen-abbott-profile\.png/);
+  assert.doesNotMatch(html, /stephen-abbott-resume\.png/);
   assert.doesNotMatch(html, /Portrait of Stephen M Abbott/);
   assert.match(styles, /min-height: 84svh/);
   assert.match(styles, /padding: 104px 20px 58px/);
@@ -316,6 +320,7 @@ test("credentials are named rather than counted", async () => {
   assert.ok(strip, "index is missing the credential strip");
   const credentialOrder = [
     "Offensive Security Certified Professional",
+    "Certified Kubernetes Application Developer (CKAD)",
     "BA, Walter Cronkite School of Journalism, Arizona State University",
   ];
   assert.doesNotMatch(strip, /BA, Arizona State University</);
@@ -460,9 +465,552 @@ test("homepage contact prints the mailbox next to the phone", async () => {
 
 test("obfuscated mailbox still decodes to the real contact address", async () => {
   const { decodeProtectedEmail } = await import("../lib/contact.ts");
-  assert.equal(decodeProtectedEmail(), "stephenabbott20@gmail.com");
+  assert.equal(decodeProtectedEmail(), "stevo@stevo.ai");
   const { decodeSiteEmail } = await import("../lib/site-email.ts");
   assert.equal(decodeSiteEmail(), "stevo@stevo.ai");
+});
+
+/** Yield every ZIP entry. DOCX is PKZIP + deflate; no ZIP package. */
+function* zipEntries(bytes) {
+  let offset = 0;
+  while (
+    offset + 30 <= bytes.length &&
+    bytes.readUInt32LE(offset) === 0x04034b50
+  ) {
+    const method = bytes.readUInt16LE(offset + 8);
+    const compressedSize = bytes.readUInt32LE(offset + 18);
+    const nameLength = bytes.readUInt16LE(offset + 26);
+    const extraLength = bytes.readUInt16LE(offset + 28);
+    const name = bytes
+      .subarray(offset + 30, offset + 30 + nameLength)
+      .toString("utf8");
+    const start = offset + 30 + nameLength + extraLength;
+    const compressed = bytes.subarray(start, start + compressedSize);
+    offset = start + compressedSize;
+    let data;
+    if (method === 0) data = compressed;
+    else if (method === 8) data = inflateRawSync(compressed);
+    else throw new Error(`unsupported ZIP method ${method} for ${name}`);
+    yield { name, data };
+  }
+}
+
+function decodeXmlEntities(text) {
+  return text
+    .replace(/&#x([0-9A-Fa-f]+);/g, (_, hex) =>
+      String.fromCodePoint(Number.parseInt(hex, 16)),
+    )
+    .replace(/&#([0-9]+);/g, (_, decimal) =>
+      String.fromCodePoint(Number.parseInt(decimal, 10)),
+    )
+    .replace(/&amp;/g, "&")
+    .replace(/&lt;/g, "<")
+    .replace(/&gt;/g, ">")
+    .replace(/&quot;/g, '"')
+    .replace(/&apos;/g, "'");
+}
+
+function docxPlainText(bytes) {
+  const parts = [];
+  for (const { data } of zipEntries(bytes)) {
+    const decoded = decodeXmlEntities(data.toString("utf8"));
+    // Keep decoded XML so mailto: and other attributes survive tag stripping.
+    parts.push(decoded, decoded.replace(/<[^>]+>/g, ""));
+  }
+  return parts.join("");
+}
+
+function normalizedText(text) {
+  return text.replace(/\s+/g, "").toLowerCase();
+}
+
+function retiredMailbox() {
+  return ["stephenabbott20", "gmail.com"].join("@");
+}
+
+function textContainsRetiredMailbox(text, retired) {
+  return normalizedText(text).includes(normalizedText(retired));
+}
+
+function inflatePdfPayload(payload) {
+  try {
+    return inflateSync(payload);
+  } catch {
+    return inflateRawSync(payload);
+  }
+}
+
+/** Inflate every FlateDecode stream. Word/LibreOffice résumé PDFs store text there. */
+function pdfInflatedStreams(bytes) {
+  const streams = [];
+  let cursor = 0;
+  while (cursor < bytes.length) {
+    const pos = bytes.indexOf("stream", cursor);
+    if (pos === -1) break;
+    if (
+      bytes
+        .subarray(Math.max(0, pos - 3), pos)
+        .toString("latin1")
+        .endsWith("end")
+    ) {
+      cursor = pos + 6;
+      continue;
+    }
+    let start;
+    if (bytes[pos + 6] === 0x0d && bytes[pos + 7] === 0x0a) start = pos + 8;
+    else if (bytes[pos + 6] === 0x0a || bytes[pos + 6] === 0x0d) start = pos + 7;
+    else {
+      cursor = pos + 6;
+      continue;
+    }
+    const end = bytes.indexOf("endstream", start);
+    if (end === -1) break;
+    let payload = bytes.subarray(start, end);
+    if (payload.at(-1) === 0x0a) {
+      payload = payload.subarray(
+        0,
+        payload.length - (payload.at(-2) === 0x0d ? 2 : 1),
+      );
+    } else if (payload.at(-1) === 0x0d) {
+      payload = payload.subarray(0, payload.length - 1);
+    }
+    const header = bytes.subarray(Math.max(0, pos - 256), pos).toString("latin1");
+    try {
+      streams.push(
+        header.includes("/FlateDecode") ? inflatePdfPayload(payload) : payload,
+      );
+    } catch {
+      // Skip non-deflate or truncated payloads; other streams still get searched.
+    }
+    cursor = end + 9;
+  }
+  return streams;
+}
+
+function pdfUnicodeFromHex(hex) {
+  const clean = hex.replace(/\s+/g, "");
+  let out = "";
+  for (let index = 0; index + 3 < clean.length; index += 4) {
+    out += String.fromCharCode(Number.parseInt(clean.slice(index, index + 4), 16));
+  }
+  return out;
+}
+
+function parsePdfToUnicode(text) {
+  const map = new Map();
+  for (const match of text.matchAll(/<([0-9A-Fa-f]+)>\s*<([0-9A-Fa-f]+)>/g)) {
+    map.set(match[1].toLowerCase(), pdfUnicodeFromHex(match[2]));
+  }
+  return map;
+}
+
+function decodePdfCidHex(hex, cmap) {
+  const clean = hex.replace(/\s+/g, "").toLowerCase();
+  let out = "";
+  for (let index = 0; index < clean.length; index += 2) {
+    out += cmap.get(clean.slice(index, index + 2)) ?? "";
+  }
+  return out;
+}
+
+function pdfHexToBytes(hex) {
+  const clean = hex.replace(/\s+/g, "");
+  const padded = clean.length % 2 === 0 ? clean : `${clean}0`;
+  let out = "";
+  for (let index = 0; index < padded.length; index += 2) {
+    out += String.fromCharCode(Number.parseInt(padded.slice(index, index + 2), 16));
+  }
+  return out;
+}
+
+function readPdfLiteral(source, start) {
+  let index = start + 1;
+  let out = "";
+  let depth = 1;
+  while (index < source.length && depth > 0) {
+    const char = source[index];
+    if (char === "\\") {
+      const next = source[index + 1];
+      if (next === undefined) break;
+      if (next >= "0" && next <= "7") {
+        let octal = next;
+        index += 2;
+        for (
+          let taken = 0;
+          taken < 2 && index < source.length && source[index] >= "0" && source[index] <= "7";
+          taken += 1
+        ) {
+          octal += source[index];
+          index += 1;
+        }
+        out += String.fromCharCode(Number.parseInt(octal, 8));
+        continue;
+      }
+      const escaped = { n: "\n", r: "\r", t: "\t", b: "\b", f: "\f" };
+      out += escaped[next] ?? next;
+      index += 2;
+      continue;
+    }
+    if (char === "(") depth += 1;
+    if (char === ")") {
+      depth -= 1;
+      if (depth === 0) return [out, index + 1];
+    }
+    if (depth > 0) out += char;
+    index += 1;
+  }
+  return [out, index];
+}
+
+function decodePdfStringToken(source, start, cmap) {
+  if (source[start] === "(") return readPdfLiteral(source, start);
+  if (source[start] === "<" && source[start + 1] !== "<") {
+    const end = source.indexOf(">", start + 1);
+    if (end === -1) return ["", start + 1];
+    const hex = source.slice(start + 1, end);
+    return [cmap ? decodePdfCidHex(hex, cmap) : pdfHexToBytes(hex), end + 1];
+  }
+  return null;
+}
+
+function skipPdfWhitespace(source, start) {
+  let index = start;
+  while (index < source.length) {
+    const char = source[index];
+    if (char === "%") {
+      const newline = source.indexOf("\n", index);
+      index = newline === -1 ? source.length : newline + 1;
+      continue;
+    }
+    if (!/\s/.test(char)) break;
+    index += 1;
+  }
+  return index;
+}
+
+function readPdfNumber(source, start) {
+  const match = source.slice(start).match(/^[+-]?(?:\d+\.?\d*|\.\d+)/);
+  if (!match) return null;
+  return [Number(match[0]), start + match[0].length];
+}
+
+/** Parse a TJ array, skipping numeric kerning and joining string entries. */
+function readPdfTjArray(source, start, cmap) {
+  if (source[start] !== "[") return null;
+  const strings = [];
+  let index = start + 1;
+  while (index < source.length) {
+    index = skipPdfWhitespace(source, index);
+    if (index >= source.length) break;
+    if (source[index] === "]") {
+      const after = skipPdfWhitespace(source, index + 1);
+      if (!source.startsWith("TJ", after)) return null;
+      return [strings.join(""), after + 2];
+    }
+    const stringToken = decodePdfStringToken(source, index, cmap);
+    if (stringToken) {
+      strings.push(stringToken[0]);
+      index = stringToken[1];
+      continue;
+    }
+    const numberToken = readPdfNumber(source, index);
+    if (numberToken) {
+      index = numberToken[1];
+      continue;
+    }
+    return null;
+  }
+  return null;
+}
+
+/**
+ * Reconstruct shown text: concatenate Tj pieces across commands with no
+ * separator, and join TJ string entries while skipping kerning numbers.
+ */
+function pdfShownText(source, cmap) {
+  if (!/Tj|TJ|'|"/.test(source)) return "";
+  let out = "";
+  let index = 0;
+  while (index < source.length) {
+    const arrayToken = readPdfTjArray(source, index, cmap);
+    if (arrayToken) {
+      out += arrayToken[0];
+      index = arrayToken[1];
+      continue;
+    }
+    const stringToken = decodePdfStringToken(source, index, cmap);
+    if (stringToken) {
+      const after = skipPdfWhitespace(source, stringToken[1]);
+      if (source.startsWith("Tj", after) || source[after] === "'" || source[after] === '"') {
+        out += stringToken[0];
+        index = after + (source.startsWith("Tj", after) ? 2 : 1);
+        continue;
+      }
+    }
+    index += 1;
+  }
+  return out;
+}
+
+/**
+ * Résumé PDFs encode contact text as CID hex plus ToUnicode CMaps, so a raw
+ * byte scan (and even inflated-stream latin1) misses it. Inflate FlateDecode
+ * streams, then reconstruct Tj/TJ text through every CMap.
+ */
+function pdfDecodedText(bytes) {
+  const streams = pdfInflatedStreams(bytes).map((stream) =>
+    stream.toString("latin1"),
+  );
+  const cmaps = streams
+    .filter((text) => text.includes("beginbfchar") || text.includes("begincmap"))
+    .map(parsePdfToUnicode);
+  const decoded = [streams.join("")];
+  for (const cmap of [null, ...cmaps]) {
+    decoded.push(streams.map((text) => pdfShownText(text, cmap)).join(""));
+  }
+  return decoded.join("");
+}
+
+function fileContainsRetiredMailbox(path, bytes, retired) {
+  const text = path.endsWith(".pdf")
+    ? pdfDecodedText(bytes)
+    : path.endsWith(".docx")
+      ? docxPlainText(bytes)
+      : bytes.toString("utf8");
+  return textContainsRetiredMailbox(text, retired);
+}
+
+function crc32(bytes) {
+  let crc = ~0;
+  for (const byte of bytes) {
+    crc ^= byte;
+    for (let bit = 0; bit < 8; bit += 1) {
+      crc = (crc >>> 1) ^ (0xedb88320 & -(crc & 1));
+    }
+  }
+  return ~crc >>> 0;
+}
+
+function zipFiles(files) {
+  const locals = [];
+  const centrals = [];
+  let offset = 0;
+  for (const { name, data } of files) {
+    const raw = Buffer.from(data);
+    const compressed = deflateRawSync(raw);
+    const nameBytes = Buffer.from(name, "utf8");
+    const crc = crc32(raw);
+    const local = Buffer.alloc(30 + nameBytes.length);
+    local.writeUInt32LE(0x04034b50, 0);
+    local.writeUInt16LE(20, 4);
+    local.writeUInt16LE(8, 8);
+    local.writeUInt32LE(crc, 14);
+    local.writeUInt32LE(compressed.length, 18);
+    local.writeUInt32LE(raw.length, 22);
+    local.writeUInt16LE(nameBytes.length, 26);
+    nameBytes.copy(local, 30);
+    const central = Buffer.alloc(46 + nameBytes.length);
+    central.writeUInt32LE(0x02014b50, 0);
+    central.writeUInt16LE(20, 4);
+    central.writeUInt16LE(20, 6);
+    central.writeUInt16LE(8, 10);
+    central.writeUInt32LE(crc, 16);
+    central.writeUInt32LE(compressed.length, 20);
+    central.writeUInt32LE(raw.length, 24);
+    central.writeUInt16LE(nameBytes.length, 28);
+    central.writeUInt32LE(offset, 42);
+    nameBytes.copy(central, 46);
+    locals.push(local, compressed);
+    centrals.push(central);
+    offset += local.length + compressed.length;
+  }
+  const centralBuf = Buffer.concat(centrals);
+  const end = Buffer.alloc(22);
+  end.writeUInt32LE(0x06054b50, 0);
+  end.writeUInt16LE(files.length, 8);
+  end.writeUInt16LE(files.length, 10);
+  end.writeUInt32LE(centralBuf.length, 12);
+  end.writeUInt32LE(offset, 16);
+  return Buffer.concat([...locals, centralBuf, end]);
+}
+
+function pdfWithContent(content) {
+  const stream = `BT\n${content}\nET\n`;
+  return Buffer.from(
+    `%PDF-1.4\n1 0 obj\n<< /Length ${stream.length} >>\nstream\n${stream}endstream\nendobj\ntrailer\n<<>>\n%%EOF\n`,
+  );
+}
+
+function docxDocument(body) {
+  return `<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<w:document xmlns:w="http://schemas.openxmlformats.org/wordprocessingml/2006/main">
+  <w:body>${body}</w:body>
+</w:document>
+`;
+}
+
+function retiredLeakFixtures(retired) {
+  const [mailbox, domain] = retired.split("@");
+  const atDomain = ["", domain].join("@");
+  const contentTypes = `<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<Types xmlns="http://schemas.openxmlformats.org/package/2006/content-types"></Types>
+`;
+  const cleanBody = "<w:p><w:r><w:t>contact on file</w:t></w:r></w:p>";
+  return [
+    {
+      name: "split-docx-runs.docx",
+      label: "split DOCX runs",
+      bytes: zipFiles([
+        { name: "[Content_Types].xml", data: contentTypes },
+        {
+          name: "word/document.xml",
+          data: docxDocument(
+            `<w:p><w:r><w:t>${mailbox}</w:t></w:r><w:r><w:t>${atDomain}</w:t></w:r></w:p>`,
+          ),
+        },
+      ]),
+    },
+    {
+      name: "docx-core-props.docx",
+      label: "DOCX core.xml part",
+      bytes: zipFiles([
+        { name: "[Content_Types].xml", data: contentTypes },
+        { name: "word/document.xml", data: docxDocument(cleanBody) },
+        {
+          name: "docProps/core.xml",
+          data: `<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<cp:coreProperties xmlns:cp="http://schemas.openxmlformats.org/package/2006/metadata/core-properties" xmlns:dc="http://purl.org/dc/elements/1.1/">
+  <dc:description>${mailbox}&#64;${domain}</dc:description>
+</cp:coreProperties>
+`,
+        },
+      ]),
+    },
+    {
+      name: "split-tj.pdf",
+      label: "Tj across commands",
+      bytes: pdfWithContent(`(${mailbox}) Tj\n(${atDomain}) Tj`),
+    },
+    {
+      name: "tj-kerning.pdf",
+      label: "TJ kerning array",
+      bytes: pdfWithContent(`[(${mailbox}) -120 (${atDomain})] TJ`),
+    },
+    {
+      name: "tj-whitespace.pdf",
+      label: "whitespace inside TJ string",
+      bytes: pdfWithContent(`(${mailbox} @ ${domain}) Tj`),
+    },
+    {
+      name: "docx-run-whitespace.docx",
+      label: "whitespace between DOCX runs",
+      bytes: zipFiles([
+        { name: "[Content_Types].xml", data: contentTypes },
+        {
+          name: "word/document.xml",
+          data: docxDocument(
+            `<w:p><w:r><w:t>${mailbox}</w:t></w:r>\n  <w:r><w:t>${atDomain}</w:t></w:r></w:p>`,
+          ),
+        },
+      ]),
+    },
+    {
+      name: "docx-entities.docx",
+      label: "entity-encoded address",
+      bytes: zipFiles([
+        { name: "[Content_Types].xml", data: contentTypes },
+        {
+          name: "word/document.xml",
+          data: docxDocument(
+            `<w:p><w:r><w:t>${mailbox}&#x40;gmail&#46;com</w:t></w:r></w:p>`,
+          ),
+        },
+      ]),
+    },
+    {
+      name: "docx-mailto-rels.docx",
+      label: "mailto in .rels",
+      bytes: zipFiles([
+        { name: "[Content_Types].xml", data: contentTypes },
+        { name: "word/document.xml", data: docxDocument(cleanBody) },
+        {
+          name: "word/_rels/document.xml.rels",
+          data: `<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships">
+  <Relationship Id="rId1" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/hyperlink" Target="mailto:${mailbox}&#64;${domain}"/>
+</Relationships>
+`,
+        },
+      ]),
+    },
+  ];
+}
+
+test("the built site and résumé files do not contain the retired Gmail mailbox", async () => {
+  const retired = retiredMailbox();
+  const resumeSource = await readFile(
+    new URL("../content/resume-download.json", import.meta.url),
+    "utf8",
+  );
+  assert.equal(textContainsRetiredMailbox(resumeSource, retired), false);
+
+  async function filesContaining(directory) {
+    const hits = [];
+    for (const entry of await readdir(directory, { withFileTypes: true })) {
+      const next = new URL(
+        `${entry.name}${entry.isDirectory() ? "/" : ""}`,
+        directory,
+      );
+      if (entry.isDirectory()) {
+        hits.push(...(await filesContaining(next)));
+        continue;
+      }
+      const bytes = await readFile(next);
+      if (fileContainsRetiredMailbox(next.pathname, bytes, retired)) {
+        hits.push(next.pathname.replace(/.*\/(out|public)\//, "$1/"));
+      }
+    }
+    return hits;
+  }
+
+  const exportHits = await filesContaining(new URL("../out/", import.meta.url));
+  const resumeHits = await filesContaining(
+    new URL("../public/resume-files/", import.meta.url),
+  );
+  assert.deepEqual(
+    exportHits,
+    [],
+    `retired Gmail leaked into the export: ${exportHits.join(", ")}`,
+  );
+  assert.deepEqual(
+    resumeHits,
+    [],
+    `retired Gmail leaked into résumé files: ${resumeHits.join(", ")}`,
+  );
+});
+
+test("the retired-Gmail leak guard reconstructs split DOCX and PDF encodings", async () => {
+  const retired = retiredMailbox();
+  const directory = await mkdtemp(join(tmpdir(), "gmail-leak-"));
+  try {
+    for (const fixture of retiredLeakFixtures(retired)) {
+      const path = join(directory, fixture.name);
+      await writeFile(path, fixture.bytes);
+      const bytes = await readFile(path);
+      assert.equal(
+        bytes.includes(retired),
+        false,
+        `${fixture.label} still has the address in raw bytes`,
+      );
+      assert.equal(
+        fileContainsRetiredMailbox(fixture.name, bytes, retired),
+        true,
+        `${fixture.label} was not reconstructed`,
+      );
+    }
+  } finally {
+    await rm(directory, { recursive: true, force: true });
+  }
 });
 
 test("the stevo.ai line is the published intake number and the retired number is gone", async () => {
@@ -794,6 +1342,23 @@ test("professional resume is detailed, private, and print-ready", async () => {
 
   assert.match(html, /Professional resume/);
   assert.match(html, /Stephen M Abbott/);
+  assert.match(html, /class="resume-headshot"/);
+  assert.match(html, /alt="Stephen Abbott"/);
+  assert.match(html, /src="\/stephen-abbott-resume\.png"/);
+  const headshot = await readFile(
+    new URL("../out/stephen-abbott-resume.png", import.meta.url),
+  );
+  assert.equal(headshot.subarray(0, 8).toString("hex"), "89504e470d0a1a0a");
+  const pngWidth = headshot.readUInt32BE(16);
+  const pngHeight = headshot.readUInt32BE(20);
+  assert.ok(
+    pngWidth >= 600 && pngHeight >= 600,
+    `resume headshot is ${pngWidth}x${pngHeight}; expected the high-res suit crop`,
+  );
+  const styles = await readFile(new URL("../app/globals.css", import.meta.url), "utf8");
+  assert.match(styles, /\.resume-headshot \{[\s\S]*?width: 140px;/);
+  assert.match(styles, /\.resume-headshot \{[\s\S]*?border-radius: 50%;/);
+  assert.match(styles, /@media print \{[\s\S]*?\.resume-headshot \{[\s\S]*?width: 52px;/);
   // The role line stands alone; the resume is the person, not the company.
   assert.match(
     html,
@@ -805,7 +1370,7 @@ test("professional resume is detailed, private, and print-ready", async () => {
   );
   assert.match(html, /Professional experience/);
   assert.match(html, /16 years/);
-  assert.match(html, /11 years/);
+  assert.match(html, /12 years/);
   assert.match(html, /Fortune 100/);
   assert.match(html, /99\.99%/);
   assert.match(html, /2024-2026/);
@@ -959,6 +1524,7 @@ test("resume reflects the current skills, tooling, and credentials", async () =>
   // Certifications are awarded; training is training. The distinction matters.
   assert.match(html, /Certifications/);
   assert.match(html, /Offensive Security Certified Professional \(OSCP\)/);
+  assert.match(html, /Certified Kubernetes Application Developer \(CKAD\)/);
   assert.match(html, /AWS Certified Cloud Practitioner/);
   assert.match(html, /Training/);
   assert.match(html, /CRISC Bootcamp/);
